@@ -10,7 +10,7 @@ import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
 import javax.swing.JPanel;
 
-public class SudutPanel extends JPanel{
+public class CustomPanel extends JPanel{
     
     private int roundTopLeft = 0; 
     int roundTopRight = 0;
@@ -49,9 +49,7 @@ public class SudutPanel extends JPanel{
         this.roundBottomLeft = roundBottomLeft;
     }
 
-    
-    
-    public SudutPanel() {
+    public CustomPanel() {
         setOpaque(false);
     }
 

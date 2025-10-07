@@ -26,9 +26,9 @@ public class PanelCharis extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        sudutPanel1 = new absensiapp.custom.SudutPanel();
+        sudutPanel1 = new absensiapp.custom.CustomPanel();
         jLabel2 = new javax.swing.JLabel();
-        sudutPanel2 = new absensiapp.custom.SudutPanel();
+        sudutPanel2 = new absensiapp.custom.CustomPanel();
         jLabel3 = new javax.swing.JLabel();
 
         sudutPanel1.setBackground(new java.awt.Color(102, 102, 255));
@@ -97,11 +97,10 @@ public class PanelCharis extends javax.swing.JPanel {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addGap(26, 26, 26)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(sudutPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(26, 26, 26)
-                        .addComponent(sudutPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(sudutPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(242, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -110,7 +109,7 @@ public class PanelCharis extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private absensiapp.custom.SudutPanel sudutPanel1;
-    private absensiapp.custom.SudutPanel sudutPanel2;
+    private absensiapp.custom.CustomPanel sudutPanel1;
+    private absensiapp.custom.CustomPanel sudutPanel2;
     // End of variables declaration//GEN-END:variables
 }
