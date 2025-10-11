@@ -4,6 +4,14 @@
  */
 package absensiapp;
 
+import com.formdev.flatlaf.FlatLightLaf;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Insets;
+import javax.swing.JButton;
+import javax.swing.SwingConstants;
+import javax.swing.UIManager;
+
 /**
  *
  * @author MyBook Hype AMD
@@ -15,9 +23,28 @@ public class MainFrame extends javax.swing.JFrame {
      */
     public MainFrame() {
         initComponents();
-        
-    }
+        setupSidebar();
+        btnDashboard.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 20, 1, 1));
+        btnDashboard.setHorizontalAlignment(SwingConstants.LEFT);
+        btnDashboard.setMargin(new Insets(5, 20, 5, 5));
 
+        btnSiswa.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 20, 1, 1));
+        btnSiswa.setHorizontalAlignment(SwingConstants.LEFT);
+        btnSiswa.setMargin(new Insets(5, 20, 5, 5));
+        
+        btnAbsensi.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 20, 1, 1));
+        btnAbsensi.setHorizontalAlignment(SwingConstants.LEFT);
+        btnAbsensi.setMargin(new Insets(5, 20, 5, 5));
+        
+        btnLaporan.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 20, 1, 1));
+        btnLaporan.setHorizontalAlignment(SwingConstants.LEFT);
+        btnLaporan.setMargin(new Insets(5, 20, 5, 5));
+        
+        btnPengaturan.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 20, 1, 1));
+        btnPengaturan.setHorizontalAlignment(SwingConstants.LEFT);
+        btnPengaturan.setMargin(new Insets(5, 20, 5, 5));
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -29,53 +56,177 @@ public class MainFrame extends javax.swing.JFrame {
 
         test1 = new test.Test();
         jPanel1 = new javax.swing.JPanel();
-        jPanelCustom1 = new absensiapp.JPanelCustom();
+        Sidebar = new absensiapp.JPanelCustom();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        btnDashboard = new javax.swing.JButton();
+        btnSiswa = new javax.swing.JButton();
+        btnAbsensi = new javax.swing.JButton();
+        btnLaporan = new javax.swing.JButton();
+        btnPengaturan = new javax.swing.JButton();
+        topBar = new javax.swing.JPanel();
+        MainContent = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setPreferredSize(new java.awt.Dimension(1366, 768));
 
-        jPanelCustom1.setBackground(new java.awt.Color(102, 102, 255));
-        jPanelCustom1.setRoundBottomRight(30);
-        jPanelCustom1.setRoundTopRight(30);
+        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel1.setPreferredSize(new java.awt.Dimension(1366, 768));
+        jPanel1.setLayout(null);
 
-        javax.swing.GroupLayout jPanelCustom1Layout = new javax.swing.GroupLayout(jPanelCustom1);
-        jPanelCustom1.setLayout(jPanelCustom1Layout);
-        jPanelCustom1Layout.setHorizontalGroup(
-            jPanelCustom1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 204, Short.MAX_VALUE)
+        Sidebar.setBackground(new java.awt.Color(8, 86, 210));
+        Sidebar.setRoundBottomRight(30);
+        Sidebar.setRoundTopRight(30);
+
+        jLabel1.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel1.setText("SIAKHA");
+
+        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Ikon/icons8-school-49.png"))); // NOI18N
+
+        jLabel2.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel2.setText("Sistem Absensi Khadijah");
+
+        btnDashboard.setBackground(new java.awt.Color(8, 86, 210));
+        btnDashboard.setFont(new java.awt.Font("Dialog", 1, 20)); // NOI18N
+        btnDashboard.setForeground(new java.awt.Color(255, 255, 255));
+        btnDashboard.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Ikon/icons8-home-35.png"))); // NOI18N
+        btnDashboard.setText("Dashboard");
+        btnDashboard.setBorder(null);
+        btnDashboard.setIconTextGap(30);
+        btnDashboard.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDashboardActionPerformed(evt);
+            }
+        });
+
+        btnSiswa.setBackground(new java.awt.Color(8, 86, 210));
+        btnSiswa.setFont(new java.awt.Font("Dialog", 1, 20)); // NOI18N
+        btnSiswa.setForeground(new java.awt.Color(255, 255, 255));
+        btnSiswa.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Ikon/icons8-student-35.png"))); // NOI18N
+        btnSiswa.setText("Siswa");
+        btnSiswa.setBorder(null);
+        btnSiswa.setIconTextGap(30);
+
+        btnAbsensi.setBackground(new java.awt.Color(8, 86, 210));
+        btnAbsensi.setFont(new java.awt.Font("Dialog", 1, 20)); // NOI18N
+        btnAbsensi.setForeground(new java.awt.Color(255, 255, 255));
+        btnAbsensi.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Ikon/icons8-checklist-35.png"))); // NOI18N
+        btnAbsensi.setText("Absensi");
+        btnAbsensi.setBorder(null);
+        btnAbsensi.setIconTextGap(30);
+
+        btnLaporan.setBackground(new java.awt.Color(8, 86, 210));
+        btnLaporan.setFont(new java.awt.Font("Dialog", 1, 20)); // NOI18N
+        btnLaporan.setForeground(new java.awt.Color(255, 255, 255));
+        btnLaporan.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Ikon/icons8-notes-35.png"))); // NOI18N
+        btnLaporan.setText("Laporan");
+        btnLaporan.setBorder(null);
+        btnLaporan.setIconTextGap(30);
+
+        btnPengaturan.setBackground(new java.awt.Color(8, 86, 210));
+        btnPengaturan.setFont(new java.awt.Font("Dialog", 1, 20)); // NOI18N
+        btnPengaturan.setForeground(new java.awt.Color(255, 255, 255));
+        btnPengaturan.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Ikon/icons8-gear-35.png"))); // NOI18N
+        btnPengaturan.setText("Pengaturan");
+        btnPengaturan.setBorder(null);
+        btnPengaturan.setIconTextGap(30);
+
+        javax.swing.GroupLayout SidebarLayout = new javax.swing.GroupLayout(Sidebar);
+        Sidebar.setLayout(SidebarLayout);
+        SidebarLayout.setHorizontalGroup(
+            SidebarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(SidebarLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel3)
+                .addGroup(SidebarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(SidebarLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel2))
+                    .addGroup(SidebarLayout.createSequentialGroup()
+                        .addGap(44, 44, 44)
+                        .addComponent(jLabel1)))
+                .addContainerGap(16, Short.MAX_VALUE))
+            .addComponent(btnDashboard, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(btnSiswa, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(btnAbsensi, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(btnLaporan, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(btnPengaturan, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
-        jPanelCustom1Layout.setVerticalGroup(
-            jPanelCustom1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 441, Short.MAX_VALUE)
+        SidebarLayout.setVerticalGroup(
+            SidebarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(SidebarLayout.createSequentialGroup()
+                .addGap(15, 15, 15)
+                .addGroup(SidebarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel3)
+                    .addGroup(SidebarLayout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel2)))
+                .addGap(46, 46, 46)
+                .addComponent(btnDashboard, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnSiswa, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnAbsensi, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnLaporan, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnPengaturan, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(533, Short.MAX_VALUE))
         );
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jPanelCustom1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 646, Short.MAX_VALUE))
+        jPanel1.add(Sidebar);
+        Sidebar.setBounds(0, 0, 250, 942);
+
+        topBar.setBackground(new java.awt.Color(164, 216, 239));
+        topBar.setForeground(new java.awt.Color(164, 216, 239));
+        topBar.setPreferredSize(new java.awt.Dimension(1300, 100));
+
+        javax.swing.GroupLayout topBarLayout = new javax.swing.GroupLayout(topBar);
+        topBar.setLayout(topBarLayout);
+        topBarLayout.setHorizontalGroup(
+            topBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 1130, Short.MAX_VALUE)
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanelCustom1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        topBarLayout.setVerticalGroup(
+            topBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 50, Short.MAX_VALUE)
         );
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
+        jPanel1.add(topBar);
+        topBar.setBounds(240, 0, 1130, 50);
+
+        MainContent.setBackground(new java.awt.Color(255, 255, 255));
+        MainContent.setLayout(new java.awt.CardLayout());
+        jPanel1.add(MainContent);
+        MainContent.setBounds(250, 50, 1130, 720);
+
+        getContentPane().add(jPanel1, java.awt.BorderLayout.CENTER);
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnDashboardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDashboardActionPerformed
+
+    }//GEN-LAST:event_btnDashboardActionPerformed
+private void setupSidebar() {
+        // Buat instance manager
+        SidebarColor sidebar = new SidebarColor();
+        
+        // Daftarkan semua button
+        sidebar.addButtons(
+            btnDashboard,
+            btnAbsensi,
+            btnSiswa,
+            btnLaporan,
+            btnPengaturan
+        );}
+
+
 
     /**
      * @param args the command line arguments
@@ -87,20 +238,9 @@ public class MainFrame extends javax.swing.JFrame {
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
          */
         try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(MainFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(MainFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(MainFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(MainFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            UIManager.setLookAndFeel(new FlatLightLaf());
+        } catch (Exception ex) {
+            System.err.println("Failed to initialize LaF");
         }
         //</editor-fold>
 
@@ -108,13 +248,24 @@ public class MainFrame extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new MainFrame().setVisible(true);
+                
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel MainContent;
+    private absensiapp.JPanelCustom Sidebar;
+    private javax.swing.JButton btnAbsensi;
+    private javax.swing.JButton btnDashboard;
+    private javax.swing.JButton btnLaporan;
+    private javax.swing.JButton btnPengaturan;
+    private javax.swing.JButton btnSiswa;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
-    private absensiapp.JPanelCustom jPanelCustom1;
     private test.Test test1;
+    private javax.swing.JPanel topBar;
     // End of variables declaration//GEN-END:variables
 }
