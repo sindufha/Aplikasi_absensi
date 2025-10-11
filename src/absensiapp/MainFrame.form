@@ -7,9 +7,6 @@
   </NonVisualComponents>
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="3"/>
-    <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-      <Dimension value="[1366, 768]"/>
-    </Property>
   </Properties>
   <SyntheticProperties>
     <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
@@ -130,7 +127,7 @@
             <Component class="javax.swing.JLabel" name="jLabel3">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/Ikon/icons8-school-49.png"/>
+                  <Image iconType="3" name="/Ikon_white/icons8-school-49.png"/>
                 </Property>
               </Properties>
             </Component>
@@ -157,7 +154,7 @@
                   <Color blue="ff" green="ff" red="ff" type="rgb"/>
                 </Property>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/Ikon/icons8-home-35.png"/>
+                  <Image iconType="3" name="/Ikon_white/home-white.png"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Dashboard"/>
                 <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
@@ -181,7 +178,7 @@
                   <Color blue="ff" green="ff" red="ff" type="rgb"/>
                 </Property>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/Ikon/icons8-student-35.png"/>
+                  <Image iconType="3" name="/Ikon_white/student-white.png"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Siswa"/>
                 <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
@@ -189,6 +186,9 @@
                 </Property>
                 <Property name="iconTextGap" type="int" value="30"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnSiswaActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JButton" name="btnAbsensi">
               <Properties>
@@ -202,7 +202,7 @@
                   <Color blue="ff" green="ff" red="ff" type="rgb"/>
                 </Property>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/Ikon/icons8-checklist-35.png"/>
+                  <Image iconType="3" name="/Ikon_white/checklist-white.png"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Absensi"/>
                 <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
@@ -210,6 +210,9 @@
                 </Property>
                 <Property name="iconTextGap" type="int" value="30"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnAbsensiActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JButton" name="btnLaporan">
               <Properties>
@@ -223,7 +226,7 @@
                   <Color blue="ff" green="ff" red="ff" type="rgb"/>
                 </Property>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/Ikon/icons8-notes-35.png"/>
+                  <Image iconType="3" name="/Ikon_white/notes-white.png"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Laporan"/>
                 <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
@@ -231,6 +234,9 @@
                 </Property>
                 <Property name="iconTextGap" type="int" value="30"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnLaporanActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JButton" name="btnPengaturan">
               <Properties>
@@ -244,7 +250,7 @@
                   <Color blue="ff" green="ff" red="ff" type="rgb"/>
                 </Property>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/Ikon/icons8-gear-35.png"/>
+                  <Image iconType="3" name="/Ikon_white/gear-white.png"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Pengaturan"/>
                 <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
@@ -252,6 +258,9 @@
                 </Property>
                 <Property name="iconTextGap" type="int" value="30"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnPengaturanActionPerformed"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>
