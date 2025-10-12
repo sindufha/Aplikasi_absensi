@@ -333,6 +333,11 @@ public class MainFrame extends javax.swing.JFrame {
     private void btnSiswaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSiswaActionPerformed
         // TODO add your handling code here:
         sidebar.setActive(btnSiswa);
+        addSiswa as = new addSiswa();
+        content.add(as);
+        content.repaint();
+        content.revalidate();
+        
     }//GEN-LAST:event_btnSiswaActionPerformed
 
     private void btnScanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnScanActionPerformed
