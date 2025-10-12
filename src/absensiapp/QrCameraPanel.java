@@ -13,21 +13,18 @@ import javax.swing.SwingUtilities;
  * @author MyBook Hype AMD
  */
 public class QrCameraPanel extends javax.swing.JPanel {
-private Webcam webcam;
+public Webcam webcam;
 private WebcamPanel webcamPanel;
-private javax.swing.JLabel onlineStatus;
+private MainFrame mainFrame;
     /**
      * Creates new form QrCameraPanel
      */
-    public QrCameraPanel() {
-        loadCameras();
+    public QrCameraPanel(MainFrame mainFrame) {
+        this.mainFrame = mainFrame;
         initComponents();
-       
-        
+        loadCameras();
     }
-public void setStatusLabel(javax.swing.JLabel label) {
-    this.onlineStatus = label;
-}  
+
 private void loadCameras() {
     new Thread(() -> {
         try {
@@ -105,10 +102,11 @@ private void connectCamera() {
                     JOptionPane.showMessageDialog(this, 
                         "Kamera berhasil terhubung!\n" + selectedCamera, 
                         "Success", JOptionPane.INFORMATION_MESSAGE);
-                    if (onlineStatus != null) {
-                    onlineStatus.setText("Terhubung: " + selectedCamera);
-                    onlineStatus.setForeground(new java.awt.Color(46, 204, 113));
-    }
+                    if (MainFrame.onlineStatus != null) {
+            mainFrame.onlineStatus.setText("Online");
+            mainFrame.onlineStatus.setForeground(new java.awt.Color(18, 231, 60));
+        }
+                    
                 });
             }
         } catch (Exception e) {
@@ -131,10 +129,10 @@ private void disconnectCamera() {
         jPanelCamera.removeAll();
         jPanelCamera.revalidate();
         jPanelCamera.repaint();
-        if (onlineStatus != null) {
-                    onlineStatus.setText("Terputus: " );
-                    onlineStatus.setForeground(new java.awt.Color(231, 76, 60));
-    }
+        if (MainFrame.onlineStatus != null) {
+            mainFrame.onlineStatus.setText("Offline");
+            mainFrame.onlineStatus.setForeground(new java.awt.Color(231, 76, 60));
+        }
     }
 }
     /**

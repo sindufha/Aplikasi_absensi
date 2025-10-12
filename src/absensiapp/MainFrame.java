@@ -8,6 +8,7 @@ import java.awt.Insets;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.SwingConstants;
+import javax.swing.Timer;
 import javax.swing.UIManager;
         
 /**
@@ -65,8 +66,8 @@ public class MainFrame extends javax.swing.JFrame {
     sidebar.setButtonIcons(btnPengaturan, 
         "src/ikon_white/gear-white.png", 
         "src/ikon_blue/gear-blue-35.png");
-    QrCameraPanel qr = new QrCameraPanel();
-    qr.setStatusLabel(onlineStatus);
+    
+    
  
     }
 
@@ -199,9 +200,9 @@ public class MainFrame extends javax.swing.JFrame {
         jLabel6.setForeground(new java.awt.Color(255, 255, 255));
         jLabel6.setText("Scanner Status : ");
 
-        onlineStatus.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
-        onlineStatus.setForeground(new java.awt.Color(0, 255, 20));
-        onlineStatus.setText("Online");
+        onlineStatus.setFont(new java.awt.Font("Dialog", 1, 20)); // NOI18N
+        onlineStatus.setForeground(new java.awt.Color(231, 76, 60));
+        onlineStatus.setText("Offline");
 
         javax.swing.GroupLayout SidebarLayout = new javax.swing.GroupLayout(Sidebar);
         Sidebar.setLayout(SidebarLayout);
@@ -274,7 +275,7 @@ public class MainFrame extends javax.swing.JFrame {
                 .addComponent(jLabel6)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(onlineStatus)
-                .addContainerGap(299, Short.MAX_VALUE))
+                .addContainerGap(297, Short.MAX_VALUE))
         );
 
         jPanel1.add(Sidebar);
@@ -301,7 +302,7 @@ public class MainFrame extends javax.swing.JFrame {
         content.setBackground(new java.awt.Color(255, 255, 255));
         content.setLayout(new java.awt.CardLayout());
         jPanel1.add(content);
-        content.setBounds(250, 50, 1130, 720);
+        content.setBounds(250, 50, 1120, 720);
 
         getContentPane().add(jPanel1, java.awt.BorderLayout.CENTER);
 
@@ -336,7 +337,7 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void btnScanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnScanActionPerformed
         // TODO add your handling code here:
-        QrCameraPanel qr = new QrCameraPanel();
+        QrCameraPanel qr = new QrCameraPanel(this);
         content.add(qr);
         content.repaint();
         content.revalidate();
@@ -385,7 +386,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
-    public javax.swing.JLabel onlineStatus;
+    public static javax.swing.JLabel onlineStatus;
     private test.Test test1;
     private javax.swing.JPanel topBar;
     // End of variables declaration//GEN-END:variables
