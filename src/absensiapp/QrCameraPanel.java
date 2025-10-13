@@ -144,7 +144,7 @@ private void disconnectCamera() {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        test1 = new test.Test();
+        test1 = new folder.Test();
         jPanelCamera = new javax.swing.JPanel();
         jComboBoxCamera = new javax.swing.JComboBox<>();
         jButtonConnect = new javax.swing.JButton();
@@ -362,6 +362,6 @@ private void disconnectCamera() {
     private javax.swing.JPanel jPanelCamera;
     private test.JPanelCustom jPanelCustom1;
     private test.JPanelCustom jPanelCustom2;
-    private test.Test test1;
+    private folder.Test test1;
     // End of variables declaration//GEN-END:variables
 }

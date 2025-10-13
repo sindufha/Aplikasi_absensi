@@ -75,7 +75,7 @@ public class MainFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        test1 = new test.Test();
+        test1 = new folder.Test();
         jPanel1 = new javax.swing.JPanel();
         Sidebar = new absensiapp.JPanelCustom();
         jLabel1 = new javax.swing.JLabel();
@@ -317,6 +317,11 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void btnPengaturanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPengaturanActionPerformed
         sidebar.setActive(btnPengaturan);
+        panelPengaturan pp = new panelPengaturan();
+        content.removeAll();
+        content.add(pp);
+        content.repaint();
+        content.revalidate();
         
     }//GEN-LAST:event_btnPengaturanActionPerformed
 
@@ -334,7 +339,9 @@ public class MainFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
         sidebar.setActive(btnSiswa);
         addSiswa as = new addSiswa();
+        content.removeAll();
         content.add(as);
+        
         content.repaint();
         content.revalidate();
         
@@ -342,8 +349,10 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void btnScanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnScanActionPerformed
         // TODO add your handling code here:
-        QrCameraPanel qr = new QrCameraPanel(this);
-        content.add(qr);
+        sidebar.setActive(null);
+        content.removeAll();
+        content.add(new QrCameraPanel(this));
+        
         content.repaint();
         content.revalidate();
     }//GEN-LAST:event_btnScanActionPerformed
@@ -392,7 +401,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
     public static javax.swing.JLabel onlineStatus;
-    private test.Test test1;
+    private folder.Test test1;
     private javax.swing.JPanel topBar;
     // End of variables declaration//GEN-END:variables
 }
