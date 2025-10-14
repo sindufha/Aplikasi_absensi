@@ -1,7 +1,7 @@
-package absensiapp;
+package Frame;
 
-import absensiapp.QRCodeGenerator;
-import absensiapp.koneksi;
+import ClassAbsensi.QRCodeGenerator;
+import ClassAbsensi.koneksi;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.sql.Connection;

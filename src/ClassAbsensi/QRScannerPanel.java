@@ -1,4 +1,4 @@
-package absensiapp;
+package ClassAbsensi;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;

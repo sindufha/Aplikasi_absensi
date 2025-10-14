@@ -1,4 +1,4 @@
-package absensiapp;
+package ClassAbsensi;
 import javax.swing.*;
 import java.awt.Color;
 import java.util.HashMap;
