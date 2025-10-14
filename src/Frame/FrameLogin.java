@@ -40,7 +40,7 @@ public class FrameLogin extends javax.swing.JFrame {
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/absensiapp/icon/icons8-open-book-90.png"))); // NOI18N
+        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Ikon_white/book login.png"))); // NOI18N
         jLabel3.setText("SD ISLAM KHADIJAH");
         jLabel3.setAlignmentY(0.0F);
         jLabel3.setIconTextGap(30);
@@ -61,10 +61,10 @@ public class FrameLogin extends javax.swing.JFrame {
         });
         getContentPane().add(btnLogin, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 350, 270, 40));
 
-        jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/absensiapp/image/h1.png"))); // NOI18N
+        jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ikon_blue/h1.png"))); // NOI18N
         getContentPane().add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 80, 470, 350));
 
-        jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/absensiapp/image/logo.png"))); // NOI18N
+        jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ikon_blue/logo.png"))); // NOI18N
         getContentPane().add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(820, 10, -1, 80));
 
         jLabel2.setBackground(new java.awt.Color(255, 255, 255));
@@ -74,7 +74,7 @@ public class FrameLogin extends javax.swing.JFrame {
         getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 130, -1, -1));
 
         jLabel1.setForeground(new java.awt.Color(51, 51, 51));
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/absensiapp/image/BG.jpg"))); // NOI18N
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ikon_blue/BG.jpg"))); // NOI18N
         jLabel1.setText("jLabel1");
         getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 900, 504));
 

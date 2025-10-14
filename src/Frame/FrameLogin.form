@@ -31,7 +31,7 @@
           <Font name="Segoe UI" size="24" style="1"/>
         </Property>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="3" name="/absensiapp/icon/icons8-open-book-90.png"/>
+          <Image iconType="3" name="/Ikon_white/book login.png"/>
         </Property>
         <Property name="text" type="java.lang.String" value="SD ISLAM KHADIJAH"/>
         <Property name="alignmentY" type="float" value="0.0"/>
@@ -76,7 +76,7 @@
     <Component class="javax.swing.JLabel" name="jLabel6">
       <Properties>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="3" name="/absensiapp/image/h1.png"/>
+          <Image iconType="3" name="/ikon_blue/h1.png"/>
         </Property>
       </Properties>
       <Constraints>
@@ -88,7 +88,7 @@
     <Component class="javax.swing.JLabel" name="jLabel7">
       <Properties>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="3" name="/absensiapp/image/logo.png"/>
+          <Image iconType="3" name="/ikon_blue/logo.png"/>
         </Property>
       </Properties>
       <Constraints>
@@ -122,7 +122,7 @@
           <Color blue="33" green="33" red="33" type="rgb"/>
         </Property>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="3" name="/absensiapp/image/BG.jpg"/>
+          <Image iconType="3" name="/ikon_blue/BG.jpg"/>
         </Property>
         <Property name="text" type="java.lang.String" value="jLabel1"/>
       </Properties>
