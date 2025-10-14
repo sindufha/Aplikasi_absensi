@@ -20,6 +20,8 @@ public class FrameLogin extends javax.swing.JFrame {
     public FrameLogin() {
         initComponents();
     }
+    
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -31,8 +33,8 @@ public class FrameLogin extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabel3 = new javax.swing.JLabel();
-        tUserName = new panelcustom.TextFieldCustom();
-        tPassword = new panelcustom.TextFieldCustom();
+        textField1 = new absensiapp.custom.TextField();
+        textField2 = new absensiapp.custom.TextField();
         btnLogin = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
@@ -50,35 +52,28 @@ public class FrameLogin extends javax.swing.JFrame {
         jLabel3.setIconTextGap(30);
         getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 10, 400, 70));
 
-        tUserName.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        tUserName.setText("Username");
-        tUserName.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        tUserName.setIcon(new javax.swing.ImageIcon(getClass().getResource("/absensiapp/icon/icons8-person-40 (2).png"))); // NOI18N
-        tUserName.setIconX(5);
-        tUserName.setInheritsPopupMenu(true);
-        tUserName.setRoundBottomLeft(5);
-        tUserName.setRoundBottomRight(5);
-        tUserName.setRoundTopLeft(5);
-        tUserName.setRoundTopRight(5);
-        tUserName.addActionListener(new java.awt.event.ActionListener() {
+        textField1.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        textField1.setText("Password");
+        textField1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/absensiapp/icon/icons8-padlock-40 (1).png"))); // NOI18N
+        textField1.setRoundBottomLeft(5);
+        textField1.setRoundBottomRight(5);
+        textField1.setRoundTopLeft(5);
+        textField1.setRoundTopRight(5);
+        textField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tUserNameActionPerformed(evt);
+                textField1ActionPerformed(evt);
             }
         });
-        getContentPane().add(tUserName, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 220, 270, 40));
+        getContentPane().add(textField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 290, 270, 40));
 
-        tPassword.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        tPassword.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        tPassword.setText("Password");
-        tPassword.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        tPassword.setIcon(new javax.swing.ImageIcon(getClass().getResource("/absensiapp/icon/icons8-padlock-40 (1).png"))); // NOI18N
-        tPassword.setIconX(5);
-        tPassword.setInheritsPopupMenu(true);
-        tPassword.setRoundBottomLeft(5);
-        tPassword.setRoundBottomRight(5);
-        tPassword.setRoundTopLeft(5);
-        tPassword.setRoundTopRight(5);
-        getContentPane().add(tPassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 280, 270, 40));
+        textField2.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        textField2.setText("Username");
+        textField2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/absensiapp/icon/icons8-person-40 (2).png"))); // NOI18N
+        textField2.setRoundBottomLeft(5);
+        textField2.setRoundBottomRight(5);
+        textField2.setRoundTopLeft(5);
+        textField2.setRoundTopRight(5);
+        getContentPane().add(textField2, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 230, 270, 40));
 
         btnLogin.setBackground(new java.awt.Color(0, 51, 51));
         btnLogin.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
@@ -121,11 +116,12 @@ public class FrameLogin extends javax.swing.JFrame {
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
         // TODO add your handling code here:
+        dispose();
     }//GEN-LAST:event_btnLoginActionPerformed
 
-    private void tUserNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tUserNameActionPerformed
+    private void textField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textField1ActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_tUserNameActionPerformed
+    }//GEN-LAST:event_textField1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -159,7 +155,7 @@ public class FrameLogin extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
-    private panelcustom.TextFieldCustom tPassword;
-    private panelcustom.TextFieldCustom tUserName;
+    private absensiapp.custom.TextField textField1;
+    private absensiapp.custom.TextField textField2;
     // End of variables declaration//GEN-END:variables
 }
