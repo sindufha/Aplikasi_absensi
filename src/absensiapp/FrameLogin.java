@@ -33,8 +33,8 @@ public class FrameLogin extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabel3 = new javax.swing.JLabel();
-        textField1 = new absensiapp.custom.TextField();
         textField2 = new absensiapp.custom.TextField();
+        passwordField1 = new absensiapp.custom.PasswordField();
         btnLogin = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
@@ -52,20 +52,6 @@ public class FrameLogin extends javax.swing.JFrame {
         jLabel3.setIconTextGap(30);
         getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 10, 400, 70));
 
-        textField1.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        textField1.setText("Password");
-        textField1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/absensiapp/icon/icons8-padlock-40 (1).png"))); // NOI18N
-        textField1.setRoundBottomLeft(5);
-        textField1.setRoundBottomRight(5);
-        textField1.setRoundTopLeft(5);
-        textField1.setRoundTopRight(5);
-        textField1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                textField1ActionPerformed(evt);
-            }
-        });
-        getContentPane().add(textField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 290, 270, 40));
-
         textField2.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         textField2.setText("Username");
         textField2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/absensiapp/icon/icons8-person-40 (2).png"))); // NOI18N
@@ -74,6 +60,15 @@ public class FrameLogin extends javax.swing.JFrame {
         textField2.setRoundTopLeft(5);
         textField2.setRoundTopRight(5);
         getContentPane().add(textField2, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 230, 270, 40));
+
+        passwordField1.setForeground(new java.awt.Color(0, 0, 0));
+        passwordField1.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        passwordField1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/absensiapp/icon/icons8-padlock-40 (1).png"))); // NOI18N
+        passwordField1.setRoundBottomLeft(5);
+        passwordField1.setRoundBottomRight(5);
+        passwordField1.setRoundTopLeft(5);
+        passwordField1.setRoundTopRight(5);
+        getContentPane().add(passwordField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 290, 270, 40));
 
         btnLogin.setBackground(new java.awt.Color(0, 51, 51));
         btnLogin.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
@@ -119,10 +114,6 @@ public class FrameLogin extends javax.swing.JFrame {
         dispose();
     }//GEN-LAST:event_btnLoginActionPerformed
 
-    private void textField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textField1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_textField1ActionPerformed
-
     /**
      * @param args the command line arguments
      */
@@ -155,7 +146,7 @@ public class FrameLogin extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
-    private absensiapp.custom.TextField textField1;
+    private absensiapp.custom.PasswordField passwordField1;
     private absensiapp.custom.TextField textField2;
     // End of variables declaration//GEN-END:variables
 }
