@@ -7,6 +7,7 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.Shape;
 import java.awt.geom.Path2D;
+import java.net.URL;
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -170,11 +171,17 @@ public class TextField extends JTextField{
 
         TextField field = new TextField();
         field.setBounds(50, 60, 300, 40);
-        field.setIcon(new ImageIcon(TextField.class.getResource("/icon/search.png")));
+        URL url = TextField.class.getResource("/icon/search.png");
+        System.out.println("URL icon: " + url);
+        if (url == null) {
+            System.out.println("File tidak ditemukan! Cek posisi folder icon di Source Packages.");
+        }
+        field.setIcon(new ImageIcon(TextField.class.getResource("/Ikon_white/username.png")));
         field.setRoundTopLeft(25);
         field.setRoundTopRight(25);
         field.setRoundBottomLeft(25);
         field.setRoundBottomRight(25);
+        
 
         // ubah posisi ikon
         field.setIconX(15);

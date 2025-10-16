@@ -158,7 +158,7 @@ public class PasswordField extends JPasswordField{
 
         PasswordField passField = new PasswordField();
         passField.setBounds(50, 60, 300, 40);
-        passField.setIcon(new ImageIcon(PasswordField.class.getResource("/icon/lock.png")));
+        passField.setIcon(new ImageIcon(PasswordField.class.getResource("/Ikon_white/gembok_ogin.png")));
         passField.setRoundTopLeft(25);
         passField.setRoundTopRight(25);
         passField.setRoundBottomLeft(25);
@@ -166,8 +166,5 @@ public class PasswordField extends JPasswordField{
 
         frame.add(passField);
         frame.setVisible(true);
-    }
-    
-    
-    
+    } 
 }
