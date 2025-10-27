@@ -86,21 +86,16 @@ public class TextField extends JTextField{
     public Icon getIcon() {
         return icon;
     }
-
-    // ================= PROPERTI POSISI ICON =================
     public int getIconX() {
         return iconX;
     }
-
     public void setIconX(int iconX) {
         this.iconX = iconX;
         repaint();
     }
-
     public int getIconY() {
         return iconY;
     }
-
     public void setIconY(int iconY) {
         this.iconY = iconY;
         repaint();
@@ -171,7 +166,7 @@ public class TextField extends JTextField{
 
         TextField field = new TextField();
         field.setBounds(50, 60, 300, 40);
-        URL url = TextField.class.getResource("/icon/search.png");
+        URL url = TextField.class.getResource("/Ikon_white/username.png");
         System.out.println("URL icon: " + url);
         if (url == null) {
             System.out.println("File tidak ditemukan! Cek posisi folder icon di Source Packages.");

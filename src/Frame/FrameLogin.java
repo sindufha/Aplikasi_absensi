@@ -67,7 +67,7 @@ public class FrameLogin extends javax.swing.JFrame {
         getContentPane().add(tUsername, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 220, 270, 40));
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Ikon_white/book login.png"))); // NOI18N
+        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Ikon_white/book-login.png"))); // NOI18N
         jLabel3.setText("SD ISLAM KHADIJAH");
         jLabel3.setAlignmentY(0.0F);
         jLabel3.setIconTextGap(30);

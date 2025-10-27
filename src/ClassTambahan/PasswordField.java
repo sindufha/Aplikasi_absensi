@@ -14,6 +14,7 @@ import javax.swing.JPasswordField;
 import javax.swing.border.EmptyBorder;
 
 public class PasswordField extends JPasswordField{
+    
     private Icon icon;
     private int iconX = 10;
     private int iconY = -1;
@@ -35,7 +36,6 @@ public class PasswordField extends JPasswordField{
         setEchoChar((char) 0);
         setText(placeholder);
 
-        // placeholder logic
         addFocusListener(new java.awt.event.FocusAdapter() {
             @Override
             public void focusGained(java.awt.event.FocusEvent e) {
@@ -61,7 +61,6 @@ public class PasswordField extends JPasswordField{
         });
     }
 
-    // ================= PROPERTI KETUMPULAN =================
     public int getRoundTopLeft() { return roundTopLeft; }
     public void setRoundTopLeft(int roundTopLeft) { this.roundTopLeft = roundTopLeft; repaint(); }
 
@@ -74,7 +73,6 @@ public class PasswordField extends JPasswordField{
     public int getRoundBottomLeft() { return roundBottomLeft; }
     public void setRoundBottomLeft(int roundBottomLeft) { this.roundBottomLeft = roundBottomLeft; repaint(); }
 
-    // ================= PROPERTI ICON =================
     public void setIcon(Icon icon) {
         this.icon = icon;
         if (icon != null) {
@@ -87,14 +85,12 @@ public class PasswordField extends JPasswordField{
 
     public Icon getIcon() { return icon; }
 
-    // ================= POSISI ICON =================
     public int getIconX() { return iconX; }
     public void setIconX(int iconX) { this.iconX = iconX; repaint(); }
 
     public int getIconY() { return iconY; }
     public void setIconY(int iconY) { this.iconY = iconY; repaint(); }
 
-    // ================= GRAFIS =================
     @Override
     protected void paintComponent(Graphics g) {
         setBorder(BorderFactory.createEmptyBorder(5, 20, 5, 10));
@@ -149,7 +145,6 @@ public class PasswordField extends JPasswordField{
         return path;
     }
 
-    // ================= TESTING =================
     public static void main(String[] args) {
         javax.swing.JFrame frame = new javax.swing.JFrame("Demo PasswordField");
         frame.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
@@ -166,5 +161,6 @@ public class PasswordField extends JPasswordField{
 
         frame.add(passField);
         frame.setVisible(true);
+        
     } 
 }

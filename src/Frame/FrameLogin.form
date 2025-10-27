@@ -77,7 +77,7 @@
           <Font name="Segoe UI" size="24" style="1"/>
         </Property>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="3" name="/Ikon_white/book login.png"/>
+          <Image iconType="3" name="/Ikon_white/book-login.png"/>
         </Property>
         <Property name="text" type="java.lang.String" value="SD ISLAM KHADIJAH"/>
         <Property name="alignmentY" type="float" value="0.0"/>
