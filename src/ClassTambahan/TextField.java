@@ -7,15 +7,13 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.Shape;
 import java.awt.geom.Path2D;
-import java.net.URL;
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
-
-public class TextField extends JTextField{
+public class TextField extends JTextField {
     
     private Icon icon;
     private int iconX = 10;
@@ -26,56 +24,55 @@ public class TextField extends JTextField{
     private int roundBottomRight = 0;
     private int roundBottomLeft = 0;
 
+    private String placeholder = "Username";
+    private boolean showingPlaceholder = true;
+
     public TextField() {
         setOpaque(false);
-        setBorder(new EmptyBorder(5, 35, 5, 10)); // ruang kiri buat icon
+        setBorder(new EmptyBorder(5, 35, 5, 10));
         setFont(new Font("Segoe UI", Font.PLAIN, 14));
         setBackground(Color.WHITE);
-        setForeground(Color.BLACK);
+        setForeground(Color.GRAY);
+        setText(placeholder);
+
+        addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
+            public void focusGained(java.awt.event.FocusEvent e) {
+                String text = getText();
+                if (text.equals(placeholder)) {
+                    setText("");
+                    setForeground(Color.BLACK);
+                    showingPlaceholder = false;
+                }
+            }
+
+            @Override
+            public void focusLost(java.awt.event.FocusEvent e) {
+                String text = getText();
+                if (text.trim().isEmpty()) {
+                    setText(placeholder);
+                    setForeground(Color.GRAY);
+                    showingPlaceholder = true;
+                }
+            }
+        });
     }
 
-    // ================= PROPERTI KETUMPULAN =================
-    public int getRoundTopLeft() {
-        return roundTopLeft;
-    }
+    public int getRoundTopLeft() { return roundTopLeft; }
+    public void setRoundTopLeft(int roundTopLeft) { this.roundTopLeft = roundTopLeft; repaint(); }
 
-    public void setRoundTopLeft(int roundTopLeft) {
-        this.roundTopLeft = roundTopLeft;
-        repaint();
-    }
+    public int getRoundTopRight() { return roundTopRight; }
+    public void setRoundTopRight(int roundTopRight) { this.roundTopRight = roundTopRight; repaint(); }
 
-    public int getRoundTopRight() {
-        return roundTopRight;
-    }
+    public int getRoundBottomRight() { return roundBottomRight; }
+    public void setRoundBottomRight(int roundBottomRight) { this.roundBottomRight = roundBottomRight; repaint(); }
 
-    public void setRoundTopRight(int roundTopRight) {
-        this.roundTopRight = roundTopRight;
-        repaint();
-    }
+    public int getRoundBottomLeft() { return roundBottomLeft; }
+    public void setRoundBottomLeft(int roundBottomLeft) { this.roundBottomLeft = roundBottomLeft; repaint(); }
 
-    public int getRoundBottomRight() {
-        return roundBottomRight;
-    }
-
-    public void setRoundBottomRight(int roundBottomRight) {
-        this.roundBottomRight = roundBottomRight;
-        repaint();
-    }
-
-    public int getRoundBottomLeft() {
-        return roundBottomLeft;
-    }
-
-    public void setRoundBottomLeft(int roundBottomLeft) {
-        this.roundBottomLeft = roundBottomLeft;
-        repaint();
-    }
-
-    // ================= PROPERTI ICON =================
     public void setIcon(Icon icon) {
         this.icon = icon;
         if (icon != null) {
-            // Tambahkan padding kiri sesuai lebar icon
             setBorder(new EmptyBorder(5, icon.getIconWidth() + 15, 5, 10));
         } else {
             setBorder(new EmptyBorder(5, 10, 5, 10));
@@ -83,25 +80,14 @@ public class TextField extends JTextField{
         repaint();
     }
 
-    public Icon getIcon() {
-        return icon;
-    }
-    public int getIconX() {
-        return iconX;
-    }
-    public void setIconX(int iconX) {
-        this.iconX = iconX;
-        repaint();
-    }
-    public int getIconY() {
-        return iconY;
-    }
-    public void setIconY(int iconY) {
-        this.iconY = iconY;
-        repaint();
-    }
+    public Icon getIcon() { return icon; }
 
-    // ================= GRAFIS TAMPILAN =================
+    public int getIconX() { return iconX; }
+    public void setIconX(int iconX) { this.iconX = iconX; repaint(); }
+
+    public int getIconY() { return iconY; }
+    public void setIconY(int iconY) { this.iconY = iconY; repaint(); }
+
     @Override
     protected void paintComponent(Graphics g) {
         setBorder(BorderFactory.createEmptyBorder(5, 20, 5, 10));
@@ -113,18 +99,19 @@ public class TextField extends JTextField{
         int width = getWidth();
         int height = getHeight();
 
-        // Gambar background & border dulu
+        // background
         g2.setColor(getBackground());
         g2.fill(createRoundShape(width, height));
+
+        // border
         g2.setColor(new Color(200, 200, 200));
         g2.draw(createRoundShape(width - 1, height - 1));
 
         g2.dispose();
 
-        // Panggil super supaya teks muncul
         super.paintComponent(g);
 
-        // Baru gambar ikon di atasnya
+        // icon
         if (icon != null) {
             Graphics2D g3 = (Graphics2D) g.create();
             int iconY = (height - icon.getIconHeight()) / 2;
@@ -134,9 +121,7 @@ public class TextField extends JTextField{
     }
 
     private Shape createRoundShape(int width, int height) {
-        int x = 0;
-        int y = 0;
-
+        int x = 0, y = 0;
         int tl = Math.min(roundTopLeft, Math.min(width, height));
         int tr = Math.min(roundTopRight, Math.min(width, height));
         int br = Math.min(roundBottomRight, Math.min(width, height));
@@ -157,34 +142,22 @@ public class TextField extends JTextField{
         return path;
     }
 
-    // ================= CONTOH PENGGUNAAN =================
+    // DEMO
     public static void main(String[] args) {
-        javax.swing.JFrame frame = new javax.swing.JFrame("Demo TextFieldCustom");
+        javax.swing.JFrame frame = new javax.swing.JFrame("Demo TextField");
         frame.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
         frame.setSize(400, 200);
         frame.setLayout(null);
 
-        TextField field = new TextField();
-        field.setBounds(50, 60, 300, 40);
-        URL url = TextField.class.getResource("/Ikon_white/username.png");
-        System.out.println("URL icon: " + url);
-        if (url == null) {
-            System.out.println("File tidak ditemukan! Cek posisi folder icon di Source Packages.");
-        }
-        field.setIcon(new ImageIcon(TextField.class.getResource("/Ikon_white/username.png")));
-        field.setRoundTopLeft(25);
-        field.setRoundTopRight(25);
-        field.setRoundBottomLeft(25);
-        field.setRoundBottomRight(25);
-        
+        TextField txtField = new TextField();
+        txtField.setBounds(50, 60, 300, 40);
+        txtField.setIcon(new ImageIcon(TextField.class.getResource("/Ikon_white/user_login.png")));
+        txtField.setRoundTopLeft(25);
+        txtField.setRoundTopRight(25);
+        txtField.setRoundBottomLeft(25);
+        txtField.setRoundBottomRight(25);
 
-        // ubah posisi ikon
-        field.setIconX(15);
-        field.setIconY(-1); // tetap auto tengah
-
-        frame.add(field);
+        frame.add(txtField);
         frame.setVisible(true);
     }
-    
 }
-    

@@ -158,6 +158,7 @@ public class PasswordField extends JPasswordField{
         passField.setRoundTopRight(25);
         passField.setRoundBottomLeft(25);
         passField.setRoundBottomRight(25);
+        
 
         frame.add(passField);
         frame.setVisible(true);
