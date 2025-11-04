@@ -1,6 +1,10 @@
 package Frame;
 
+
+import ClassAbsensi.LoginDAO;
+import ClassAbsensi.User;
 import com.formdev.flatlaf.FlatLightLaf;
+import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
@@ -113,8 +117,64 @@ public class FrameLogin extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
-        // TODO add your handling code here:
-        dispose();
+                                          
+    // Ambil input dari user
+    String username = tUsername.getText().trim();
+    String password = new String(tPassword.getPassword());
+    
+    // Validasi input kosong
+    if (username.isEmpty()) {
+        JOptionPane.showMessageDialog(this, 
+            "Username tidak boleh kosong!", 
+            "Peringatan", 
+            JOptionPane.WARNING_MESSAGE);
+        tUsername.requestFocus();
+        return;
+    }
+    
+    if (password.isEmpty()) {
+        JOptionPane.showMessageDialog(this, 
+            "Password tidak boleh kosong!", 
+            "Peringatan", 
+            JOptionPane.WARNING_MESSAGE);
+        tPassword.requestFocus();
+        return;
+    }
+    
+    // Panggil LoginDAO untuk cek ke database
+    LoginDAO loginDAO = new LoginDAO();
+    User user = loginDAO.login(username, password);
+    
+    // Cek hasil login
+    if (user != null) {
+        // Login berhasil
+        JOptionPane.showMessageDialog(this, 
+            "Login Berhasil!\n\nSelamat datang, " + user.getNama() + "\nRole: " + user.getRole(), 
+            "Sukses", 
+            JOptionPane.INFORMATION_MESSAGE);
+        
+        // Tutup form login
+        this.dispose();
+        
+        // Arahkan ke form sesuai role
+        if (user.getRole().equals("Admin")) {
+            new MainFrame().setVisible(true);
+        } else if (user.getRole().equals("Guru")) {
+            return; //ganti nanti
+        }
+        
+    } else {
+        // Login gagal
+        JOptionPane.showMessageDialog(this, 
+            "Login Gagal!\n\nUsername atau Password salah.", 
+            "Error", 
+            JOptionPane.ERROR_MESSAGE);
+        
+        // Kosongkan password & focus ke username
+        tPassword.setText("");
+        tUsername.requestFocus();
+    }
+
     }//GEN-LAST:event_btnLoginActionPerformed
 
     private void tPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tPasswordActionPerformed

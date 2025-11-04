@@ -1,7 +1,7 @@
 package Frame;
 
 import ClassAbsensi.QRCodeGenerator;
-import ClassAbsensi.koneksi;
+import ClassAbsensi.Koneksi;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.sql.Connection;
@@ -160,105 +160,7 @@ public class addSiswa extends javax.swing.JPanel {
     }//GEN-LAST:event_txtNamaActionPerformed
 
     private void btnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSimpanActionPerformed
-        String nis = txtNIS.getText().trim();
-        String nama = txtNama.getText().trim();
-        int id_kelas = Integer.parseInt(txtIdKelas.getText());
-        String jenisKelamin = cmbJenisKelamin.getSelectedItem().toString();
-        if (nis.isEmpty() || nama.isEmpty()) {
-            JOptionPane.showMessageDialog(this, 
-                "NIS dan Nama tidak boleh kosong!", 
-                "Validasi Error", 
-                JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-         try {
-            Connection conn = koneksi.konek();
-            
-            if (conn == null) {
-                JOptionPane.showMessageDialog(this, 
-                    "Gagal koneksi ke database!", 
-                    "Database Error", 
-                    JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-            
-            // Cek apakah NIS sudah ada
-            String checkSql = "SELECT COUNT(*) FROM siswa WHERE nis = ?";
-            PreparedStatement checkPs = conn.prepareStatement(checkSql);
-            checkPs.setString(1, nis);
-            ResultSet rs = checkPs.executeQuery();
-            
-            if (rs.next() && rs.getInt(1) > 0) {
-                JOptionPane.showMessageDialog(this, 
-                    "NIS sudah terdaftar!", 
-                    "Validasi Error", 
-                    JOptionPane.ERROR_MESSAGE);
-                rs.close();
-                checkPs.close();
-                return;
-            }
-            rs.close();
-            checkPs.close();
-            
-            // Generate QR Code
-            String qrData = nis; // Data yang di-encode ke QR
-            String qrPath = QRCodeGenerator.generateAndSaveSiswaQR(nis);
-            
-            if (qrPath == null) {
-                JOptionPane.showMessageDialog(this, 
-                    "Gagal generate QR Code!", 
-                    "QR Error", 
-                    JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-            
-            // Insert ke database
-            String sql = "INSERT INTO siswa (nis, nama_siswa, jenis_kelamin,id_kelas, qr_code, qr_image_path) VALUES (?, ?, ?, ?, ?,?)";
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, nis);
-            ps.setString(2, nama);
-            ps.setString(3, jenisKelamin);
-            ps.setInt(4, id_kelas);
-            ps.setString(5, qrData);
-            ps.setString(6, qrPath);
-            
-            int result = ps.executeUpdate();
-            ps.close();
-            
-            if (result > 0) {
-                // Tampilkan QR Code di JLabel
-                BufferedImage qrImage = ImageIO.read(new File(qrPath));
-                lblQRCode.setIcon(new ImageIcon(qrImage));
-                lblQRCode.setText(""); // Hapus text default
-                
-                JOptionPane.showMessageDialog(this, 
-                    "Data siswa berhasil disimpan!\nQR Code: " + qrPath, 
-                    "Sukses", 
-                    JOptionPane.INFORMATION_MESSAGE);
-                
-                // Reset form
-                resetForm();
-            } else {
-                JOptionPane.showMessageDialog(this, 
-                    "Gagal menyimpan data!", 
-                    "Database Error", 
-                    JOptionPane.ERROR_MESSAGE);
-            }
-            
-        } catch (SQLException e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this, 
-                "Error database: " + e.getMessage(), 
-                "Database Error", 
-                JOptionPane.ERROR_MESSAGE);
-        } catch (Exception e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this, 
-                "Error: " + e.getMessage(), 
-                "Error", 
-                JOptionPane.ERROR_MESSAGE);
-        }
-    
+        
 
     }//GEN-LAST:event_btnSimpanActionPerformed
 
