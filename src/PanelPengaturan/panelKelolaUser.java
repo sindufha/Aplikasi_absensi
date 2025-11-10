@@ -92,7 +92,7 @@ public void colorTable(){
         jButton5 = new javax.swing.JButton();
         jButton7 = new javax.swing.JButton();
         jButton8 = new javax.swing.JButton();
-        jPanelCustom1 = new test.JPanelCustom();
+        jPanelCustom1 = new org.netbeans.modules.form.InvalidComponent();
         jLabel6 = new javax.swing.JLabel();
         tUsername = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
@@ -167,12 +167,6 @@ public void colorTable(){
             }
         });
 
-        jPanelCustom1.setBackground(new java.awt.Color(219, 234, 254));
-        jPanelCustom1.setRoundBottomLeft(24);
-        jPanelCustom1.setRoundBottomRight(24);
-        jPanelCustom1.setRoundTopLeft(24);
-        jPanelCustom1.setRoundTopRight(24);
-
         jLabel6.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(51, 65, 85));
         jLabel6.setText("Username");
@@ -217,14 +211,13 @@ public void colorTable(){
                 .addContainerGap()
                 .addGroup(jPanelCustom1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(tPassword, javax.swing.GroupLayout.DEFAULT_SIZE, 257, Short.MAX_VALUE)
-                    .addGroup(jPanelCustom1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(cRole, javax.swing.GroupLayout.Alignment.TRAILING, 0, 257, Short.MAX_VALUE)
-                        .addComponent(jLabel6)
-                        .addComponent(jLabel7)
-                        .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(tNama)
-                        .addComponent(tUsername)))
+                    .addComponent(cRole, 0, 257, Short.MAX_VALUE)
+                    .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tNama, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(tUsername, javax.swing.GroupLayout.Alignment.LEADING))
                 .addContainerGap(18, Short.MAX_VALUE))
         );
         jPanelCustom1Layout.setVerticalGroup(
@@ -524,7 +517,7 @@ private void clearForm() {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
-    private test.JPanelCustom jPanelCustom1;
+    private org.netbeans.modules.form.InvalidComponent jPanelCustom1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField tNama;
     private javax.swing.JPasswordField tPassword;

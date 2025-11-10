@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<Form version="1.3" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JPanelFormInfo">
+<Form version="1.5" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JPanelFormInfo">
   <Properties>
     <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
       <Color blue="f9" green="f5" red="f1" type="rgb"/>
@@ -199,7 +199,7 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton8ActionPerformed"/>
       </Events>
     </Component>
-    <Container class="test.JPanelCustom" name="jPanelCustom1">
+    <Container class="org.netbeans.modules.form.InvalidComponent" name="jPanelCustom1">
       <Properties>
         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="fe" green="ea" red="db" type="rgb"/>
@@ -217,15 +217,13 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="1" max="-2" attributes="0">
                       <Component id="tPassword" pref="257" max="32767" attributes="0"/>
-                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="cRole" alignment="1" pref="257" max="32767" attributes="0"/>
-                          <Component id="jLabel6" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="jLabel7" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="jLabel8" alignment="0" min="-2" pref="85" max="-2" attributes="0"/>
-                          <Component id="jLabel9" alignment="0" min="-2" pref="85" max="-2" attributes="0"/>
-                          <Component id="tNama" max="32767" attributes="0"/>
-                          <Component id="tUsername" alignment="0" max="32767" attributes="0"/>
-                      </Group>
+                      <Component id="cRole" alignment="1" pref="257" max="32767" attributes="0"/>
+                      <Component id="jLabel6" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLabel7" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLabel8" alignment="0" min="-2" pref="85" max="-2" attributes="0"/>
+                      <Component id="jLabel9" alignment="0" min="-2" pref="85" max="-2" attributes="0"/>
+                      <Component id="tNama" alignment="0" max="32767" attributes="0"/>
+                      <Component id="tUsername" alignment="0" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace pref="18" max="32767" attributes="0"/>
               </Group>
