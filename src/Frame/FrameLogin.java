@@ -160,7 +160,7 @@ public class FrameLogin extends javax.swing.JFrame {
         if (user.getRole().equals("Admin")) {
             new MainFrame().setVisible(true);
         } else if (user.getRole().equals("Guru")) {
-            return; //ganti nanti
+            new MainFrame().setVisible(true);
         }
         
     } else {
