@@ -181,7 +181,7 @@ public class panelPengaturan extends javax.swing.JPanel {
 
     private void btnKelolauserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnKelolauserActionPerformed
         sidebar.setActive(btnKelolauser);
-        panelKelolaUser pk = new panelKelolaUser();
+        panelKelolaUser1 pk = new panelKelolaUser1();
         pengaturanBox.removeAll();
         pengaturanBox.add(pk);
         pengaturanBox.repaint();

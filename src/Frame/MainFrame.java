@@ -384,7 +384,7 @@ private void setupResponsiveLayout() {
 
     private void btnSiswaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSiswaActionPerformed
 sidebar.setActive(btnSiswa);
-        addSiswa as = new addSiswa();
+        panelSiswa as = new panelSiswa();
         content.removeAll();
         content.add(as);
 
