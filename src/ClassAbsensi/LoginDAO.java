@@ -17,7 +17,7 @@ public class LoginDAO {
         
         try {
             // Ambil koneksi database
-            conn = Koneksi.getKoneksi();
+            conn = koneksi.getKoneksi();
             
             if (conn == null) {
                 System.out.println("✗ Koneksi database gagal!");

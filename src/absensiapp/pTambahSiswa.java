@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
 package absensiapp;
+import ClassAbsensi.Koneksi;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.sql.*;
@@ -179,7 +180,7 @@ public class pTambahSiswa extends javax.swing.JPanel {
             return;
         }
          try {
-            Connection conn = koneksi.konek();
+            Connection conn = Koneksi.getKoneksi();
             
             if (conn == null) {
                 JOptionPane.showMessageDialog(this, 
