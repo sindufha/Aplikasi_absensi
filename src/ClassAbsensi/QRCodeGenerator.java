@@ -5,10 +5,12 @@ import com.google.zxing.WriterException;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 
 /**
  * Class untuk generate QR Code
@@ -92,5 +94,26 @@ public class QRCodeGenerator {
         boolean success = generateQRFile(nis, fullPath, 300, 300);
         
         return success ? fullPath : null;
+    }
+    
+    public static ImageIcon loadQRCodeForPreview(String filePath, int previewSize){
+        try {
+            
+            BufferedImage originalImage = ImageIO.read(new File(filePath));
+            
+            if (originalImage == null) {
+                return null;
+            }
+
+            // resize dengan kualitas bagus
+            Image scaledImage = originalImage.getScaledInstance(previewSize,
+                    previewSize,
+                    Image.SCALE_SMOOTH
+            );
+            return new ImageIcon(scaledImage);
+        } catch (IOException e) {
+            System.out.println("Error Loading QR Code: "+e.getMessage());
+            return null;
+        }
     }
 }
