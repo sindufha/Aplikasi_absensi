@@ -159,7 +159,7 @@ private void setupResponsiveLayout() {
         jLabel4.setText("Tekan Tombol Diatas");
 
         btnScan.setBackground(new java.awt.Color(8, 86, 210));
-        btnScan.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Ikon_white/icons8-qr-96.png"))); // NOI18N
+        btnScan.setText("SCAN");
         btnScan.setBorder(null);
         btnScan.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -384,7 +384,7 @@ private void setupResponsiveLayout() {
 
     private void btnSiswaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSiswaActionPerformed
 sidebar.setActive(btnSiswa);
-        addSiswa as = new addSiswa();
+        panelSiswa as = new panelSiswa();
         content.removeAll();
         content.add(as);
 

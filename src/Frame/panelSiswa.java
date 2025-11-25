@@ -20,12 +20,14 @@ import javax.swing.SwingUtilities;
  * @author MyBook Hype AMD
  */
 public class panelSiswa extends javax.swing.JPanel {
-
+private SiswaDAO siswaDAO;
     /**
      * Creates new form panelSiswa
      */
     public panelSiswa() {
         initComponents();
+    
+        siswaDAO  = new SiswaDAO();
         tampilkanDataSiswa();
     }
     
@@ -56,7 +58,8 @@ public class panelSiswa extends javax.swing.JPanel {
     
     private void filterSiswaByKelas() {
     // Ambil id_kelas yang dipilih dari ComboBox
-    int idKelas = getSelectedKelasId();
+    int idKelas;
+    idKelas = Integer.parseInt(cbFilter.getSelectedItem().toString());
     
     if (idKelas > 0) {
         // Panggil method getSiswaByKelas dari SiswaDB
@@ -71,20 +74,7 @@ public class panelSiswa extends javax.swing.JPanel {
     }
 }
 
-private int getSelectedKelasId() {
-    // Ambil object yang dipilih dari ComboBox
-    Object selected = cbFilter.getSelectedItem();
-    
-    // Jika Anda menyimpan object Kelas di ComboBox
-    if (selected instanceof Package) {
-        return ((Package) selected).get();
-    }
-    
-    // Atau jika menyimpan String, parse dari value
-    // return Integer.parseInt(selected.toString());
-    
-    return 0; // Return 0 jika "Semua Kelas"
-}
+
 
 private void loadTableData(List<Siswa> listSiswa) {
     // Clear table terlebih dahulu
@@ -110,8 +100,20 @@ private void loadAllSiswa() {
     loadTableData(listSiswa);
 }
 
+private void loadComboBoxKelas() {
+        cbFilter.removeAllItems();
+        cbFilter.addItem("-- Semua Kelas --");
+        
+        List<Integer> listKelas = siswaDAO.getDistinctKelas();
+        
+        for (Integer idKelas : listKelas) {
+            cbFilter.addItem(idKelas.toString());
+        
+    }
 
+    
 
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -140,6 +142,11 @@ private void loadAllSiswa() {
 
         cbFilter.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         cbFilter.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Kelas 1", "Kelas 2", "Kelas 3", "Kelas 4", "Kelas 5", "Kelas 6" }));
+        cbFilter.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbFilterActionPerformed(evt);
+            }
+        });
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel2.setText("Search :");
@@ -325,132 +332,30 @@ private void loadAllSiswa() {
     }//GEN-LAST:event_bUbahActionPerformed
 
     private void bTambahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bTambahActionPerformed
-        String username = tUsername.getText().trim();
-        String password = new String(tPassword.getPassword()).trim();
-        String nama = tNama.getText().trim();
-        String role = cRole.getSelectedItem().toString();
-
-        // Validasi input
-        if (username.isEmpty()) {
-            JOptionPane.showMessageDialog(this,
-                "Username tidak boleh kosong!",
-                "Validasi Error",
-                JOptionPane.WARNING_MESSAGE);
-            tUsername.requestFocus();
-            return;
-        }
-
-        if (password.isEmpty()) {
-            JOptionPane.showMessageDialog(this,
-                "Password tidak boleh kosong!",
-                "Validasi Error",
-                JOptionPane.WARNING_MESSAGE);
-            tPassword.requestFocus();
-            return;
-        }
-
-        if (nama.isEmpty()) {
-            JOptionPane.showMessageDialog(this,
-                "Nama tidak boleh kosong!",
-                "Validasi Error",
-                JOptionPane.WARNING_MESSAGE);
-            tNama.requestFocus();
-            return;
-        }
-
-        // Konfirmasi
-        int confirm = JOptionPane.showConfirmDialog(this,
-            "Tambah user baru dengan data:\n" +
-            "Username: " + username + "\n" +
-            "Nama: " + nama + "\n" +
-            "Role: " + role + "\n\n" +
-            "Lanjutkan?",
-            "Konfirmasi Tambah",
-            JOptionPane.YES_NO_OPTION);
-
-        if (confirm == JOptionPane.YES_OPTION) {
-            // Buat object User
-            User user = new User();
-            user.setUsername(username);
-            user.setPassword(password);
-            user.setNama(nama);
-            user.setRole(role);
-
-            // Panggil method dari UserDAO
-            UserDAO userDAO = new UserDAO();
-            boolean success = userDAO.addUser(user);
-
-            if (success) {
-                JOptionPane.showMessageDialog(this,
-                    "✓ User berhasil ditambahkan!",
-                    "Sukses",
-                    JOptionPane.INFORMATION_MESSAGE);
-
-                // Clear form
-                clearForm();
-
-                // Refresh tabel
-                loadDataUser();
-            } else {
-                JOptionPane.showMessageDialog(this,
-                    "✗ Gagal menambahkan user!\n" +
-                    "Username mungkin sudah digunakan.",
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE);
-            }
-        }
+      
     }//GEN-LAST:event_bTambahActionPerformed
 
     private void bHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bHapusActionPerformed
-        int selectedRow = tblUser.getSelectedRow();
-
-        if (selectedRow == -1) {
-            JOptionPane.showMessageDialog(this,
-                "Pilih user yang akan dihapus!",
-                "Peringatan",
-                JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-
-        String userId = tblUser.getValueAt(selectedRow, 0).toString();
-        String username = tblUser.getValueAt(selectedRow, 1).toString();
-        String nama = tblUser.getValueAt(selectedRow, 3).toString();
-
-        // Konfirmasi hapus
-        int confirm = JOptionPane.showConfirmDialog(this,
-            "Hapus user:\n" +
-            "Username: " + username + "\n" +
-            "Nama: " + nama + "\n\n" +
-            "Data yang dihapus tidak dapat dikembalikan!\n" +
-            "Lanjutkan?",
-            "Konfirmasi Hapus",
-            JOptionPane.YES_NO_OPTION,
-            JOptionPane.WARNING_MESSAGE);
-
-        if (confirm == JOptionPane.YES_OPTION) {
-            UserDAO userDAO = new UserDAO();
-            boolean success = userDAO.deleteUser(Integer.parseInt(userId));
-
-            if (success) {
-                JOptionPane.showMessageDialog(this,
-                    "✓ User berhasil dihapus!",
-                    "Sukses",
-                    JOptionPane.INFORMATION_MESSAGE);
-
-                clearForm();
-                loadDataUser();
-            } else {
-                JOptionPane.showMessageDialog(this,
-                    "✗ Gagal menghapus user!",
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE);
-            }
-        }
+        
     }//GEN-LAST:event_bHapusActionPerformed
 
     private void bResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bResetActionPerformed
-        clearForm();
+      
     }//GEN-LAST:event_bResetActionPerformed
+
+    private void cbFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbFilterActionPerformed
+  Object selected = cbFilter.getSelectedItem();
+                List<Siswa> listSiswa;
+                
+                if (selected instanceof Integer) {
+                    int idKelas = (Integer) selected;
+                    listSiswa = siswaDAO.getSiswaByKelas(idKelas);
+                } else {
+                    listSiswa = siswaDAO.getAllSiswa();
+                }
+                
+                loadTableData(listSiswa);        // TODO add your handling code here:
+    }//GEN-LAST:event_cbFilterActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

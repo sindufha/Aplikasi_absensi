@@ -214,4 +214,21 @@ public class SiswaDAO {
         }
         return list;
     }
+    
+    public List<Integer> getDistinctKelas() {
+        List<Integer> listKelas = new ArrayList<>();
+        String sql = "SELECT DISTINCT id_kelas FROM siswa ORDER BY id_kelas";
+        
+        try (Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            
+            while (rs.next()) {
+                listKelas.add(rs.getInt("id_kelas"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        return listKelas;
+    }
 }
