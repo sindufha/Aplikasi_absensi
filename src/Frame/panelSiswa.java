@@ -5,11 +5,15 @@
 package Frame;
 import ClassAbsensi.Siswa;
 import ClassAbsensi.SiswaDAO;
+import ClassAbsensi.User;
+import PanelPengaturan.dialogUbahUser;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
 import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
 import java.awt.Color;
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 /**
  *
@@ -49,6 +53,62 @@ public class panelSiswa extends javax.swing.JPanel {
     
     tblSiswa.setModel(model);
 }
+    
+    private void filterSiswaByKelas() {
+    // Ambil id_kelas yang dipilih dari ComboBox
+    int idKelas = getSelectedKelasId();
+    
+    if (idKelas > 0) {
+        // Panggil method getSiswaByKelas dari SiswaDB
+        SiswaDAO siswaDB = new SiswaDAO();
+        List<Siswa> listSiswa = siswaDB.getSiswaByKelas(idKelas);
+        
+        // Tampilkan data ke table
+        loadTableData(listSiswa);
+    } else {
+        // Jika "Semua Kelas" dipilih, tampilkan semua siswa
+        loadAllSiswa();
+    }
+}
+
+private int getSelectedKelasId() {
+    // Ambil object yang dipilih dari ComboBox
+    Object selected = cbFilter.getSelectedItem();
+    
+    // Jika Anda menyimpan object Kelas di ComboBox
+    if (selected instanceof Package) {
+        return ((Package) selected).get();
+    }
+    
+    // Atau jika menyimpan String, parse dari value
+    // return Integer.parseInt(selected.toString());
+    
+    return 0; // Return 0 jika "Semua Kelas"
+}
+
+private void loadTableData(List<Siswa> listSiswa) {
+    // Clear table terlebih dahulu
+    DefaultTableModel model = (DefaultTableModel) tblSiswa.getModel();
+    model.setRowCount(0);
+    
+    // Isi table dengan data siswa
+    for (Siswa siswa : listSiswa) {
+        model.addRow(new Object[]{
+            siswa.getIdSiswa(),
+            siswa.getNis(),
+            siswa.getNamaSiswa(),
+            siswa.getIdKelas(),
+            siswa.getJenisKelamin(),
+            siswa.getQrCode()
+        });
+    }
+}
+
+private void loadAllSiswa() {
+    SiswaDAO siswaDB = new SiswaDAO();
+    List<Siswa> listSiswa = siswaDB.getAllSiswa();
+    loadTableData(listSiswa);
+}
 
 
 
@@ -66,55 +126,23 @@ public class panelSiswa extends javax.swing.JPanel {
         cbFilter = new javax.swing.JComboBox<>();
         jLabel2 = new javax.swing.JLabel();
         tCari = new javax.swing.JTextField();
-        bTambah = new javax.swing.JButton();
-        bUbah = new javax.swing.JButton();
-        bHapus = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblSiswa = new javax.swing.JTable();
+        bUbah = new javax.swing.JButton();
+        bTambah = new javax.swing.JButton();
+        bHapus = new javax.swing.JButton();
         bReset = new javax.swing.JButton();
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jLabel1.setText("Filter");
 
+        cbFilter.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         cbFilter.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Kelas 1", "Kelas 2", "Kelas 3", "Kelas 4", "Kelas 5", "Kelas 6" }));
 
-        jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel2.setText("Search :");
-
-        bTambah.setBackground(new java.awt.Color(102, 102, 255));
-        bTambah.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        bTambah.setForeground(new java.awt.Color(255, 255, 255));
-        bTambah.setText("Tambah");
-        bTambah.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        bTambah.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bTambahActionPerformed(evt);
-            }
-        });
-
-        bUbah.setBackground(new java.awt.Color(255, 204, 102));
-        bUbah.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        bUbah.setForeground(new java.awt.Color(255, 255, 255));
-        bUbah.setText("Ubah");
-        bUbah.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        bUbah.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bUbahActionPerformed(evt);
-            }
-        });
-
-        bHapus.setBackground(new java.awt.Color(255, 102, 102));
-        bHapus.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        bHapus.setForeground(new java.awt.Color(255, 255, 255));
-        bHapus.setText("Hapus");
-        bHapus.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        bHapus.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bHapusActionPerformed(evt);
-            }
-        });
 
         tblSiswa.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -129,11 +157,40 @@ public class panelSiswa extends javax.swing.JPanel {
         ));
         jScrollPane1.setViewportView(tblSiswa);
 
-        bReset.setBackground(new java.awt.Color(51, 204, 0));
-        bReset.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        bUbah.setBackground(new java.awt.Color(245, 158, 11));
+        bUbah.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        bUbah.setForeground(new java.awt.Color(255, 255, 255));
+        bUbah.setText("Ubah");
+        bUbah.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bUbahActionPerformed(evt);
+            }
+        });
+
+        bTambah.setBackground(new java.awt.Color(34, 197, 94));
+        bTambah.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        bTambah.setForeground(new java.awt.Color(255, 255, 255));
+        bTambah.setText("Tambah");
+        bTambah.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bTambahActionPerformed(evt);
+            }
+        });
+
+        bHapus.setBackground(new java.awt.Color(239, 68, 68));
+        bHapus.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        bHapus.setForeground(new java.awt.Color(255, 255, 255));
+        bHapus.setText("Hapus");
+        bHapus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bHapusActionPerformed(evt);
+            }
+        });
+
+        bReset.setBackground(new java.awt.Color(100, 116, 139));
+        bReset.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         bReset.setForeground(new java.awt.Color(255, 255, 255));
         bReset.setText("Reset");
-        bReset.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         bReset.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bResetActionPerformed(evt);
@@ -148,45 +205,46 @@ public class panelSiswa extends javax.swing.JPanel {
                 .addGap(25, 25, 25)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(cbFilter, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(tCari, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(57, 57, 57))
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(tCari, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(81, 81, 81))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(bTambah, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(bUbah, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(bHapus, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(bReset, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(bTambah, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(27, 27, 27)
+                                .addComponent(bUbah, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(31, 31, 31)
+                                .addComponent(bHapus, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(30, 30, 30)
+                                .addComponent(bReset, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(cbFilter, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1057, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 38, Short.MAX_VALUE))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(tCari, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(tCari, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(2, 2, 2)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cbFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(36, 36, 36)
+                .addComponent(cbFilter, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(23, 23, 23)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(bTambah)
-                    .addComponent(bUbah)
-                    .addComponent(bHapus)
-                    .addComponent(bReset))
-                .addGap(40, 40, 40)
+                    .addComponent(bTambah, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(bHapus, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(bUbah, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(bReset, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 520, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(22, Short.MAX_VALUE))
         );
@@ -203,20 +261,195 @@ public class panelSiswa extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void bTambahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bTambahActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_bTambahActionPerformed
-
     private void bUbahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bUbahActionPerformed
-        // TODO add your handling code here:
+        int selectedRow = tblSiswa.getSelectedRow();
+
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this,
+                "Pilih user yang akan diubah!",
+                "Peringatan",
+                JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        try {
+            // Ambil data LANGSUNG dari tabel (tidak perlu query lagi)
+            String userId = tblSiswa.getValueAt(selectedRow, 0).toString();
+            String username = tblSiswa.getValueAt(selectedRow, 1).toString();
+            String nama = tblSiswa.getValueAt(selectedRow, 3).toString();
+            String role = tblSiswa.getValueAt(selectedRow, 4).toString();
+
+            System.out.println("Data dari tabel:");
+            System.out.println("  - ID: " + userId);
+            System.out.println("  - Username: " + username);
+            System.out.println("  - Nama: " + nama);
+            System.out.println("  - Role: " + role);
+
+            // Buat object User manual (tidak perlu getUserById)
+            User user = new User();
+            user.setUserId(Integer.parseInt(userId));
+            user.setUsername(username);
+            user.setNama(nama);
+            user.setRole(role);
+
+            // Validasi user tidak null
+            if (user.getUsername() == null || user.getUsername().isEmpty()) {
+                JOptionPane.showMessageDialog(this,
+                    "Data user tidak valid!",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // Buka dialog
+            dialogUbahUser dialog = new dialogUbahUser(
+                (java.awt.Frame) SwingUtilities.getWindowAncestor(this),
+                true,
+                user
+            );
+            dialog.setVisible(true);
+
+            // Refresh tabel
+            if (dialog.isSaved()) {
+                tampilkanDataSiswa();
+            }
+
+        } catch (Exception e) {
+            System.out.println("❌ Error btnUbah: " + e.getMessage());
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this,
+                "Terjadi kesalahan: " + e.getMessage(),
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_bUbahActionPerformed
 
+    private void bTambahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bTambahActionPerformed
+        String username = tUsername.getText().trim();
+        String password = new String(tPassword.getPassword()).trim();
+        String nama = tNama.getText().trim();
+        String role = cRole.getSelectedItem().toString();
+
+        // Validasi input
+        if (username.isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                "Username tidak boleh kosong!",
+                "Validasi Error",
+                JOptionPane.WARNING_MESSAGE);
+            tUsername.requestFocus();
+            return;
+        }
+
+        if (password.isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                "Password tidak boleh kosong!",
+                "Validasi Error",
+                JOptionPane.WARNING_MESSAGE);
+            tPassword.requestFocus();
+            return;
+        }
+
+        if (nama.isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                "Nama tidak boleh kosong!",
+                "Validasi Error",
+                JOptionPane.WARNING_MESSAGE);
+            tNama.requestFocus();
+            return;
+        }
+
+        // Konfirmasi
+        int confirm = JOptionPane.showConfirmDialog(this,
+            "Tambah user baru dengan data:\n" +
+            "Username: " + username + "\n" +
+            "Nama: " + nama + "\n" +
+            "Role: " + role + "\n\n" +
+            "Lanjutkan?",
+            "Konfirmasi Tambah",
+            JOptionPane.YES_NO_OPTION);
+
+        if (confirm == JOptionPane.YES_OPTION) {
+            // Buat object User
+            User user = new User();
+            user.setUsername(username);
+            user.setPassword(password);
+            user.setNama(nama);
+            user.setRole(role);
+
+            // Panggil method dari UserDAO
+            UserDAO userDAO = new UserDAO();
+            boolean success = userDAO.addUser(user);
+
+            if (success) {
+                JOptionPane.showMessageDialog(this,
+                    "✓ User berhasil ditambahkan!",
+                    "Sukses",
+                    JOptionPane.INFORMATION_MESSAGE);
+
+                // Clear form
+                clearForm();
+
+                // Refresh tabel
+                loadDataUser();
+            } else {
+                JOptionPane.showMessageDialog(this,
+                    "✗ Gagal menambahkan user!\n" +
+                    "Username mungkin sudah digunakan.",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }//GEN-LAST:event_bTambahActionPerformed
+
     private void bHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bHapusActionPerformed
-        // TODO add your handling code here:
+        int selectedRow = tblUser.getSelectedRow();
+
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this,
+                "Pilih user yang akan dihapus!",
+                "Peringatan",
+                JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        String userId = tblUser.getValueAt(selectedRow, 0).toString();
+        String username = tblUser.getValueAt(selectedRow, 1).toString();
+        String nama = tblUser.getValueAt(selectedRow, 3).toString();
+
+        // Konfirmasi hapus
+        int confirm = JOptionPane.showConfirmDialog(this,
+            "Hapus user:\n" +
+            "Username: " + username + "\n" +
+            "Nama: " + nama + "\n\n" +
+            "Data yang dihapus tidak dapat dikembalikan!\n" +
+            "Lanjutkan?",
+            "Konfirmasi Hapus",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.WARNING_MESSAGE);
+
+        if (confirm == JOptionPane.YES_OPTION) {
+            UserDAO userDAO = new UserDAO();
+            boolean success = userDAO.deleteUser(Integer.parseInt(userId));
+
+            if (success) {
+                JOptionPane.showMessageDialog(this,
+                    "✓ User berhasil dihapus!",
+                    "Sukses",
+                    JOptionPane.INFORMATION_MESSAGE);
+
+                clearForm();
+                loadDataUser();
+            } else {
+                JOptionPane.showMessageDialog(this,
+                    "✗ Gagal menghapus user!",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            }
+        }
     }//GEN-LAST:event_bHapusActionPerformed
 
     private void bResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bResetActionPerformed
-        // TODO add your handling code here:
+        clearForm();
     }//GEN-LAST:event_bResetActionPerformed
 
 
