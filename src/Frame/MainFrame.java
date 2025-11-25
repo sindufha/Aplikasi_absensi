@@ -323,7 +323,7 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_btnScanActionPerformed
 
     private void btnPengaturanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPengaturanActionPerformed
- sidebar.setActive(btnPengaturan);
+    sidebar.setActive(btnPengaturan);
         panelPengaturan pp = new panelPengaturan();
         content.removeAll();
         content.add(pp);

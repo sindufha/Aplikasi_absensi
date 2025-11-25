@@ -169,6 +169,11 @@ private void disconnectCamera() {
         jComboBoxCamera.setForeground(new java.awt.Color(0, 51, 255));
         jComboBoxCamera.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         jComboBoxCamera.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 51, 255), 2, true));
+        jComboBoxCamera.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBoxCameraActionPerformed(evt);
+            }
+        });
 
         jButtonConnect.setBackground(new java.awt.Color(42, 149, 255));
         jButtonConnect.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
@@ -194,19 +199,16 @@ private void disconnectCamera() {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jPanelCamera, javax.swing.GroupLayout.PREFERRED_SIZE, 641, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGroup(layout.createSequentialGroup()
-                            .addContainerGap()
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(jComboBoxCamera, javax.swing.GroupLayout.PREFERRED_SIZE, 297, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGap(25, 25, 25)
-                                    .addComponent(jButtonConnect, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addComponent(jLabelStatus1))))
+                    .addComponent(jPanelCamera, javax.swing.GroupLayout.PREFERRED_SIZE, 641, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jLabelStatus)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jComboBoxCamera, javax.swing.GroupLayout.PREFERRED_SIZE, 297, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(25, 25, 25)
+                                .addComponent(jButtonConnect, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jLabelStatus1)
+                            .addComponent(jLabelStatus))))
                 .addContainerGap(367, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -229,6 +231,10 @@ private void disconnectCamera() {
         // TODO add your handling code here:
         connectCamera();
     }//GEN-LAST:event_jButtonConnectActionPerformed
+
+    private void jComboBoxCameraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxCameraActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jComboBoxCameraActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
