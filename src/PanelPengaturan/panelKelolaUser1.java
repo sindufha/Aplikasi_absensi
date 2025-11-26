@@ -8,7 +8,7 @@ import java.awt.Color;
 import java.awt.Font;
 import javax.swing.table.JTableHeader;
 import ClassAbsensi.User;
-import ClassAbsensi.UserDAO;
+import ClassAbsensi.UserDB;
 import javax.swing.table.DefaultTableModel;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -45,7 +45,7 @@ public class panelKelolaUser1 extends javax.swing.JPanel {
     model.addColumn("Role");
     
     // Pakai UserDAO untuk ambil semua user
-    UserDAO userDAO = new UserDAO();
+    UserDB userDAO = new UserDB();
     List<User> listUser = userDAO.getAllUsers();
     
     for (User user : listUser) {
@@ -446,7 +446,7 @@ public void colorTable(){
         user.setRole(role);
         
         // Panggil method dari UserDAO
-        UserDAO userDAO = new UserDAO();
+        UserDB userDAO = new UserDB();
         boolean success = userDAO.addUser(user);
         
         if (success) {
@@ -497,7 +497,7 @@ public void colorTable(){
         JOptionPane.WARNING_MESSAGE);
     
     if (confirm == JOptionPane.YES_OPTION) {
-        UserDAO userDAO = new UserDAO();
+        UserDB userDAO = new UserDB();
         boolean success = userDAO.deleteUser(Integer.parseInt(userId));
         
         if (success) {

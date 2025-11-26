@@ -6,10 +6,10 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SiswaDAO {
+public class SiswaDB {
     private Connection conn;
 
-    public SiswaDAO() {
+    public SiswaDB() {
         conn = Koneksi.getKoneksi();
     }
 

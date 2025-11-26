@@ -365,9 +365,9 @@ private void setupResponsiveLayout() {
 
     private void btnPengaturanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPengaturanActionPerformed
         sidebar.setActive(btnPengaturan);
-        panelPengaturan pp = new panelPengaturan();
+        panelPengaturan ad = new panelPengaturan();
         content.removeAll();
-        content.add(pp);
+        content.add(ad);
         content.repaint();
         content.revalidate();
     }//GEN-LAST:event_btnPengaturanActionPerformed
@@ -378,13 +378,12 @@ private void setupResponsiveLayout() {
     }//GEN-LAST:event_btnLaporanActionPerformed
 
     private void btnAbsensiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAbsensiActionPerformed
-     sidebar.setActive(btnAbsensi);
-
+     
     }//GEN-LAST:event_btnAbsensiActionPerformed
 
     private void btnSiswaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSiswaActionPerformed
 sidebar.setActive(btnSiswa);
-        panelSiswa as = new panelSiswa();
+        addSiswa as = new addSiswa();
         content.removeAll();
         content.add(as);
 

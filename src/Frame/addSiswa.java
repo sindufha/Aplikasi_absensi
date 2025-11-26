@@ -159,8 +159,110 @@ public class addSiswa extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtNamaActionPerformed
 
-    private void btnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSimpanActionPerformed
+    private void btnSimpanActionPerformed(java.awt.event.ActionEvent evt) {                                          
+//GEN-FIRST:event_btnSimpanActionPerformed
+        String nis = txtNIS.getText().trim();
+String nama = txtNama.getText().trim();
+int id_kelas = Integer.parseInt(txtIdKelas.getText());
+String jenisKelamin = cmbJenisKelamin.getSelectedItem().toString();
+
+if (nis.isEmpty() || nama.isEmpty()) {
+    JOptionPane.showMessageDialog(this, 
+        "NIS dan Nama tidak boleh kosong!", 
+        "Validasi Error", 
+        JOptionPane.ERROR_MESSAGE);
+    return;
+}
+
+try {
+    Connection conn = Koneksi.getKoneksi();
+    
+    if (conn == null) {
+        JOptionPane.showMessageDialog(this, 
+            "Gagal koneksi ke database!", 
+            "Database Error", 
+            JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+    
+    // Cek apakah NIS sudah ada
+    String checkSql = "SELECT COUNT(*) FROM siswa WHERE nis = ?";
+    PreparedStatement checkPs = conn.prepareStatement(checkSql);
+    checkPs.setString(1, nis);
+    ResultSet rs = checkPs.executeQuery();
+    
+    if (rs.next() && rs.getInt(1) > 0) {
+        JOptionPane.showMessageDialog(this, 
+            "NIS sudah terdaftar!", 
+            "Validasi Error", 
+            JOptionPane.ERROR_MESSAGE);
+        rs.close();
+        checkPs.close();
+        return;
+    }
+    rs.close();
+    checkPs.close();
+    
+    // Generate QR Code (hanya untuk keperluan cetak/simpan lokal)
+    String qrData = "QR" + nis; // Sesuai format di database: QR2024001
+    String qrPath = QRCodeGenerator.generateAndSaveSiswaQR(nis);
+    
+    if (qrPath == null) {
+        JOptionPane.showMessageDialog(this, 
+            "Gagal generate QR Code!", 
+            "QR Error", 
+            JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+    
+    // Insert ke database (tanpa qr_image_path karena kolom tidak ada)
+    String sql = "INSERT INTO siswa (nis, nama_siswa, id_kelas, jenis_kelamin, qr_code) VALUES (?, ?, ?, ?, ?)";
+    PreparedStatement ps = conn.prepareStatement(sql);
+    ps.setString(1, nis);
+    ps.setString(2, nama);
+    ps.setInt(3, id_kelas);
+    ps.setString(4, jenisKelamin);
+    ps.setString(5, qrData);
+    
+    int result = ps.executeUpdate();
+    ps.close();
+    
+    if (result > 0) {
+        // Tampilkan QR Code di JLabel
+        BufferedImage qrImage = ImageIO.read(new File(qrPath));
+        lblQRCode.setIcon(new ImageIcon(qrImage));
+        lblQRCode.setText(""); // Hapus text default
         
+        JOptionPane.showMessageDialog(this, 
+            "Data siswa berhasil disimpan!\nQR Code disimpan di: " + qrPath, 
+            "Sukses", 
+            JOptionPane.INFORMATION_MESSAGE);
+        
+        // Reset form
+        resetForm();
+    } else {
+        JOptionPane.showMessageDialog(this, 
+            "Gagal menyimpan data!", 
+            "Database Error", 
+            JOptionPane.ERROR_MESSAGE);
+    }
+    
+} catch (SQLException e) {
+    e.printStackTrace();
+    JOptionPane.showMessageDialog(this, 
+        "Error database: " + e.getMessage(), 
+        "Database Error", 
+        JOptionPane.ERROR_MESSAGE);
+} catch (Exception e) {
+    e.printStackTrace();
+    JOptionPane.showMessageDialog(this, 
+        "Error: " + e.getMessage(), 
+        "Error", 
+        JOptionPane.ERROR_MESSAGE);
+}
+    
+
+    
 
     }//GEN-LAST:event_btnSimpanActionPerformed
 

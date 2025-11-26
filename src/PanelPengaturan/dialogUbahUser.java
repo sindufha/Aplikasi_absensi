@@ -5,7 +5,7 @@
 package PanelPengaturan;
 
 import ClassAbsensi.User;
-import ClassAbsensi.UserDAO;
+import ClassAbsensi.UserDB;
 import javax.swing.JOptionPane;
 
 /**
@@ -302,7 +302,7 @@ if (confirm == JOptionPane.YES_OPTION) {
     }
     
     // Update ke database
-    UserDAO userDAO = new UserDAO();
+    UserDB userDAO = new UserDB();
     boolean success = userDAO.updateUser(user);
     
     if (success) {
@@ -335,7 +335,7 @@ if (confirm == JOptionPane.YES_OPTION) {
             user.setPassword(password);
         }
         
-        UserDAO userDAO = new UserDAO();
+        UserDB userDAO = new UserDB();
         return userDAO.updateUser(user);
     }
     private boolean addUser(String username, String password, String nama, String role) {
@@ -345,7 +345,7 @@ if (confirm == JOptionPane.YES_OPTION) {
         user.setNama(nama);
         user.setRole(role);
         
-        UserDAO userDAO = new UserDAO();
+        UserDB userDAO = new UserDB();
         return userDAO.addUser(user);
     }
     private void showError(String message) {

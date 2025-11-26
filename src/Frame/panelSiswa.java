@@ -4,7 +4,7 @@
  */
 package Frame;
 import ClassAbsensi.Siswa;
-import ClassAbsensi.SiswaDAO;
+import ClassAbsensi.SiswaDB;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
 
@@ -30,7 +30,7 @@ public class panelSiswa extends javax.swing.JPanel {
     model.addColumn("Kelas");
     model.addColumn("Jenis Kelamin");
     
-    SiswaDAO siswaDAO = new SiswaDAO();
+    SiswaDB siswaDAO = new SiswaDB();
     List<Siswa> listSiswa = siswaDAO.getAllSiswa();
     
     int no = 1;
