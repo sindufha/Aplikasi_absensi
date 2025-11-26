@@ -12,6 +12,7 @@ import javax.swing.SwingConstants;
 import javax.swing.Timer;
 import javax.swing.UIManager;
 import ClassTambahan.JPanelCustom;
+import java.awt.Dimension;
 /**
  *
  * @author MyBook Hype AMD
@@ -25,7 +26,7 @@ public class MainFrame extends javax.swing.JFrame {
      */
     public MainFrame() {
         initComponents();
-        
+        setupResponsiveLayout();
         btnDashboard.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 20, 1, 1));
         btnDashboard.setHorizontalAlignment(SwingConstants.LEFT);
         btnDashboard.setMargin(new Insets(5, 20, 5, 5));
@@ -72,13 +73,48 @@ public class MainFrame extends javax.swing.JFrame {
     
  
     }
-
+private void setupResponsiveLayout() {
+        // Set initial size
+        setMinimumSize(new Dimension(1366, 768));
+        setLocationRelativeTo(null);
+        
+        // Add resize listener
+        this.addComponentListener(new java.awt.event.ComponentAdapter() {
+            @Override
+            public void componentResized(java.awt.event.ComponentEvent evt) {
+                handleResize();
+            }
+        });
+        
+        // Initial resize
+        handleResize();
+    }
+    
+    private void handleResize() {
+        int w = getWidth();
+        int h = getHeight();
+        
+        // Sidebar: fixed 260px width, full height
+        panelSidebar.setBounds(0, 0, 260, h);
+        
+        // Topbar: start at x=260, grow horizontal, height 50px
+         panelTopbar.setBounds(0, 0, w, 50);
+        
+        // Content area: start at (260, 50), fill remaining space
+        content.setBounds(260, 50, w - 260, h - 50);
+        
+        // Force refresh
+        revalidate();
+        repaint();
+    }
+    
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jPanelCustom1 = new ClassTambahan.JPanelCustom();
+        panelSidebar = new ClassTambahan.JPanelCustom();
         onlineStatus = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
@@ -92,7 +128,7 @@ public class MainFrame extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        topBar = new javax.swing.JPanel();
+        panelTopbar = new javax.swing.JPanel();
         content = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -101,8 +137,10 @@ public class MainFrame extends javax.swing.JFrame {
         jPanel1.setPreferredSize(new java.awt.Dimension(1366, 768));
         jPanel1.setLayout(null);
 
-        jPanelCustom1.setBackground(new java.awt.Color(8, 86, 210));
-        jPanelCustom1.setPreferredSize(new java.awt.Dimension(250, 942));
+        panelSidebar.setBackground(new java.awt.Color(8, 86, 210));
+        panelSidebar.setPreferredSize(new java.awt.Dimension(250, 942));
+        panelSidebar.setRoundBottomRight(70);
+        panelSidebar.setRoundTopRight(70);
 
         onlineStatus.setFont(new java.awt.Font("Dialog", 1, 20)); // NOI18N
         onlineStatus.setForeground(new java.awt.Color(231, 76, 60));
@@ -204,60 +242,59 @@ public class MainFrame extends javax.swing.JFrame {
 
         jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Ikon_white/icons8-school-49.png"))); // NOI18N
 
-        javax.swing.GroupLayout jPanelCustom1Layout = new javax.swing.GroupLayout(jPanelCustom1);
-        jPanelCustom1.setLayout(jPanelCustom1Layout);
-        jPanelCustom1Layout.setHorizontalGroup(
-            jPanelCustom1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        javax.swing.GroupLayout panelSidebarLayout = new javax.swing.GroupLayout(panelSidebar);
+        panelSidebar.setLayout(panelSidebarLayout);
+        panelSidebarLayout.setHorizontalGroup(
+            panelSidebarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(btnPengaturan, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(btnLaporan, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(btnAbsensi, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(btnSiswa, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(btnDashboard, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(jPanelCustom1Layout.createSequentialGroup()
-                .addGap(36, 36, 36)
-                .addGroup(jPanelCustom1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelCustom1Layout.createSequentialGroup()
-                        .addComponent(jLabel4)
-                        .addGap(27, 27, 27))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelCustom1Layout.createSequentialGroup()
-                        .addComponent(onlineStatus)
-                        .addGap(87, 87, 87))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelCustom1Layout.createSequentialGroup()
-                        .addComponent(jLabel6)
-                        .addGap(42, 42, 42)))
-                .addGap(0, 0, Short.MAX_VALUE))
-            .addGroup(jPanelCustom1Layout.createSequentialGroup()
-                .addGap(16, 16, 16)
-                .addComponent(jLabel5)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelCustom1Layout.createSequentialGroup()
+            .addGroup(panelSidebarLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanelCustom1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelCustom1Layout.createSequentialGroup()
-                        .addComponent(jLabel3)
-                        .addGroup(jPanelCustom1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanelCustom1Layout.createSequentialGroup()
-                                .addGap(52, 52, 52)
-                                .addComponent(jLabel1))
-                            .addGroup(jPanelCustom1Layout.createSequentialGroup()
-                                .addGap(18, 18, 18)
-                                .addComponent(jLabel2)))
-                        .addGap(7, 7, 7))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelCustom1Layout.createSequentialGroup()
+                .addGroup(panelSidebarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelSidebarLayout.createSequentialGroup()
                         .addComponent(btnScan)
-                        .addGap(75, 75, 75))))
+                        .addGap(73, 73, 73))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelSidebarLayout.createSequentialGroup()
+                        .addComponent(jLabel4)
+                        .addGap(28, 28, 28))))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelSidebarLayout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jLabel6)
+                .addGap(49, 49, 49))
+            .addGroup(panelSidebarLayout.createSequentialGroup()
+                .addGroup(panelSidebarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelSidebarLayout.createSequentialGroup()
+                        .addGap(12, 12, 12)
+                        .addComponent(jLabel3)
+                        .addGroup(panelSidebarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(panelSidebarLayout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jLabel2))
+                            .addGroup(panelSidebarLayout.createSequentialGroup()
+                                .addGap(49, 49, 49)
+                                .addComponent(jLabel1))))
+                    .addGroup(panelSidebarLayout.createSequentialGroup()
+                        .addGap(16, 16, 16)
+                        .addComponent(jLabel5))
+                    .addGroup(panelSidebarLayout.createSequentialGroup()
+                        .addGap(93, 93, 93)
+                        .addComponent(onlineStatus)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        jPanelCustom1Layout.setVerticalGroup(
-            jPanelCustom1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelCustom1Layout.createSequentialGroup()
-                .addGap(23, 23, 23)
-                .addGroup(jPanelCustom1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanelCustom1Layout.createSequentialGroup()
+        panelSidebarLayout.setVerticalGroup(
+            panelSidebarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelSidebarLayout.createSequentialGroup()
+                .addGap(35, 35, 35)
+                .addGroup(panelSidebarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(panelSidebarLayout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel2))
                     .addComponent(jLabel3))
-                .addGap(51, 51, 51)
+                .addGap(39, 39, 39)
                 .addComponent(btnDashboard, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnSiswa, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -267,9 +304,9 @@ public class MainFrame extends javax.swing.JFrame {
                 .addComponent(btnLaporan, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(btnPengaturan, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(60, 60, 60)
+                .addGap(29, 29, 29)
                 .addComponent(btnScan)
-                .addGap(32, 32, 32)
+                .addGap(18, 18, 18)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel5)
@@ -277,29 +314,29 @@ public class MainFrame extends javax.swing.JFrame {
                 .addComponent(jLabel6)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(onlineStatus)
-                .addContainerGap(180, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanelCustom1);
-        jPanelCustom1.setBounds(0, 0, 250, 942);
+        jPanel1.add(panelSidebar);
+        panelSidebar.setBounds(0, 0, 250, 770);
 
-        topBar.setBackground(new java.awt.Color(164, 216, 239));
-        topBar.setForeground(new java.awt.Color(164, 216, 239));
-        topBar.setPreferredSize(new java.awt.Dimension(1300, 100));
+        panelTopbar.setBackground(new java.awt.Color(164, 216, 239));
+        panelTopbar.setForeground(new java.awt.Color(164, 216, 239));
+        panelTopbar.setPreferredSize(new java.awt.Dimension(1300, 100));
 
-        javax.swing.GroupLayout topBarLayout = new javax.swing.GroupLayout(topBar);
-        topBar.setLayout(topBarLayout);
-        topBarLayout.setHorizontalGroup(
-            topBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1130, Short.MAX_VALUE)
+        javax.swing.GroupLayout panelTopbarLayout = new javax.swing.GroupLayout(panelTopbar);
+        panelTopbar.setLayout(panelTopbarLayout);
+        panelTopbarLayout.setHorizontalGroup(
+            panelTopbarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 1270, Short.MAX_VALUE)
         );
-        topBarLayout.setVerticalGroup(
-            topBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        panelTopbarLayout.setVerticalGroup(
+            panelTopbarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 50, Short.MAX_VALUE)
         );
 
-        jPanel1.add(topBar);
-        topBar.setBounds(240, 0, 1130, 50);
+        jPanel1.add(panelTopbar);
+        panelTopbar.setBounds(100, 0, 1270, 50);
 
         content.setBackground(new java.awt.Color(255, 255, 255));
         content.setLayout(new java.awt.CardLayout());
@@ -312,6 +349,10 @@ public class MainFrame extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    
+    
+    
+    
     private void btnScanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnScanActionPerformed
     sidebar.setActive(null);
         content.removeAll();
@@ -323,7 +364,7 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_btnScanActionPerformed
 
     private void btnPengaturanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPengaturanActionPerformed
-    sidebar.setActive(btnPengaturan);
+        sidebar.setActive(btnPengaturan);
         panelPengaturan pp = new panelPengaturan();
         content.removeAll();
         content.add(pp);
@@ -343,7 +384,7 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void btnSiswaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSiswaActionPerformed
 sidebar.setActive(btnSiswa);
-        addSiswa as = new addSiswa();
+        panelSiswa as = new panelSiswa();
         content.removeAll();
         content.add(as);
 
@@ -397,8 +438,8 @@ sidebar.setActive(btnSiswa);
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
-    private ClassTambahan.JPanelCustom jPanelCustom1;
     public static javax.swing.JLabel onlineStatus;
-    private javax.swing.JPanel topBar;
+    private ClassTambahan.JPanelCustom panelSidebar;
+    private javax.swing.JPanel panelTopbar;
     // End of variables declaration//GEN-END:variables
 }

@@ -1,6 +1,10 @@
 package Frame;
 
+
+import ClassAbsensi.LoginDAO;
+import ClassAbsensi.User;
 import com.formdev.flatlaf.FlatLightLaf;
+import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
@@ -22,8 +26,8 @@ public class FrameLogin extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        textField1 = new ClassTambahan.TextField();
-        jCheckBox1 = new javax.swing.JCheckBox();
+        tUsername = new ClassTambahan.TextField();
+        cbShowData = new javax.swing.JCheckBox();
         tPassword = new ClassTambahan.PasswordField();
         jLabel3 = new javax.swing.JLabel();
         btnLogin = new javax.swing.JButton();
@@ -36,29 +40,29 @@ public class FrameLogin extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        textField1.setForeground(new java.awt.Color(0, 0, 0));
-        textField1.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        textField1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Ikon_white/username.png"))); // NOI18N
-        textField1.setRoundBottomLeft(5);
-        textField1.setRoundBottomRight(5);
-        textField1.setRoundTopLeft(5);
-        textField1.setRoundTopRight(5);
-        textField1.addActionListener(new java.awt.event.ActionListener() {
+        tUsername.setForeground(new java.awt.Color(0, 0, 0));
+        tUsername.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        tUsername.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Ikon_white/username.png"))); // NOI18N
+        tUsername.setRoundBottomLeft(5);
+        tUsername.setRoundBottomRight(5);
+        tUsername.setRoundTopLeft(5);
+        tUsername.setRoundTopRight(5);
+        tUsername.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                textField1ActionPerformed(evt);
+                tUsernameActionPerformed(evt);
             }
         });
-        getContentPane().add(textField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 200, 270, 40));
+        getContentPane().add(tUsername, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 200, 270, 40));
 
-        jCheckBox1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jCheckBox1.setForeground(new java.awt.Color(255, 255, 255));
-        jCheckBox1.setText("Show Password");
-        jCheckBox1.addActionListener(new java.awt.event.ActionListener() {
+        cbShowData.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        cbShowData.setForeground(new java.awt.Color(255, 255, 255));
+        cbShowData.setText("Show Password");
+        cbShowData.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBox1ActionPerformed(evt);
+                cbShowDataActionPerformed(evt);
             }
         });
-        getContentPane().add(jCheckBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 310, -1, -1));
+        getContentPane().add(cbShowData, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 310, -1, -1));
 
         tPassword.setForeground(new java.awt.Color(0, 0, 0));
         tPassword.setHorizontalAlignment(javax.swing.JTextField.CENTER);
@@ -122,21 +126,83 @@ public class FrameLogin extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
-        // TODO add your handling code here:
-        dispose();
+                                          
+    // Ambil input dari user
+    String username = tUsername.getText().trim();
+    String password = new String(tPassword.getPassword());
+    
+    // Validasi input kosong
+    if (username.isEmpty()) {
+        JOptionPane.showMessageDialog(this, 
+            "Username tidak boleh kosong!", 
+            "Peringatan", 
+            JOptionPane.WARNING_MESSAGE);
+        tUsername.requestFocus();
+        return;
+    }
+    
+    if (password.isEmpty()) {
+        JOptionPane.showMessageDialog(this, 
+            "Password tidak boleh kosong!", 
+            "Peringatan", 
+            JOptionPane.WARNING_MESSAGE);
+        tPassword.requestFocus();
+        return;
+    }
+    
+    // Panggil LoginDAO untuk cek ke database
+    LoginDAO loginDAO = new LoginDAO();
+    User user = loginDAO.login(username, password);
+    
+    // Cek hasil login
+    if (user != null) {
+        // Login berhasil
+        JOptionPane.showMessageDialog(this, 
+            "Login Berhasil!\n\nSelamat datang, " + user.getNama() + "\nRole: " + user.getRole(), 
+            "Sukses", 
+            JOptionPane.INFORMATION_MESSAGE);
+        
+        // Tutup form login
+        this.dispose();
+        
+        // Arahkan ke form sesuai role
+        if (user.getRole().equals("Admin")) {
+            new MainFrame().setVisible(true);
+        } else if (user.getRole().equals("Guru")) {
+            new MainFrame().setVisible(true);
+        }
+        
+    } else {
+        // Login gagal
+        JOptionPane.showMessageDialog(this, 
+            "Login Gagal!\n\nUsername atau Password salah.", 
+            "Error", 
+            JOptionPane.ERROR_MESSAGE);
+        
+        // Kosongkan password & focus ke username
+        tPassword.setText("");
+        tUsername.requestFocus();
+    }
+
     }//GEN-LAST:event_btnLoginActionPerformed
 
     private void tPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tPasswordActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_tPasswordActionPerformed
 
-    private void textField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textField1ActionPerformed
+    private void tUsernameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tUsernameActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_textField1ActionPerformed
+    }//GEN-LAST:event_tUsernameActionPerformed
 
-    private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
+    private void cbShowDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbShowDataActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBox1ActionPerformed
+           if (cbShowData.isSelected()) {
+            tPassword.setEchoChar((char) 0);
+            
+        }else{
+            tPassword.setEchoChar('*');
+        }
+    }//GEN-LAST:event_cbShowDataActionPerformed
 
     /**
      * @param args the command line arguments
@@ -164,7 +230,7 @@ public class FrameLogin extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnLogin;
-    private javax.swing.JCheckBox jCheckBox1;
+    private javax.swing.JCheckBox cbShowData;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -172,6 +238,6 @@ public class FrameLogin extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private ClassTambahan.PasswordField tPassword;
-    private ClassTambahan.TextField textField1;
+    private ClassTambahan.TextField tUsername;
     // End of variables declaration//GEN-END:variables
 }
