@@ -1,14 +1,8 @@
 package ClassAbsensi;
 import java.sql.*;
 
-public class LoginDAO {
+public class LoginDB {
     
-    /**
-     * Method untuk login user
-     * @param username username yang diinput
-     * @param password password yang diinput
-     * @return Object User jika berhasil, null jika gagal
-     */
     public User login(String username, String password) {
         Connection conn = null;
         PreparedStatement ps = null;
@@ -35,7 +29,7 @@ public class LoginDAO {
             
             // Cek apakah data ditemukan
             if (rs.next()) {
-                // Buat object User dan isi datanya
+                
                 user = new User();
                 user.setUserId(rs.getInt("user_id"));
                 user.setUsername(rs.getString("username"));
@@ -51,11 +45,11 @@ public class LoginDAO {
             System.out.println("✗ Error saat login: " + e.getMessage());
             e.printStackTrace();
         } finally {
-            // Tutup resource (ResultSet dan PreparedStatement)
+            
             try {
                 if (rs != null) rs.close();
                 if (ps != null) ps.close();
-                // Jangan tutup Connection karena pakai singleton pattern
+                
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -64,11 +58,6 @@ public class LoginDAO {
         return user;
     }
     
-    /**
-     * Method untuk cek apakah username sudah ada (untuk register)
-     * @param username username yang mau dicek
-     * @return true jika sudah ada, false jika belum
-     */
     public boolean isUsernameExist(String username) {
         Connection conn = null;
         PreparedStatement ps = null;
@@ -81,7 +70,7 @@ public class LoginDAO {
             ps.setString(1, username);
             rs = ps.executeQuery();
             
-            return rs.next(); // Return true jika data ditemukan
+            return rs.next(); 
             
         } catch (SQLException e) {
             System.out.println("✗ Error cek username: " + e.getMessage());
