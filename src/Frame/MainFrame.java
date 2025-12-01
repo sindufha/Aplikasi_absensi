@@ -315,17 +315,17 @@ private void setupResponsiveLayout() {
         );
         panelTopbarLayout.setVerticalGroup(
             panelTopbarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 50, Short.MAX_VALUE)
+            .addGap(0, 40, Short.MAX_VALUE)
         );
 
         jPanel1.add(panelTopbar);
-        panelTopbar.setBounds(200, 0, 1170, 50);
+        panelTopbar.setBounds(200, 0, 1170, 40);
 
         content.setBackground(new java.awt.Color(255, 255, 255));
         content.setMaximumSize(new java.awt.Dimension(1120, 650));
         content.setLayout(new java.awt.CardLayout());
         jPanel1.add(content);
-        content.setBounds(250, 50, 1120, 720);
+        content.setBounds(250, 40, 1120, 730);
 
         getContentPane().add(jPanel1, java.awt.BorderLayout.CENTER);
 
