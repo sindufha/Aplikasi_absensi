@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
 package Frame;
+import ClassAbsensi.Koneksi;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.sql.*;
@@ -22,6 +23,7 @@ public class panelLaporan extends javax.swing.JPanel {
      */
     public panelLaporan() {
         initComponents();
+        tampilkanData();
     }
     
      private String getTanggal(com.toedter.calendar.JDateChooser chooser) {
@@ -57,7 +59,41 @@ public class panelLaporan extends javax.swing.JPanel {
         }
     });
 }
-     
+     public void tampilkanData() {
+    DefaultTableModel model = (DefaultTableModel) absensi.getModel();
+    model.setRowCount(0);
+
+    try {
+        Connection con = Koneksi.getKoneksi();
+        String sql = "SELECT * FROM absensi";
+        PreparedStatement pst = con.prepareStatement(sql);
+        ResultSet rs = pst.executeQuery();
+
+        ResultSetMetaData meta = rs.getMetaData();
+        int columnCount = meta.getColumnCount();
+
+        model.setColumnCount(columnCount);
+
+        // Set nama kolom otomatis
+        String[] columnNames = new String[columnCount];
+        for (int i = 0; i < columnCount; i++) {
+            columnNames[i] = meta.getColumnName(i + 1);
+        }
+        model.setColumnIdentifiers(columnNames);
+
+        while (rs.next()) {
+            Object[] row = new Object[columnCount];
+            for (int i = 0; i < columnCount; i++) {
+                row[i] = rs.getObject(i + 1);
+            }
+            model.addRow(row);
+        }
+
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Gagal mengambil data: " + e.getMessage());
+    }
+}
+
      
 
    
@@ -79,7 +115,9 @@ public class panelLaporan extends javax.swing.JPanel {
         jLabel4 = new javax.swing.JLabel();
         jDateChooser2 = new com.toedter.calendar.JDateChooser();
         jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        btn_tampilkan = new javax.swing.JButton();
+        jLabel16 = new javax.swing.JLabel();
+        jComboBox1 = new javax.swing.JComboBox<>();
         jPanelCustom2 = new ClassTambahan.JPanelCustom();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
@@ -88,12 +126,12 @@ public class panelLaporan extends javax.swing.JPanel {
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
-        jLabel12 = new javax.swing.JLabel();
-        jLabel13 = new javax.swing.JLabel();
-        jLabel14 = new javax.swing.JLabel();
-        jLabel15 = new javax.swing.JLabel();
+        lbl_siswahadir = new javax.swing.JLabel();
+        lbl_siswaizin = new javax.swing.JLabel();
+        lbl_siswasakit = new javax.swing.JLabel();
+        lbl_alva = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        absensi = new javax.swing.JTable();
 
         jPanel1.setBackground(new java.awt.Color(44, 62, 80));
 
@@ -144,15 +182,19 @@ public class panelLaporan extends javax.swing.JPanel {
             }
         });
 
-        jButton2.setBackground(new java.awt.Color(138, 43, 226));
-        jButton2.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        jButton2.setForeground(new java.awt.Color(255, 255, 255));
-        jButton2.setText("Tampilkan");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        btn_tampilkan.setBackground(new java.awt.Color(138, 43, 226));
+        btn_tampilkan.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        btn_tampilkan.setForeground(new java.awt.Color(255, 255, 255));
+        btn_tampilkan.setText("Tampilkan");
+        btn_tampilkan.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                btn_tampilkanActionPerformed(evt);
             }
         });
+
+        jLabel16.setText("Jenis Laporan");
+
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Harian", "Mingguan", "Bulanan" }));
 
         javax.swing.GroupLayout jPanelCustom1Layout = new javax.swing.GroupLayout(jPanelCustom1);
         jPanelCustom1.setLayout(jPanelCustom1Layout);
@@ -165,9 +207,15 @@ public class panelLaporan extends javax.swing.JPanel {
                         .addComponent(jLabel2)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelCustom1Layout.createSequentialGroup()
-                        .addComponent(jLabel3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jDateChooser1, javax.swing.GroupLayout.DEFAULT_SIZE, 172, Short.MAX_VALUE)
+                        .addGroup(jPanelCustom1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanelCustom1Layout.createSequentialGroup()
+                                .addComponent(jLabel16)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(jPanelCustom1Layout.createSequentialGroup()
+                                .addComponent(jLabel3)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jDateChooser1, javax.swing.GroupLayout.DEFAULT_SIZE, 174, Short.MAX_VALUE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanelCustom1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanelCustom1Layout.createSequentialGroup()
@@ -177,7 +225,7 @@ public class panelLaporan extends javax.swing.JPanel {
                             .addGroup(jPanelCustom1Layout.createSequentialGroup()
                                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(btn_tampilkan, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(24, 24, 24))))
         );
         jPanelCustom1Layout.setVerticalGroup(
@@ -191,9 +239,13 @@ public class panelLaporan extends javax.swing.JPanel {
                     .addComponent(jDateChooser1, javax.swing.GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE)
                     .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 182, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addGroup(jPanelCustom1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel16)
+                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 155, Short.MAX_VALUE)
                 .addGroup(jPanelCustom1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btn_tampilkan, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE))
                 .addGap(14, 14, 14))
         );
@@ -232,21 +284,21 @@ public class panelLaporan extends javax.swing.JPanel {
         jLabel11.setForeground(new java.awt.Color(255, 255, 255));
         jLabel11.setText("Siswa Alpa :");
 
-        jLabel12.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
-        jLabel12.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel12.setText("19");
+        lbl_siswahadir.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        lbl_siswahadir.setForeground(new java.awt.Color(255, 255, 255));
+        lbl_siswahadir.setText("19");
 
-        jLabel13.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
-        jLabel13.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel13.setText("1");
+        lbl_siswaizin.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        lbl_siswaizin.setForeground(new java.awt.Color(255, 255, 255));
+        lbl_siswaizin.setText("1");
 
-        jLabel14.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
-        jLabel14.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel14.setText("4");
+        lbl_siswasakit.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        lbl_siswasakit.setForeground(new java.awt.Color(255, 255, 255));
+        lbl_siswasakit.setText("4");
 
-        jLabel15.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
-        jLabel15.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel15.setText("8");
+        lbl_alva.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        lbl_alva.setForeground(new java.awt.Color(255, 255, 255));
+        lbl_alva.setText("8");
 
         javax.swing.GroupLayout jPanelCustom2Layout = new javax.swing.GroupLayout(jPanelCustom2);
         jPanelCustom2.setLayout(jPanelCustom2Layout);
@@ -265,10 +317,10 @@ public class panelLaporan extends javax.swing.JPanel {
                             .addComponent(jLabel11))
                         .addGap(18, 18, 18)
                         .addGroup(jPanelCustom2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel15)
-                            .addComponent(jLabel14)
-                            .addComponent(jLabel13)
-                            .addComponent(jLabel12)
+                            .addComponent(lbl_alva)
+                            .addComponent(lbl_siswasakit)
+                            .addComponent(lbl_siswaizin)
+                            .addComponent(lbl_siswahadir)
                             .addComponent(jLabel10))))
                 .addContainerGap(198, Short.MAX_VALUE))
         );
@@ -284,23 +336,23 @@ public class panelLaporan extends javax.swing.JPanel {
                 .addGap(18, 18, 18)
                 .addGroup(jPanelCustom2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
-                    .addComponent(jLabel12))
+                    .addComponent(lbl_siswahadir))
                 .addGap(18, 18, 18)
                 .addGroup(jPanelCustom2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
-                    .addComponent(jLabel13))
+                    .addComponent(lbl_siswaizin))
                 .addGap(18, 18, 18)
                 .addGroup(jPanelCustom2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel9)
-                    .addComponent(jLabel14))
+                    .addComponent(lbl_siswasakit))
                 .addGap(18, 18, 18)
                 .addGroup(jPanelCustom2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel11)
-                    .addComponent(jLabel15))
+                    .addComponent(lbl_alva))
                 .addGap(40, 40, 40))
         );
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        absensi.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -311,12 +363,12 @@ public class panelLaporan extends javax.swing.JPanel {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+        absensi.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jTable1MouseClicked(evt);
+                absensiMouseClicked(evt);
             }
         });
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(absensi);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -347,25 +399,10 @@ public class panelLaporan extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void btn_tampilkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_tampilkanActionPerformed
         // TODO add your handling code here:
-         String tglDari = getTanggal(jDateChooser1);
-         String tglSampai = getTanggal(jDateChooser2);
-
-         if (tglDari == null || tglSampai == null) {
-        javax.swing.JOptionPane.showMessageDialog(this, 
-            "Silakan pilih tanggal terlebih dahulu!");
-        return;
-    }
-         
-        javax.swing.JOptionPane.showMessageDialog(this,
-            "Tanggal Dari : " + tglDari + "\n" +
-            "Tanggal Sampai : " + tglSampai,
-            "Informasi",
-            javax.swing.JOptionPane.INFORMATION_MESSAGE
-    ); 
-
-    }//GEN-LAST:event_jButton2ActionPerformed
+        tampilkanData();
+    }//GEN-LAST:event_btn_tampilkanActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
@@ -375,41 +412,47 @@ public class panelLaporan extends javax.swing.JPanel {
     int result = chooser.showSaveDialog(this);
     if (result == JFileChooser.APPROVE_OPTION) {
         String path = chooser.getSelectedFile().getAbsolutePath();
-        exportPDF(jTable1, path);
+        exportPDF(absensi, path);
     }
         
         
 
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+    private void absensiMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_absensiMouseClicked
         // TODO add your handling code here:
-        javax.swing.table.DefaultTableModel model = 
-        (javax.swing.table.DefaultTableModel) jTable1.getModel();
+        int row = absensi.rowAtPoint(evt.getPoint());
 
-    model.setRowCount(0); // bersihkan isi table
-    
-        Object tglDari = null;
-        Object tglSampai = null;
+    // Ambil data berdasarkan index
+    String no = absensi.getValueAt(row, 0).toString();
+    String nis = absensi.getValueAt(row, 1).toString();
+    String nama = absensi.getValueAt(row, 2).toString();
+    String kelas = absensi.getValueAt(row, 3).toString();
+    String waktu = absensi.getValueAt(row, 4).toString();
+    String status = absensi.getValueAt(row, 5).toString();
 
-    model.addRow(new Object[]{"Data contoh 1", tglDari, tglSampai});
-    model.addRow(new Object[]{"Data contoh 2", tglDari, tglSampai});
+    // Jika waktu adalah format tanggal
+    try {
+        java.util.Date tgl = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(waktu);
+        
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
     
-    }//GEN-LAST:event_jTable1MouseClicked
+    }//GEN-LAST:event_absensiMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTable absensi;
+    private javax.swing.JButton btn_tampilkan;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JComboBox<String> jComboBox1;
     private com.toedter.calendar.JDateChooser jDateChooser1;
     private com.toedter.calendar.JDateChooser jDateChooser2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel13;
-    private javax.swing.JLabel jLabel14;
-    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -422,7 +465,10 @@ public class panelLaporan extends javax.swing.JPanel {
     private ClassTambahan.JPanelCustom jPanelCustom1;
     private ClassTambahan.JPanelCustom jPanelCustom2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JLabel lbl_alva;
+    private javax.swing.JLabel lbl_siswahadir;
+    private javax.swing.JLabel lbl_siswaizin;
+    private javax.swing.JLabel lbl_siswasakit;
     // End of variables declaration//GEN-END:variables
 
     private void exportPDF(JTable jTable1, String path) {

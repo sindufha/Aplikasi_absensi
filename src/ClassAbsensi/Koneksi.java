@@ -10,7 +10,7 @@ public class Koneksi {
     public static Connection getKoneksi() {
         try {
             if (conn == null || conn.isClosed()) {
-                String url = "jdbc:mysql://localhost:3306/absensiapp";
+                String url = "jdbc:mysql://localhost:3306/absensi_sdi";
                 String user = "root";
                 String password = "";
                 
