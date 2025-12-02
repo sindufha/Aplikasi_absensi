@@ -394,6 +394,12 @@ sidebar.setActive(btnSiswa);
 
     private void btnDashboardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDashboardActionPerformed
        sidebar.setActive(btnDashboard);
+       panelDashboard as = new panelDashboard();
+        content.removeAll();
+        content.add(as);
+
+        content.repaint();
+        content.revalidate();
     }//GEN-LAST:event_btnDashboardActionPerformed
                          
 

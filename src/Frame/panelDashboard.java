@@ -23,31 +23,90 @@ public class panelDashboard extends javax.swing.JPanel {
 
      private void tampilkanChart() {
         // Buat dataset
-        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-        dataset.setValue(90.90, "H", "Hadir");
-        dataset.setValue(70.90, "I", "Izin");
-        dataset.setValue(50.90, "S", "Sakit");
-        dataset.setValue(30.90, "TL", "Terlambat");
-        dataset.setValue(10.90, "A", "Alfa");
-        
-        // Buat chart
-        JFreeChart chart = ChartFactory.createBarChart(
-                "Data Absensi SDI Khadijah",
-                "Keterangan",
-                "Presentase", 
-                dataset, 
-                PlotOrientation.HORIZONTAL,
-                true,
-                true,
-                true
-        );
-        
-        // Buat ChartPanel dan tambahkan ke panelChart
-        ChartPanel chartPanel = new ChartPanel(chart);
-        panelChart.removeAll();
-        panelChart.setLayout(new java.awt.BorderLayout());
-        panelChart.add(chartPanel, java.awt.BorderLayout.CENTER);
-        panelChart.validate();
+         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+         dataset.setValue(90.90, "Hadir", "Hadir");
+         dataset.setValue(70.90, "Izin", "Izin");
+         dataset.setValue(50.90, "Sakit", "Sakit");
+         dataset.setValue(30.90, "Terlambat", "Terlambat");
+         dataset.setValue(10.90, "Alfa", "Alfa");
+
+         // Buat chart HORIZONTAL
+         JFreeChart chart = ChartFactory.createBarChart(
+                 "Data Absensi SDI Khadijah",
+                 "Keterangan",
+                 "Presentase (%)",
+                 dataset,
+                 PlotOrientation.VERTICAL,
+                 false,
+                 true,
+                 false
+         );
+
+         // Kustomisasi tampilan chart
+         chart.setBackgroundPaint(java.awt.Color.WHITE);
+         chart.getTitle().setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 18));
+
+         // Kustomisasi plot
+         org.jfree.chart.plot.CategoryPlot plot = chart.getCategoryPlot();
+         plot.setBackgroundPaint(java.awt.Color.WHITE);
+         plot.setRangeGridlinePaint(new java.awt.Color(200, 200, 200));
+         plot.setOutlineVisible(false);
+
+         // Kustomisasi bar renderer dengan warna berbeda untuk setiap kategori
+         org.jfree.chart.renderer.category.BarRenderer renderer = new org.jfree.chart.renderer.category.BarRenderer() {
+             @Override
+             public java.awt.Paint getItemPaint(int row, int column) {
+                 // row = series, column = kategori
+                 switch (row) {
+                     case 0:
+                         return new java.awt.Color(0, 255, 255);      // Hadir - Cyan
+                     case 1:
+                         return new java.awt.Color(0, 153, 255);      // Izin - Blue  
+                     case 2:
+                         return new java.awt.Color(0, 102, 255);      // Sakit - Dark Blue
+                     case 3:
+                         return new java.awt.Color(51, 0, 255);       // Terlambat - Purple
+                     case 4:
+                         return new java.awt.Color(255, 51, 0);       // Alfa - Red
+                     default:
+                         return java.awt.Color.GRAY;
+                 }
+             }
+         };
+
+         plot.setRenderer(renderer);
+         renderer.setBarPainter(new org.jfree.chart.renderer.category.StandardBarPainter());
+         renderer.setShadowVisible(false);
+         renderer.setDrawBarOutline(false);
+         
+         renderer.setItemMargin(0.0);  
+         renderer.setMinimumBarLength(0.9);
+//        renderer.setItem
+         // Kustomisasi axis
+         
+         // Atur lebar kategori agar bar lebih besar
+org.jfree.chart.axis.CategoryAxis domainAxis = plot.getDomainAxis();
+domainAxis.setTickLabelFont(new java.awt.Font("Segoe UI", java.awt.Font.PLAIN, 12));
+domainAxis.setCategoryMargin(0.1);  // Atur margin antar kategori (0.0 - 0.5)
+domainAxis.setLowerMargin(0.01);    // Margin bawah
+domainAxis.setUpperMargin(0.01);    // Margin atas
+         domainAxis.setTickLabelFont(new java.awt.Font("Segoe UI", java.awt.Font.PLAIN, 12));
+
+         org.jfree.chart.axis.NumberAxis rangeAxis = (org.jfree.chart.axis.NumberAxis) plot.getRangeAxis();
+         rangeAxis.setTickLabelFont(new java.awt.Font("Segoe UI", java.awt.Font.PLAIN, 12));
+         rangeAxis.setRange(0, 100);
+         
+         // Buat ChartPanel
+         ChartPanel chartPanel = new ChartPanel(chart);
+         chartPanel.setPreferredSize(new java.awt.Dimension(600, 470));
+         chartPanel.setBackground(java.awt.Color.WHITE);
+
+         // Tambahkan ke panelChart
+         panelChart.removeAll();
+         panelChart.setLayout(new java.awt.BorderLayout());
+         panelChart.add(chartPanel, java.awt.BorderLayout.CENTER);
+         panelChart.revalidate();
+         panelChart.repaint();
      }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -267,7 +326,7 @@ public class panelDashboard extends javax.swing.JPanel {
         );
         panelChartLayout.setVerticalGroup(
             panelChartLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 470, Short.MAX_VALUE)
+            .addGap(0, 408, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -304,7 +363,7 @@ public class panelDashboard extends javax.swing.JPanel {
                     .addComponent(jPanelCustom4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(49, 49, 49)
                 .addComponent(panelChart, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(48, Short.MAX_VALUE))
+                .addContainerGap(110, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
