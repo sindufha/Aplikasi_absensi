@@ -284,29 +284,18 @@ public class AbsensiDAO {
     /**
  * Get semua status absensi dari database
  */
+/**
+ * Get semua status absensi dari database
+ */
 public List<String> getAllStatus() {
     List<String> listStatus = new ArrayList<>();
-    String sql = "SELECT DISTINCT status FROM absensi ORDER BY status";
     
-    try (Connection conn = Koneksi.getKoneksi();
-         Statement stmt = conn.createStatement();
-         ResultSet rs = stmt.executeQuery(sql)) {
-        
-        while (rs.next()) {
-            listStatus.add(rs.getString("status"));
-        }
-        
-    } catch (SQLException e) {
-        e.printStackTrace();
-    }
-    
-    // Jika database kosong atau error, return default
-    if (listStatus.isEmpty()) {
-        listStatus.add("Hadir");
-        listStatus.add("Sakit");
-        listStatus.add("Izin");
-        listStatus.add("Alfa");
-    }
+    // Hardcode semua status yang boleh dipilih guru
+    listStatus.add("Hadir");
+    listStatus.add("Sakit");
+    listStatus.add("Izin");
+    listStatus.add("Alfa");
+    listStatus.add("Telat");
     
     return listStatus;
 }

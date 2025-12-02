@@ -73,7 +73,8 @@ public class SiswaDAO {
 
     public Siswa getSiswaByNis(String nis) {
         String sql = "SELECT * FROM siswa WHERE nis = ?";
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = Koneksi.getKoneksi();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, nis);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
@@ -116,7 +117,9 @@ public class SiswaDAO {
     public List<Siswa> getSiswaByKelas(int idKelas) {
         List<Siswa> list = new ArrayList<>();
         String sql = "SELECT * FROM siswa WHERE id_kelas = ? ORDER BY nama_siswa";
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (
+                Connection conn = Koneksi.getKoneksi();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, idKelas);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
