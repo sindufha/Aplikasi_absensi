@@ -20,6 +20,7 @@ import javax.swing.DefaultCellEditor;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.Timer;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
@@ -44,8 +45,13 @@ public class panelAbsensi extends javax.swing.JPanel {
         loadComboBoxKelas();
         updateTanggalInfo();
         
-    }
-    
+        Timer t = new Timer(1000,(e)->{
+        java.sql.Time waktu = new java.sql.Time(System.currentTimeMillis());
+        waktuRealTime.setText(String.valueOf(waktu));
+       
+        });
+         t.start();
+                }
     private void loadComboBoxKelas() {
         
         cbKelas.removeAllItems();
@@ -180,7 +186,7 @@ private void simpanAbsensi() {
         }
         
         // Ambil tanggal hari ini
-        Date tanggal = new Date(System.currentTimeMillis());
+        Date tanggal = new java.sql.Date(System.currentTimeMillis());
         
         int berhasil = 0;
         int gagal = 0;
@@ -267,7 +273,7 @@ private void simpanAbsensi() {
         jLabel2 = new javax.swing.JLabel();
         lblTanggal = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
+        waktuRealTime = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         btnMuat = new javax.swing.JPanel();
@@ -309,8 +315,8 @@ private void simpanAbsensi() {
         jLabel4.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel4.setText("Waktu : ");
 
-        jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel5.setText("06:00");
+        waktuRealTime.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        waktuRealTime.setText("06:00");
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel6.setText("Waktu Masuk : ");
@@ -336,7 +342,7 @@ private void simpanAbsensi() {
                         .addGap(68, 68, 68)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblTanggal)
-                            .addComponent(jLabel5))))
+                            .addComponent(waktuRealTime))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -349,7 +355,7 @@ private void simpanAbsensi() {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
-                    .addComponent(jLabel5))
+                    .addComponent(waktuRealTime))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel7)
@@ -472,7 +478,6 @@ private void simpanAbsensi() {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
@@ -481,5 +486,6 @@ private void simpanAbsensi() {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblTanggal;
     private javax.swing.JTable tblAbsensiMnl;
+    private javax.swing.JLabel waktuRealTime;
     // End of variables declaration//GEN-END:variables
 }
