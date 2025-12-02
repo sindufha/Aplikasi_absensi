@@ -7,6 +7,8 @@ import ClassAbsensi.Siswa;
 import ClassAbsensi.SiswaDAO;
 import ClassAbsensi.User;
 import PanelPengaturan.dialogUbahUser;
+import absensiapp.DialogTambahSiswa;
+import absensiapp.dialogUbahSiswa;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
 import com.formdev.flatlaf.FlatDarkLaf;
@@ -269,70 +271,11 @@ private void loadComboBoxKelas() {
     }// </editor-fold>//GEN-END:initComponents
 
     private void bUbahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bUbahActionPerformed
-        int selectedRow = tblSiswa.getSelectedRow();
-
-        if (selectedRow == -1) {
-            JOptionPane.showMessageDialog(this,
-                "Pilih user yang akan diubah!",
-                "Peringatan",
-                JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-
-        try {
-            // Ambil data LANGSUNG dari tabel (tidak perlu query lagi)
-            String userId = tblSiswa.getValueAt(selectedRow, 0).toString();
-            String username = tblSiswa.getValueAt(selectedRow, 1).toString();
-            String nama = tblSiswa.getValueAt(selectedRow, 3).toString();
-            String role = tblSiswa.getValueAt(selectedRow, 4).toString();
-
-            System.out.println("Data dari tabel:");
-            System.out.println("  - ID: " + userId);
-            System.out.println("  - Username: " + username);
-            System.out.println("  - Nama: " + nama);
-            System.out.println("  - Role: " + role);
-
-            // Buat object User manual (tidak perlu getUserById)
-            User user = new User();
-            user.setUserId(Integer.parseInt(userId));
-            user.setUsername(username);
-            user.setNama(nama);
-            user.setRole(role);
-
-            // Validasi user tidak null
-            if (user.getUsername() == null || user.getUsername().isEmpty()) {
-                JOptionPane.showMessageDialog(this,
-                    "Data user tidak valid!",
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
-            // Buka dialog
-            dialogUbahUser dialog = new dialogUbahUser(
-                (java.awt.Frame) SwingUtilities.getWindowAncestor(this),
-                true,
-                user
-            );
-            dialog.setVisible(true);
-
-            // Refresh tabel
-            if (dialog.isSaved()) {
-                tampilkanDataSiswa();
-            }
-
-        } catch (Exception e) {
-            System.out.println("❌ Error btnUbah: " + e.getMessage());
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this,
-                "Terjadi kesalahan: " + e.getMessage(),
-                "Error",
-                JOptionPane.ERROR_MESSAGE);
-        }
+      new dialogUbahSiswa().setVisible(true);
     }//GEN-LAST:event_bUbahActionPerformed
 
     private void bTambahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bTambahActionPerformed
-      
+      new DialogTambahSiswa().setVisible(true);
     }//GEN-LAST:event_bTambahActionPerformed
 
     private void bHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bHapusActionPerformed
