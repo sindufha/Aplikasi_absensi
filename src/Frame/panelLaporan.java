@@ -407,11 +407,16 @@ public class panelLaporan extends javax.swing.JPanel {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         JFileChooser chooser = new JFileChooser();
-    chooser.setSelectedFile(new java.io.File("laporan.pdf"));
+        chooser.setSelectedFile(new java.io.File("laporan.pdf"));
 
     int result = chooser.showSaveDialog(this);
     if (result == JFileChooser.APPROVE_OPTION) {
         String path = chooser.getSelectedFile().getAbsolutePath();
+        
+        if (!path.toLowerCase().endsWith(".pdf")) {
+             path += ".pdf";
+        }
+
         exportPDF(absensi, path);
     }
         
@@ -471,7 +476,48 @@ public class panelLaporan extends javax.swing.JPanel {
     private javax.swing.JLabel lbl_siswasakit;
     // End of variables declaration//GEN-END:variables
 
-    private void exportPDF(JTable jTable1, String path) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public void exportPDF(JTable jTable1, String path) {
+        try {
+        // Pastikan folder tujuan tersedia
+        java.io.File file = new java.io.File(path);
+        java.io.File parent = file.getParentFile();
+        if (!parent.exists()) parent.mkdirs();
+
+        // Membuat dokumen PDF
+        com.itextpdf.text.Document doc = new com.itextpdf.text.Document();
+        com.itextpdf.text.pdf.PdfWriter.getInstance(doc, new java.io.FileOutputStream(path));
+
+        doc.open();
+
+        // Membuat tabel PDF sesuai kolom JTable
+        com.itextpdf.text.pdf.PdfPTable pdfTable = new com.itextpdf.text.pdf.PdfPTable(absensi.getColumnCount());
+
+        // Tambahkan header
+        for (int i = 0; i < absensi.getColumnCount(); i++) {
+            pdfTable.addCell(new com.itextpdf.text.pdf.PdfPCell(
+                    new com.itextpdf.text.Phrase(absensi.getColumnName(i))
+            ));
+        }
+
+        // Tambahkan isi data
+        for (int row = 0; row < absensi.getRowCount(); row++) {
+            for (int col = 0; col < absensi.getColumnCount(); col++) {
+                Object value = absensi.getValueAt(row, col);
+                pdfTable.addCell(value != null ? value.toString() : "");
+            }
+        }
+
+        doc.add(pdfTable);
+        doc.close();
+
+        JOptionPane.showMessageDialog(null,
+            "PDF berhasil disimpan di:\n" + path,
+            "Sukses", JOptionPane.INFORMATION_MESSAGE);
+
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(null,
+            "Gagal export PDF: " + e.getMessage(),
+            "Error", JOptionPane.ERROR_MESSAGE);
+    }  
     }
 }
