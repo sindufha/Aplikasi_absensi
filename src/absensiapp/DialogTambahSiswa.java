@@ -16,6 +16,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -38,7 +39,44 @@ public class DialogTambahSiswa extends javax.swing.JDialog {
         initComponents();
        
     }
+// Method untuk load semua ComboBox saat form dibuka
+private void loadComboBox() {
+    loadComboBoxJenisKelamin();
+    loadComboBoxKelas();
+}
 
+// Method untuk load ComboBox Jenis Kelamin
+private void loadComboBoxJenisKelamin() {
+    cJK.removeAllItems();
+    cJK.addItem("-- Pilih Jenis Kelamin --");
+    cJK.addItem("Laki-laki");
+    cJK.addItem("Perempuan");
+    cJK.setSelectedIndex(0);
+}
+
+// Method untuk load ComboBox Kelas dari database
+private void loadComboBoxKelas() {
+    cKelas.removeAllItems();
+    cKelas.addItem("-- Pilih Kelas --");
+    
+    SiswaDAO siswaDAO = new SiswaDAO();
+    List<Integer> listKelas = siswaDAO.getDistinctKelas();
+    
+    if (listKelas.isEmpty()) {
+        JOptionPane.showMessageDialog(this,
+            "Data kelas masih kosong!\n" +
+            "Silakan tambahkan data kelas terlebih dahulu.",
+            "Peringatan",
+            JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+    
+    for (Integer idKelas : listKelas) {
+        cKelas.addItem(String.valueOf(idKelas));
+    }
+    
+    cKelas.setSelectedIndex(0);
+}
     private void resetForm (){
         tNIS.setText("");
         tNama.setText("");
@@ -257,30 +295,17 @@ public class DialogTambahSiswa extends javax.swing.JDialog {
     }//GEN-LAST:event_btnBatalActionPerformed
 
     private void btnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSimpanActionPerformed
-      
-         String nis = tNIS.getText().trim();
+      String nis = tNIS.getText().trim();
     String namaSiswa = tNama.getText().trim();
     String jenisKelamin = cJK.getSelectedItem().toString();
     
-    // Ambil ID kelas dari combobox
-    // Asumsi: cKelas berisi data dengan format "ID - Nama Kelas" atau hanya ID
+    // Ambil ID kelas dari ComboBox
     int idKelas = 0;
-    if (cKelas.getSelectedItem() != null && !cKelas.getSelectedItem().toString().equals("Item 1")) {
-        try {
-            // Jika format "ID - Nama Kelas", ambil bagian ID saja
-            String kelasText = cKelas.getSelectedItem().toString();
-            if (kelasText.contains("-")) {
-                idKelas = Integer.parseInt(kelasText.split("-")[0].trim());
-            } else {
-                idKelas = Integer.parseInt(kelasText);
-            }
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-        }
+    if (cKelas.getSelectedIndex() > 0) { // Index 0 adalah "-- Pilih Kelas --"
+        idKelas = (Integer) cKelas.getSelectedItem();
     }
     
-    // QR Code akan digenerate atau diambil dari field (sesuaikan dengan kebutuhan)
-    String qrCode = nis; // Atau bisa generate dari button "Buat QR"
+    String qrCode = nis; // Atau ambil dari field QR Code
     
     // Validasi input
     if (nis.isEmpty()) {
@@ -292,7 +317,6 @@ public class DialogTambahSiswa extends javax.swing.JDialog {
         return;
     }
     
-    // Validasi format NIS (opsional, sesuaikan dengan kebutuhan)
     if (!nis.matches("\\d+")) {
         JOptionPane.showMessageDialog(this,
             "NIS harus berupa angka!",
@@ -311,7 +335,7 @@ public class DialogTambahSiswa extends javax.swing.JDialog {
         return;
     }
     
-    if (idKelas == 0 || cKelas.getSelectedItem().toString().equals("Item 1")) {
+    if (idKelas == 0 || cKelas.getSelectedIndex() == 0) {
         JOptionPane.showMessageDialog(this,
             "Kelas harus dipilih!",
             "Validasi Error",
@@ -320,7 +344,7 @@ public class DialogTambahSiswa extends javax.swing.JDialog {
         return;
     }
     
-    if (jenisKelamin.equals("Item 1")) {
+    if (cJK.getSelectedIndex() == 0) {
         JOptionPane.showMessageDialog(this,
             "Jenis kelamin harus dipilih!",
             "Validasi Error",
@@ -338,12 +362,12 @@ public class DialogTambahSiswa extends javax.swing.JDialog {
         return;
     }
     
-    // Konfirmasi sebelum menyimpan
+    // Konfirmasi
     int confirm = JOptionPane.showConfirmDialog(this,
         "Simpan data siswa dengan informasi:\n\n" +
         "NIS           : " + nis + "\n" +
         "Nama Siswa    : " + namaSiswa + "\n" +
-        "Kelas         : " + cKelas.getSelectedItem() + "\n" +
+        "Kelas         : " + idKelas + "\n" +
         "Jenis Kelamin : " + jenisKelamin + "\n\n" +
         "Apakah Anda yakin ingin menyimpan data ini?",
         "Konfirmasi Simpan Data",
@@ -369,16 +393,7 @@ public class DialogTambahSiswa extends javax.swing.JDialog {
                 "Berhasil",
                 JOptionPane.INFORMATION_MESSAGE);
             
-            // Clear form setelah berhasil
             dispose();
-            
-            // Tutup dialog/form (jika ini adalah dialog)
-            // this.dispose();
-            
-            // Atau refresh data di frame parent (jika ada)
-            // if (parentFrame != null) {
-            //     parentFrame.loadDataSiswa();
-            // }
             
         } else {
             JOptionPane.showMessageDialog(this,
@@ -386,13 +401,12 @@ public class DialogTambahSiswa extends javax.swing.JDialog {
                 "Kemungkinan penyebab:\n" +
                 "• NIS sudah terdaftar\n" +
                 "• Koneksi database bermasalah\n" +
-                "• Data tidak valid\n\n" +
-                "Silakan cek kembali data Anda.",
+                "• Data tidak valid",
                 "Error",
                 JOptionPane.ERROR_MESSAGE);
         }
-    
-}
+    }
+
 
        
     }//GEN-LAST:event_btnSimpanActionPerformed
