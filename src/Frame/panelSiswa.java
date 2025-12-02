@@ -14,7 +14,7 @@ import com.formdev.flatlaf.themes.FlatMacLightLaf;
 import java.awt.Color;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
-
+import absensiapp.DialogTambahSiswa;
 /**
  *
  * @author MyBook Hype AMD
@@ -331,7 +331,8 @@ private void loadComboBoxKelas() {
     }//GEN-LAST:event_bUbahActionPerformed
 
     private void bTambahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bTambahActionPerformed
-      
+      DialogTambahSiswa dia = new DialogTambahSiswa();
+      dia.setVisible(true);
     }//GEN-LAST:event_bTambahActionPerformed
 
     private void bHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bHapusActionPerformed
