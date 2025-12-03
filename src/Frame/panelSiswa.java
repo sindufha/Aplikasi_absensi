@@ -28,94 +28,116 @@ private SiswaDAO siswaDAO;
      */
     public panelSiswa() {
         initComponents();
-    
-        siswaDAO  = new SiswaDAO();
+        siswaDAO = new SiswaDAO();
+        loadComboBoxKelas(); // Load kelas dari database
         tampilkanDataSiswa();
     }
     
+    
+    
     private void tampilkanDataSiswa() {
-    DefaultTableModel model = new DefaultTableModel();
-    model.addColumn("No");
-    model.addColumn("NIS");
-    model.addColumn("Nama Siswa");
-    model.addColumn("Kelas");
-    model.addColumn("Jenis Kelamin");
-    
-    SiswaDAO siswaDAO = new SiswaDAO();
-    List<Siswa> listSiswa = siswaDAO.getAllSiswa();
-    
-    int no = 1;
-    for (Siswa siswa : listSiswa) {
-        model.addRow(new Object[]{
-            no++,
-            siswa.getNis(),
-            siswa.getNamaSiswa(),
-            siswa.getIdKelas(),
-            siswa.getJenisKelamin()
-        });
+        DefaultTableModel model = new DefaultTableModel();
+        model.addColumn("No");
+        model.addColumn("NIS");
+        model.addColumn("Nama Siswa");
+        model.addColumn("Kelas");
+        model.addColumn("Jenis Kelamin");
+
+        List<Siswa> listSiswa = siswaDAO.getAllSiswa();
+
+        int no = 1;
+        for (Siswa siswa : listSiswa) {
+            model.addRow(new Object[]{
+                no++,
+                siswa.getNis(),
+                siswa.getNamaSiswa(),
+                siswa.getIdKelas(),
+                siswa.getJenisKelamin()
+            });
+        }
+
+        tblSiswa.setModel(model);
     }
-    
-    tblSiswa.setModel(model);
-}
-    
+
     private void filterSiswaByKelas() {
-    // Ambil id_kelas yang dipilih dari ComboBox
-    int idKelas;
-    idKelas = Integer.parseInt(cbFilter.getSelectedItem().toString());
-    
-    if (idKelas > 0) {
-        // Panggil method getSiswaByKelas dari SiswaDB
+        // Ambil id_kelas yang dipilih dari ComboBox
+        int idKelas;
+        idKelas = Integer.parseInt(cbFilter.getSelectedItem().toString());
+
+        if (idKelas > 0) {
+            // Panggil method getSiswaByKelas dari SiswaDB
+            SiswaDAO siswaDB = new SiswaDAO();
+            List<Siswa> listSiswa = siswaDB.getSiswaByKelas(idKelas);
+
+            // Tampilkan data ke table
+            loadTableData(listSiswa);
+        } else {
+            // Jika "Semua Kelas" dipilih, tampilkan semua siswa
+            loadAllSiswa();
+        }
+    }
+
+    private void loadTableData(List<Siswa> listSiswa) {
+        DefaultTableModel model = (DefaultTableModel) tblSiswa.getModel();
+        model.setRowCount(0);
+
+        int no = 1;
+        for (Siswa siswa : listSiswa) {
+            model.addRow(new Object[]{
+                no++, // No
+                siswa.getNis(), // NIS
+                siswa.getNamaSiswa(), // Nama Siswa
+                siswa.getIdKelas(), // Kelas
+                siswa.getJenisKelamin() // Jenis Kelamin
+            });
+        }
+    }
+
+    private void loadAllSiswa() {
         SiswaDAO siswaDB = new SiswaDAO();
-        List<Siswa> listSiswa = siswaDB.getSiswaByKelas(idKelas);
-        
-        // Tampilkan data ke table
+        List<Siswa> listSiswa = siswaDB.getAllSiswa();
         loadTableData(listSiswa);
-    } else {
-        // Jika "Semua Kelas" dipilih, tampilkan semua siswa
-        loadAllSiswa();
     }
-}
 
-
-
-private void loadTableData(List<Siswa> listSiswa) {
-    // Clear table terlebih dahulu
-    DefaultTableModel model = (DefaultTableModel) tblSiswa.getModel();
-    model.setRowCount(0);
-    
-    // Isi table dengan data siswa
-    for (Siswa siswa : listSiswa) {
-        model.addRow(new Object[]{
-            siswa.getIdSiswa(),
-            siswa.getNis(),
-            siswa.getNamaSiswa(),
-            siswa.getIdKelas(),
-            siswa.getJenisKelamin(),
-            siswa.getQrCode()
-        });
-    }
-}
-
-private void loadAllSiswa() {
-    SiswaDAO siswaDB = new SiswaDAO();
-    List<Siswa> listSiswa = siswaDB.getAllSiswa();
-    loadTableData(listSiswa);
-}
-
-private void loadComboBoxKelas() {
+    private void loadComboBoxKelas() {
         cbFilter.removeAllItems();
         cbFilter.addItem("-- Semua Kelas --");
-        
+
         List<Integer> listKelas = siswaDAO.getDistinctKelas();
-        
+
         for (Integer idKelas : listKelas) {
             cbFilter.addItem(idKelas.toString());
-        
+        }
+    }
+
+    private void searchSiswa() {
+        String keyword = tCari.getText().trim();
+
+        // Buat model tabel
+        DefaultTableModel model = new DefaultTableModel();
+        model.addColumn("NIS");
+        model.addColumn("Nama Siswa");
+        model.addColumn("Kelas");
+        model.addColumn("Jenis Kelamin");
+
+        // Ambil data dari database berdasarkan keyword
+        SiswaDAO siswaDAO = new SiswaDAO();
+        List<Siswa> listSiswa = siswaDAO.cariSiswa(keyword);
+
+        // Isi data ke tabel
+        for (Siswa siswa : listSiswa) {
+            model.addRow(new Object[]{
+                siswa.getNis(),
+                siswa.getNamaSiswa(),
+                siswa.getIdKelas(),
+                siswa.getJenisKelamin()
+            });
+        }
+
+        tblSiswa.setModel(model);
     }
 
     
-
-    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -164,6 +186,11 @@ private void loadComboBoxKelas() {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        tblSiswa.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblSiswaMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tblSiswa);
 
         bUbah.setBackground(new java.awt.Color(245, 158, 11));
@@ -245,7 +272,6 @@ private void loadComboBoxKelas() {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(2, 2, 2)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cbFilter, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(23, 23, 23)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -279,26 +305,124 @@ private void loadComboBoxKelas() {
     }//GEN-LAST:event_bTambahActionPerformed
 
     private void bHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bHapusActionPerformed
-        
+        int selectedRow = tblSiswa.getSelectedRow();
+
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this,
+                    "Pilih data siswa yang akan dihapus!",
+                    "Peringatan",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // Ambil data dari baris yang dipilih
+        String nis = tblSiswa.getValueAt(selectedRow, 1).toString();
+        String namaSiswa = tblSiswa.getValueAt(selectedRow, 2).toString();
+
+        // ✅ Ambil id_siswa (sesuaikan dengan kolom di tabel)
+        // Jika id_siswa ada di kolom tersembunyi atau kolom tertentu
+        int idSiswa = Integer.parseInt(tblSiswa.getValueAt(selectedRow, 0).toString());
+
+        // Konfirmasi hapus
+        int confirm = JOptionPane.showConfirmDialog(this,
+                "Apakah Anda yakin ingin menghapus data siswa?\n\n"
+                + "NIS  : " + nis + "\n"
+                + "Nama : " + namaSiswa + "\n\n"
+                + "Data yang dihapus tidak dapat dikembalikan!",
+                "Konfirmasi Hapus",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE);
+
+        if (confirm == JOptionPane.YES_OPTION) {
+            SiswaDAO siswaDAO = new SiswaDAO();
+
+            // ✅ Panggil method hapusSiswa dengan parameter int idSiswa
+            boolean success = siswaDAO.hapusSiswa(idSiswa);
+
+            if (success) {
+                JOptionPane.showMessageDialog(this,
+                        "√ Data siswa berhasil dihapus!",
+                        "Berhasil",
+                        JOptionPane.INFORMATION_MESSAGE);
+
+                // Load ulang langsung dari database
+                List<Siswa> listSiswa = siswaDAO.getAllSiswa();
+                loadTableData(listSiswa);
+
+            } else {
+                JOptionPane.showMessageDialog(this,
+                        "✗ Gagal menghapus data siswa!",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        }
+
     }//GEN-LAST:event_bHapusActionPerformed
 
     private void bResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bResetActionPerformed
-      
+      // Reset filter
+        cbFilter.setSelectedIndex(0);
+        tCari.setText("");
+
+        // Load ulang langsung dari database
+        List<Siswa> listSiswa = siswaDAO.getAllSiswa();
+        loadTableData(listSiswa);
+
+        JOptionPane.showMessageDialog(this, "Filter dan pencarian telah direset!",
+                "Info", JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_bResetActionPerformed
 
     private void cbFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbFilterActionPerformed
-  Object selected = cbFilter.getSelectedItem();
-                List<Siswa> listSiswa;
-                
-                if (selected instanceof Integer) {
-                    int idKelas = (Integer) selected;
-                    listSiswa = siswaDAO.getSiswaByKelas(idKelas);
-                } else {
-                    listSiswa = siswaDAO.getAllSiswa();
-                }
-                
-                loadTableData(listSiswa);        // TODO add your handling code here:
+
+        Object selectedItem = cbFilter.getSelectedItem();
+    
+    if (selectedItem == null) {
+        // Jika null, tampilkan semua siswa atau return
+        List<Siswa> listSiswa = siswaDAO.getAllSiswa();
+        loadTableData(listSiswa);
+        return;
+    }
+    
+    String selected = selectedItem.toString();
+    List<Siswa> listSiswa;
+    
+    // Cek apakah pilihan adalah "-- Semua Kelas --" atau angka kelas
+    if (selected.equals("-- Semua Kelas --") || cbFilter.getSelectedIndex() == 0) {
+        // Tampilkan semua siswa
+        listSiswa = siswaDAO.getAllSiswa();
+    } else {
+        // Parse String ke Integer dan filter berdasarkan kelas
+        try {
+            int idKelas = Integer.parseInt(selected);
+            listSiswa = siswaDAO.getSiswaByKelas(idKelas);
+        } catch (NumberFormatException e) {
+            // Jika parsing gagal, tampilkan semua siswa
+            listSiswa = siswaDAO.getAllSiswa();
+        }
+    }
+    
+    loadTableData(listSiswa);
     }//GEN-LAST:event_cbFilterActionPerformed
+
+    private void tblSiswaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblSiswaMouseClicked
+        int baris = tblSiswa.rowAtPoint(evt.getPoint());
+
+        if (baris >= 0) {
+            // Highlight baris yang dipilih
+            tblSiswa.setRowSelectionInterval(baris, baris);
+
+            // Enable tombol Ubah dan Hapus
+            bUbah.setEnabled(true);
+            bHapus.setEnabled(true);
+
+            // Jika double click, langsung buka dialog edit
+            if (evt.getClickCount() == 2) {
+                bUbahActionPerformed(null);
+            }
+        }
+
+        
+    }//GEN-LAST:event_tblSiswaMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
