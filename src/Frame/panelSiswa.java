@@ -7,6 +7,8 @@ import ClassAbsensi.Siswa;
 import ClassAbsensi.SiswaDAO;
 import ClassAbsensi.User;
 import PanelPengaturan.dialogUbahUser;
+import absensiapp.DialogTambahSiswa;
+import absensiapp.dialogUbahSiswa;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
 import com.formdev.flatlaf.FlatDarkLaf;
@@ -269,13 +271,11 @@ private void loadComboBoxKelas() {
     }// </editor-fold>//GEN-END:initComponents
 
     private void bUbahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bUbahActionPerformed
-       dialogUbahSiswa du = new dialogUbahSiswa();
-       du.setVisible(true);
+      new dialogUbahSiswa().setVisible(true);
     }//GEN-LAST:event_bUbahActionPerformed
 
     private void bTambahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bTambahActionPerformed
-      DialogTambahSiswa dia = new DialogTambahSiswa();
-      dia.setVisible(true);
+      new DialogTambahSiswa().setVisible(true);
     }//GEN-LAST:event_bTambahActionPerformed
 
     private void bHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bHapusActionPerformed
