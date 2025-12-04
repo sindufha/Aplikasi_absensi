@@ -8,6 +8,13 @@ import ClassAbsensi.QRCodeGenerator;
 import ClassAbsensi.Koneksi;
 import ClassAbsensi.Siswa;
 import ClassAbsensi.SiswaDAO;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.EncodeHintType;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.WriterException;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import java.awt.HeadlessException;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -16,7 +23,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -40,43 +49,44 @@ public class DialogTambahSiswa extends javax.swing.JDialog {
        
     }
 // Method untuk load semua ComboBox saat form dibuka
-private void loadComboBox() {
-    loadComboBoxJenisKelamin();
-    loadComboBoxKelas();
-}
+
+    private void loadComboBox() {
+        loadComboBoxJenisKelamin();
+        loadComboBoxKelas();
+    }
 
 // Method untuk load ComboBox Jenis Kelamin
-private void loadComboBoxJenisKelamin() {
-    cJK.removeAllItems();
-    cJK.addItem("-- Pilih Jenis Kelamin --");
-    cJK.addItem("Laki-laki");
-    cJK.addItem("Perempuan");
-    cJK.setSelectedIndex(0);
-}
+    private void loadComboBoxJenisKelamin() {
+        cJK.removeAllItems();
+        cJK.addItem("-- Pilih Jenis Kelamin --");
+        cJK.addItem("Laki-laki");
+        cJK.addItem("Perempuan");
+        cJK.setSelectedIndex(0);
+    }
 
 // Method untuk load ComboBox Kelas dari database
-private void loadComboBoxKelas() {
-    cKelas.removeAllItems();
-    cKelas.addItem("-- Pilih Kelas --");
-    
-    SiswaDAO siswaDAO = new SiswaDAO();
-    List<Integer> listKelas = siswaDAO.getDistinctKelas();
-    
-    if (listKelas.isEmpty()) {
-        JOptionPane.showMessageDialog(this,
-            "Data kelas masih kosong!\n" +
-            "Silakan tambahkan data kelas terlebih dahulu.",
-            "Peringatan",
-            JOptionPane.WARNING_MESSAGE);
-        return;
+    private void loadComboBoxKelas() {
+        cKelas.removeAllItems();
+        cKelas.addItem("-- Pilih Kelas --");
+
+        SiswaDAO siswaDAO = new SiswaDAO();
+        List<Integer> listKelas = siswaDAO.getDistinctKelas();
+
+        if (listKelas.isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                    "Data kelas masih kosong!\n"
+                    + "Silakan tambahkan data kelas terlebih dahulu.",
+                    "Peringatan",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        for (Integer idKelas : listKelas) {
+            cKelas.addItem(String.valueOf(idKelas));
+        }
+
+        cKelas.setSelectedIndex(0);
     }
-    
-    for (Integer idKelas : listKelas) {
-        cKelas.addItem(String.valueOf(idKelas));
-    }
-    
-    cKelas.setSelectedIndex(0);
-}
     private void resetForm (){
         tNIS.setText("");
         tNama.setText("");
@@ -156,6 +166,11 @@ private void loadComboBoxKelas() {
         );
 
         bBuat.setText("Buat QR");
+        bBuat.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bBuatActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -410,6 +425,78 @@ private void loadComboBoxKelas() {
 
        
     }//GEN-LAST:event_btnSimpanActionPerformed
+
+    private void bBuatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bBuatActionPerformed
+         try {
+        // Ambil data dari form
+        String nis = tNIS.getText().trim();
+        String namaSiswa = tNama.getText().trim();
+        
+        // Validasi minimal NIS
+        if (nis.isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                "NIS harus diisi terlebih dahulu!",
+                "Peringatan",
+                JOptionPane.WARNING_MESSAGE);
+            tNIS.requestFocus();
+            return;
+        }
+        
+        if (namaSiswa.isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                "Nama Siswa harus diisi terlebih dahulu!",
+                "Peringatan",
+                JOptionPane.WARNING_MESSAGE);
+            tNama.requestFocus();
+            return;
+        }
+        
+        String kelas = cKelas.getSelectedItem().toString();
+        String jenisKelamin = cJK.getSelectedItem().toString();
+        
+        // Buat data untuk QR Code
+        String qrData = "NIS: " + nis + "\n" +
+                       "Nama: " + namaSiswa + "\n" +
+                       "Kelas: " + kelas + "\n" +
+                       "Jenis Kelamin: " + jenisKelamin;
+        
+        // Generate QR Code
+        int size = 300;
+        String charset = "UTF-8";
+        
+        Map<EncodeHintType, Object> hints = new HashMap<>();
+        hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H);
+        hints.put(EncodeHintType.CHARACTER_SET, charset);
+        hints.put(EncodeHintType.MARGIN, 1);
+        
+        BitMatrix matrix = new MultiFormatWriter().encode(
+            qrData,
+            BarcodeFormat.QR_CODE,
+            size,
+            size,
+            hints
+        );
+        
+        // Convert ke BufferedImage
+        BufferedImage qrImage = MatrixToImageWriter.toBufferedImage(matrix);
+        
+        // Tampilkan di label
+        ImageIcon icon = new ImageIcon(qrImage);
+        lblCode.setIcon(icon);
+        
+        JOptionPane.showMessageDialog(this,
+            "✓ QR Code berhasil dibuat!",
+            "Berhasil",
+            JOptionPane.INFORMATION_MESSAGE);
+        
+    } catch (WriterException e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(this,
+            "✗ Gagal membuat QR Code: " + e.getMessage(),
+            "Error",
+            JOptionPane.ERROR_MESSAGE);
+    }
+    }//GEN-LAST:event_bBuatActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

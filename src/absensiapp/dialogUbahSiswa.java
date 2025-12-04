@@ -6,6 +6,15 @@ package absensiapp;
 import ClassAbsensi.Koneksi;
 import ClassAbsensi.QRCodeGenerator;
 import ClassAbsensi.Koneksi;
+import ClassAbsensi.Siswa;
+import ClassAbsensi.SiswaDAO;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.EncodeHintType;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.WriterException;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import java.awt.HeadlessException;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -14,6 +23,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -33,7 +45,48 @@ public class dialogUbahSiswa extends javax.swing.JDialog {
         initComponents();
     }
 
-    private void resetForm (){
+    
+    // Method untuk load semua ComboBox saat form dibuka
+
+    private void loadComboBox() {
+        loadComboBoxJenisKelamin();
+        loadComboBoxKelas();
+    }
+
+// Method untuk load ComboBox Jenis Kelamin
+    private void loadComboBoxJenisKelamin() {
+        cJK.removeAllItems();
+        cJK.addItem("-- Pilih Jenis Kelamin --");
+        cJK.addItem("Laki-laki");
+        cJK.addItem("Perempuan");
+        cJK.setSelectedIndex(0);
+    }
+
+// Method untuk load ComboBox Kelas dari database
+    private void loadComboBoxKelas() {
+        cKelas.removeAllItems();
+        cKelas.addItem("-- Pilih Kelas --");
+
+        SiswaDAO siswaDAO = new SiswaDAO();
+        List<Integer> listKelas = siswaDAO.getDistinctKelas();
+
+        if (listKelas.isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                    "Data kelas masih kosong!\n"
+                    + "Silakan tambahkan data kelas terlebih dahulu.",
+                    "Peringatan",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        for (Integer idKelas : listKelas) {
+            cKelas.addItem(String.valueOf(idKelas));
+        }
+
+        cKelas.setSelectedIndex(0);
+    }
+
+    private void resetForm() {
         tNIS.setText("");
         tNama.setText("");
         cKelas.setSelectedIndex(0);
@@ -133,6 +186,11 @@ public class dialogUbahSiswa extends javax.swing.JDialog {
         );
 
         bBuat.setText("Buat QR");
+        bBuat.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bBuatActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -201,8 +259,8 @@ public class dialogUbahSiswa extends javax.swing.JDialog {
             }
         });
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -236,129 +294,203 @@ public class dialogUbahSiswa extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSimpanActionPerformed
-        String nis = tNIS.getText();
-        String nama = tNama.getText();
-        String kelas = cKelas.getSelectedItem().toString();
-        String Jk = cJK.getSelectedItem().toString();
+        String nis = tNIS.getText().trim();
+        String namaSiswa = tNama.getText().trim();
+        String jenisKelamin = cJK.getSelectedItem().toString();
 
-        if (nis.isEmpty() || nama.isEmpty()){
+        // Ambil ID kelas dari ComboBox
+        int idKelas = 0;
+        if (cKelas.getSelectedIndex() > 0) { // Index 0 adalah "-- Pilih Kelas --"
+            idKelas = (Integer) cKelas.getSelectedItem();
+        }
+
+        String qrCode = nis; // Atau ambil dari field QR Code
+
+        // Validasi input
+        if (nis.isEmpty()) {
             JOptionPane.showMessageDialog(this,
-                "NIS dan Nama Tidak Boleh Kosong!",
-                "Validasi Error",
-                JOptionPane.ERROR_MESSAGE);
+                    "NIS tidak boleh kosong!",
+                    "Validasi Error",
+                    JOptionPane.WARNING_MESSAGE);
+            tNIS.requestFocus();
             return;
         }
 
-        try {
-            Connection conn = Koneksi.getKoneksi();
-
-            if (conn == null) {
-                JOptionPane.showMessageDialog(this,
-                    "Gagal Koneksi Ke Database!",
-                    "Database Error",
-                    JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
-            //Cek apakah nis sudah ada
-            String checkSql = "SELECT COUNT(*) FROM siswa WHERE nis = ?";
-            PreparedStatement checkPs = conn.prepareStatement(checkSql);
-            checkPs.setString(1, nis);
-            ResultSet rs = checkPs.executeQuery();
-
-            if (rs.next() && rs.getInt(1) > 0) {
-                JOptionPane.showMessageDialog(this,
-                    "NIS Sudah Terdaftar!",
+        if (!nis.matches("\\d+")) {
+            JOptionPane.showMessageDialog(this,
+                    "NIS harus berupa angka!",
                     "Validasi Error",
-                    JOptionPane.ERROR_MESSAGE);
-                rs.close();
-                checkPs.close();
-                return;
-            }
-            rs.close();
-            checkPs.close();
+                    JOptionPane.WARNING_MESSAGE);
+            tNIS.requestFocus();
+            return;
+        }
 
-            //generete QR code
-            String qrData = nis; //Data yang di encode ke QR
-            String qrPath = QRCodeGenerator.generateAndSaveSiswaQR(nis);
-
-            if (qrPath == null) {
-                JOptionPane.showMessageDialog(this,
-                    "Gagal Generate QR Code!",
-                    "QR Error",
-                    JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
-            //tampilkan QR code di preview (150x150)
-            ImageIcon qrIcon = QRCodeGenerator.loadQRCodeForPreview(qrPath,150);
-            if (qrIcon != null){
-                lblCode.setIcon(qrIcon);
-                lblCode.setText("");
-            } else {
-                lblCode.setIcon(null);
-                lblCode.setText("Preview Tidak Tersedia");
-            }
-
-            // insert kedatabase
-            String sql = "UPDATE siswa SET nama_siswa=?, jenis_kelamin=?, id_kelas=?, qr_code=?, qr_image_path=? WHERE nis=?";
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, nama);
-            ps.setString(2, Jk);
-            ps.setString(3, kelas);
-            ps.setString(4, qrData);
-            ps.setString(5, qrPath);
-            ps.setString(6, nis);
-
-            int result = ps.executeUpdate();
-            ps.close();
-
-            if (result > 0) {
-                //tampilkan QR code di jlabel
-                BufferedImage qrImage = ImageIO.read(new File(qrPath));
-                lblCode.setIcon(new ImageIcon(qrImage));
-                lblCode.setText(""); //hapus text default
-
-                JOptionPane.showMessageDialog(this,
-                    "Data Siswa Berhasil Disimpan!\nQR Code: " + qrPath,
-                    "Sukses",
-                    JOptionPane.INFORMATION_MESSAGE);
-
-                //reset form
-                resetForm();
-            } else {
-                JOptionPane.showMessageDialog(this,
-                    "Gagal Menyimpan Data!",
-                    "Database Error",
-                    JOptionPane.ERROR_MESSAGE);
-            }
-        } catch (SQLException sQLException) {
-            sQLException.printStackTrace();
+        if (namaSiswa.isEmpty()) {
             JOptionPane.showMessageDialog(this,
-                "Error Database:" +sQLException.getMessage(),
-                "Database Error",
-                JOptionPane.ERROR_MESSAGE);
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            JOptionPane.showMessageDialog(this,
-                "Error: " + ex.getMessage(),
-                "Error",
-                JOptionPane.ERROR_MESSAGE);
+                    "Nama siswa tidak boleh kosong!",
+                    "Validasi Error",
+                    JOptionPane.WARNING_MESSAGE);
+            tNama.requestFocus();
+            return;
+        }
 
+        if (idKelas == 0 || cKelas.getSelectedIndex() == 0) {
+            JOptionPane.showMessageDialog(this,
+                    "Kelas harus dipilih!",
+                    "Validasi Error",
+                    JOptionPane.WARNING_MESSAGE);
+            cKelas.requestFocus();
+            return;
+        }
+
+        if (cJK.getSelectedIndex() == 0) {
+            JOptionPane.showMessageDialog(this,
+                    "Jenis kelamin harus dipilih!",
+                    "Validasi Error",
+                    JOptionPane.WARNING_MESSAGE);
+            cJK.requestFocus();
+            return;
+        }
+
+        if (qrCode.isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                    "QR Code belum dibuat!\n"
+                    + "Klik tombol 'Buat QR' terlebih dahulu.",
+                    "Validasi Error",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // Konfirmasi
+        int confirm = JOptionPane.showConfirmDialog(this,
+                "Simpan data siswa dengan informasi:\n\n"
+                + "NIS           : " + nis + "\n"
+                + "Nama Siswa    : " + namaSiswa + "\n"
+                + "Kelas         : " + idKelas + "\n"
+                + "Jenis Kelamin : " + jenisKelamin + "\n\n"
+                + "Apakah Anda yakin ingin menyimpan data ini?",
+                "Konfirmasi Simpan Data",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE);
+
+        if (confirm == JOptionPane.YES_OPTION) {
+            // Buat object Siswa
+            Siswa siswa = new Siswa();
+            siswa.setNis(nis);
+            siswa.setNamaSiswa(namaSiswa);
+            siswa.setIdKelas(idKelas);
+            siswa.setJenisKelamin(jenisKelamin);
+            siswa.setQrCode(qrCode);
+
+            // Panggil method dari SiswaDAO
+            SiswaDAO siswaDAO = new SiswaDAO();
+            boolean success = siswaDAO.updateSiswa(siswa);
+
+            if (success) {
+                JOptionPane.showMessageDialog(this,
+                        "✓ Data siswa berhasil disimpan!",
+                        "Berhasil",
+                        JOptionPane.INFORMATION_MESSAGE);
+
+                dispose();
+
+            } else {
+                JOptionPane.showMessageDialog(this,
+                        "✗ Gagal menyimpan data siswa!\n\n"
+                        + "Kemungkinan penyebab:\n"
+                        + "• NIS sudah terdaftar\n"
+                        + "• Koneksi database bermasalah\n"
+                        + "• Data tidak valid",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+            }
         }
 
     }//GEN-LAST:event_btnSimpanActionPerformed
 
     private void btnBatalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBatalActionPerformed
         int confirm = JOptionPane.showConfirmDialog(this,
-            "Batalkan perubahan?",
-            "Konfirmasi",
-            JOptionPane.YES_NO_OPTION);
+                "Batalkan perubahan?",
+                "Konfirmasi",
+                JOptionPane.YES_NO_OPTION);
 
         if (confirm == JOptionPane.YES_OPTION) {
             dispose();
         }
     }//GEN-LAST:event_btnBatalActionPerformed
+
+    private void bBuatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bBuatActionPerformed
+        try {
+            // Ambil data dari form
+            String nis = tNIS.getText().trim();
+            String namaSiswa = tNama.getText().trim();
+
+            // Validasi minimal NIS
+            if (nis.isEmpty()) {
+                JOptionPane.showMessageDialog(this,
+                        "NIS harus diisi terlebih dahulu!",
+                        "Peringatan",
+                        JOptionPane.WARNING_MESSAGE);
+                tNIS.requestFocus();
+                return;
+            }
+
+            if (namaSiswa.isEmpty()) {
+                JOptionPane.showMessageDialog(this,
+                        "Nama Siswa harus diisi terlebih dahulu!",
+                        "Peringatan",
+                        JOptionPane.WARNING_MESSAGE);
+                tNama.requestFocus();
+                return;
+            }
+
+            String kelas = cKelas.getSelectedItem().toString();
+            String jenisKelamin = cJK.getSelectedItem().toString();
+
+            // Buat data untuk QR Code
+            String qrData = "NIS: " + nis + "\n"
+                    + "Nama: " + namaSiswa + "\n"
+                    + "Kelas: " + kelas + "\n"
+                    + "Jenis Kelamin: " + jenisKelamin;
+
+            // Generate QR Code
+            int size = 300;
+            String charset = "UTF-8";
+
+            Map<EncodeHintType, Object> hints = new HashMap<>();
+            hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H);
+            hints.put(EncodeHintType.CHARACTER_SET, charset);
+            hints.put(EncodeHintType.MARGIN, 1);
+
+            BitMatrix matrix = new MultiFormatWriter().encode(
+                    qrData,
+                    BarcodeFormat.QR_CODE,
+                    size,
+                    size,
+                    hints
+            );
+
+            // Convert ke BufferedImage
+            BufferedImage qrImage = MatrixToImageWriter.toBufferedImage(matrix);
+
+            // Tampilkan di label
+            ImageIcon icon = new ImageIcon(qrImage);
+            lblCode.setIcon(icon);
+
+            JOptionPane.showMessageDialog(this,
+                    "✓ QR Code berhasil dibuat!",
+                    "Berhasil",
+                    JOptionPane.INFORMATION_MESSAGE);
+
+        } catch (WriterException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this,
+                    "✗ Gagal membuat QR Code: " + e.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+        
+    }//GEN-LAST:event_bBuatActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
