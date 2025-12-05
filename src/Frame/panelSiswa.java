@@ -15,7 +15,10 @@ import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
 import java.awt.Color;
 import javax.swing.JOptionPane;
+import javax.swing.RowFilter;
 import javax.swing.SwingUtilities;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 
 /**
  *
@@ -32,9 +35,7 @@ private SiswaDAO siswaDAO;
         loadComboBoxKelas(); // Load kelas dari database
         tampilkanDataSiswa();
     }
-    
-    
-    
+
     private void tampilkanDataSiswa() {
         DefaultTableModel model = new DefaultTableModel();
         model.addColumn("No");
@@ -110,33 +111,6 @@ private SiswaDAO siswaDAO;
         }
     }
 
-    private void searchSiswa() {
-        String keyword = tCari.getText().trim();
-
-        // Buat model tabel
-        DefaultTableModel model = new DefaultTableModel();
-        model.addColumn("NIS");
-        model.addColumn("Nama Siswa");
-        model.addColumn("Kelas");
-        model.addColumn("Jenis Kelamin");
-
-        // Ambil data dari database berdasarkan keyword
-        SiswaDAO siswaDAO = new SiswaDAO();
-        List<Siswa> listSiswa = siswaDAO.cariSiswa(keyword);
-
-        // Isi data ke tabel
-        for (Siswa siswa : listSiswa) {
-            model.addRow(new Object[]{
-                siswa.getNis(),
-                siswa.getNamaSiswa(),
-                siswa.getIdKelas(),
-                siswa.getJenisKelamin()
-            });
-        }
-
-        tblSiswa.setModel(model);
-    }
-
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -174,6 +148,17 @@ private SiswaDAO siswaDAO;
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel2.setText("Search :");
+
+        tCari.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tCariActionPerformed(evt);
+            }
+        });
+        tCari.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                tCariKeyReleased(evt);
+            }
+        });
 
         tblSiswa.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -375,33 +360,33 @@ private SiswaDAO siswaDAO;
     private void cbFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbFilterActionPerformed
 
         Object selectedItem = cbFilter.getSelectedItem();
-    
-    if (selectedItem == null) {
-        // Jika null, tampilkan semua siswa atau return
-        List<Siswa> listSiswa = siswaDAO.getAllSiswa();
-        loadTableData(listSiswa);
-        return;
-    }
-    
-    String selected = selectedItem.toString();
-    List<Siswa> listSiswa;
-    
-    // Cek apakah pilihan adalah "-- Semua Kelas --" atau angka kelas
-    if (selected.equals("-- Semua Kelas --") || cbFilter.getSelectedIndex() == 0) {
-        // Tampilkan semua siswa
-        listSiswa = siswaDAO.getAllSiswa();
-    } else {
-        // Parse String ke Integer dan filter berdasarkan kelas
-        try {
-            int idKelas = Integer.parseInt(selected);
-            listSiswa = siswaDAO.getSiswaByKelas(idKelas);
-        } catch (NumberFormatException e) {
-            // Jika parsing gagal, tampilkan semua siswa
-            listSiswa = siswaDAO.getAllSiswa();
+
+        if (selectedItem == null) {
+            // Jika null, tampilkan semua siswa atau return
+            List<Siswa> listSiswa = siswaDAO.getAllSiswa();
+            loadTableData(listSiswa);
+            return;
         }
-    }
-    
-    loadTableData(listSiswa);
+
+        String selected = selectedItem.toString();
+        List<Siswa> listSiswa;
+
+        // Cek apakah pilihan adalah "-- Semua Kelas --" atau angka kelas
+        if (selected.equals("-- Semua Kelas --") || cbFilter.getSelectedIndex() == 0) {
+            // Tampilkan semua siswa
+            listSiswa = siswaDAO.getAllSiswa();
+        } else {
+            // Parse String ke Integer dan filter berdasarkan kelas
+            try {
+                int idKelas = Integer.parseInt(selected);
+                listSiswa = siswaDAO.getSiswaByKelas(idKelas);
+            } catch (NumberFormatException e) {
+                // Jika parsing gagal, tampilkan semua siswa
+                listSiswa = siswaDAO.getAllSiswa();
+            }
+        }
+
+        loadTableData(listSiswa);
     }//GEN-LAST:event_cbFilterActionPerformed
 
     private void tblSiswaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblSiswaMouseClicked
@@ -423,6 +408,24 @@ private SiswaDAO siswaDAO;
 
         
     }//GEN-LAST:event_tblSiswaMouseClicked
+
+    private void tCariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tCariActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tCariActionPerformed
+
+    private void tCariKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tCariKeyReleased
+       TableRowSorter<TableModel> rowSorter;
+    DefaultTableModel model = (DefaultTableModel) tblSiswa.getModel();
+    rowSorter = new TableRowSorter<>(model);
+    tblSiswa.setRowSorter(rowSorter);
+    String text = tCari.getText();
+    
+    if (text.trim().length() == 0) {
+        rowSorter.setRowFilter(null); // tampilkan semua data
+    } else {
+        rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + text)); // filter, ignore case
+    }
+    }//GEN-LAST:event_tCariKeyReleased
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
