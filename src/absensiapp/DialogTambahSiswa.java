@@ -16,6 +16,7 @@ import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import java.awt.HeadlessException;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -48,14 +49,14 @@ public class DialogTambahSiswa extends javax.swing.JDialog {
         initComponents();
        
     }
-// Method untuk load semua ComboBox saat form dibuka
+    // Method untuk load semua ComboBox saat form dibuka
 
     private void loadComboBox() {
         loadComboBoxJenisKelamin();
         loadComboBoxKelas();
     }
 
-// Method untuk load ComboBox Jenis Kelamin
+    // Method untuk load ComboBox Jenis Kelamin
     private void loadComboBoxJenisKelamin() {
         cJK.removeAllItems();
         cJK.addItem("-- Pilih Jenis Kelamin --");
@@ -64,7 +65,7 @@ public class DialogTambahSiswa extends javax.swing.JDialog {
         cJK.setSelectedIndex(0);
     }
 
-// Method untuk load ComboBox Kelas dari database
+    // Method untuk load ComboBox Kelas dari database
     private void loadComboBoxKelas() {
         cKelas.removeAllItems();
         cKelas.addItem("-- Pilih Kelas --");
@@ -473,7 +474,7 @@ public class DialogTambahSiswa extends javax.swing.JDialog {
     }//GEN-LAST:event_btnSimpanActionPerformed
 
     private void bBuatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bBuatActionPerformed
-         try {
+        try {
         // Ambil data dari form
         String nis = tNIS.getText().trim();
         String namaSiswa = tNama.getText().trim();
@@ -526,9 +527,14 @@ public class DialogTambahSiswa extends javax.swing.JDialog {
         // Convert ke BufferedImage
         BufferedImage qrImage = MatrixToImageWriter.toBufferedImage(matrix);
         
+        // Resize ke ukuran panel (150x127)
+        Image scaledImage = qrImage.getScaledInstance(150, 127, Image.SCALE_SMOOTH);
+        ImageIcon icon = new ImageIcon(scaledImage);
+        
         // Tampilkan di label
-        ImageIcon icon = new ImageIcon(qrImage);
+        lblCode.setText(""); // Hapus text "QR"
         lblCode.setIcon(icon);
+        lblCode.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         
         JOptionPane.showMessageDialog(this,
             "✓ QR Code berhasil dibuat!",
