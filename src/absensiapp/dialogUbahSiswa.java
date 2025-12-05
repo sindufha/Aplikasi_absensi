@@ -45,15 +45,13 @@ public class dialogUbahSiswa extends javax.swing.JDialog {
         initComponents();
     }
 
-    
     // Method untuk load semua ComboBox saat form dibuka
-
     private void loadComboBox() {
         loadComboBoxJenisKelamin();
         loadComboBoxKelas();
     }
 
-// Method untuk load ComboBox Jenis Kelamin
+    // Method untuk load ComboBox Jenis Kelamin
     private void loadComboBoxJenisKelamin() {
         cJK.removeAllItems();
         cJK.addItem("-- Pilih Jenis Kelamin --");
@@ -62,7 +60,7 @@ public class dialogUbahSiswa extends javax.swing.JDialog {
         cJK.setSelectedIndex(0);
     }
 
-// Method untuk load ComboBox Kelas dari database
+    // Method untuk load ComboBox Kelas dari database
     private void loadComboBoxKelas() {
         cKelas.removeAllItems();
         cKelas.addItem("-- Pilih Kelas --");
@@ -91,8 +89,7 @@ public class dialogUbahSiswa extends javax.swing.JDialog {
         tNama.setText("");
         cKelas.setSelectedIndex(0);
         cJK.setSelectedIndex(0);
-        lblCode.setIcon(null);
-        lblCode.setText("QR Code Preview");
+
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -114,10 +111,6 @@ public class dialogUbahSiswa extends javax.swing.JDialog {
         cKelas = new javax.swing.JComboBox<>();
         jLabel5 = new javax.swing.JLabel();
         cJK = new javax.swing.JComboBox<>();
-        jPanel3 = new javax.swing.JPanel();
-        lblCode = new javax.swing.JLabel();
-        lableCode = new javax.swing.JLabel();
-        bBuat = new javax.swing.JButton();
         btnSimpan = new javax.swing.JButton();
         btnBatal = new javax.swing.JButton();
 
@@ -162,63 +155,21 @@ public class dialogUbahSiswa extends javax.swing.JDialog {
 
         cJK.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
-        jPanel3.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel3.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        jPanel3.setMaximumSize(new java.awt.Dimension(150, 127));
-        jPanel3.setPreferredSize(new java.awt.Dimension(150, 127));
-
-        lblCode.setText("QR");
-
-        lableCode.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lableCode.setText("QR");
-
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(135, 135, 135)
-                .addComponent(lblCode)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addComponent(lableCode, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addComponent(lableCode, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblCode)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        bBuat.setText("Buat QR");
-        bBuat.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bBuatActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(14, 14, 14)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(cKelas, 0, 378, Short.MAX_VALUE)
-                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(tNama)
-                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(tNIS)
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(cJK, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(bBuat)
-                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cKelas, 0, 378, Short.MAX_VALUE)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tNama)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tNIS)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cJK, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(26, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -240,11 +191,7 @@ public class dialogUbahSiswa extends javax.swing.JDialog {
                 .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(cJK, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(bBuat)
-                .addContainerGap(26, Short.MAX_VALUE))
+                .addContainerGap(17, Short.MAX_VALUE))
         );
 
         btnSimpan.setBackground(new java.awt.Color(39, 174, 96));
@@ -288,7 +235,7 @@ public class dialogUbahSiswa extends javax.swing.JDialog {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 495, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 325, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnBatal, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnSimpan, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -297,161 +244,161 @@ public class dialogUbahSiswa extends javax.swing.JDialog {
                 .addGroup(layout.createSequentialGroup()
                     .addGap(58, 58, 58)
                     .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(59, Short.MAX_VALUE)))
+                    .addContainerGap(60, Short.MAX_VALUE)))
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSimpanActionPerformed
                                       
-  String nis = tNIS.getText().trim();
-    String namaSiswa = tNama.getText().trim();
-    
-    // ✅ CONVERT JENIS KELAMIN KE FORMAT DATABASE
-    String jenisKelaminDisplay = cJK.getSelectedItem().toString();
-    String jenisKelamin = "";
-    
-    if (jenisKelaminDisplay.equals("Laki-laki")) {
-        jenisKelamin = "L";
-    } else if (jenisKelaminDisplay.equals("Perempuan")) {
-        jenisKelamin = "P";
-    }
-    
-    // Parse kelas
-    int idKelas = 0;
-    if (cKelas.getSelectedIndex() > 0) {
-        try {
-            String selectedKelas = cKelas.getSelectedItem().toString();
-            idKelas = Integer.parseInt(selectedKelas);
-        } catch (NumberFormatException e) {
+        String nis = tNIS.getText().trim();
+        String namaSiswa = tNama.getText().trim();
+
+        // ✅ CONVERT JENIS KELAMIN KE FORMAT DATABASE
+        String jenisKelaminDisplay = cJK.getSelectedItem().toString();
+        String jenisKelamin = "";
+
+        if (jenisKelaminDisplay.equals("Laki-laki")) {
+            jenisKelamin = "L";
+        } else if (jenisKelaminDisplay.equals("Perempuan")) {
+            jenisKelamin = "P";
+        }
+
+        // Parse kelas
+        int idKelas = 0;
+        if (cKelas.getSelectedIndex() > 0) {
+            try {
+                String selectedKelas = cKelas.getSelectedItem().toString();
+                idKelas = Integer.parseInt(selectedKelas);
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(this,
+                        "Format kelas tidak valid!",
+                        "Validasi Error",
+                        JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+        }
+
+        String qrCode = nis;
+
+        // Validasi input
+        if (nis.isEmpty()) {
             JOptionPane.showMessageDialog(this,
-                "Format kelas tidak valid!",
-                "Validasi Error",
-                JOptionPane.WARNING_MESSAGE);
+                    "NIS tidak boleh kosong!",
+                    "Validasi Error",
+                    JOptionPane.WARNING_MESSAGE);
+            tNIS.requestFocus();
             return;
         }
-    }
-    
-    String qrCode = nis;
-    
-    // Validasi input
-    if (nis.isEmpty()) {
-        JOptionPane.showMessageDialog(this,
-            "NIS tidak boleh kosong!",
-            "Validasi Error",
-            JOptionPane.WARNING_MESSAGE);
-        tNIS.requestFocus();
-        return;
-    }
-    
-    if (!nis.matches("\\d+")) {
-        JOptionPane.showMessageDialog(this,
-            "NIS harus berupa angka!",
-            "Validasi Error",
-            JOptionPane.WARNING_MESSAGE);
-        tNIS.requestFocus();
-        return;
-    }
-    
-    if (namaSiswa.isEmpty()) {
-        JOptionPane.showMessageDialog(this,
-            "Nama siswa tidak boleh kosong!",
-            "Validasi Error",
-            JOptionPane.WARNING_MESSAGE);
-        tNama.requestFocus();
-        return;
-    }
-    
-    if (idKelas == 0 || cKelas.getSelectedIndex() == 0) {
-        JOptionPane.showMessageDialog(this,
-            "Kelas harus dipilih!",
-            "Validasi Error",
-            JOptionPane.WARNING_MESSAGE);
-        cKelas.requestFocus();
-        return;
-    }
-    
-    if (cJK.getSelectedIndex() == 0) {
-        JOptionPane.showMessageDialog(this,
-            "Jenis kelamin harus dipilih!",
-            "Validasi Error",
-            JOptionPane.WARNING_MESSAGE);
-        cJK.requestFocus();
-        return;
-    }
-    
-    if (qrCode.isEmpty()) {
-        JOptionPane.showMessageDialog(this,
-            "QR Code belum dibuat!\n" +
-            "Klik tombol 'Buat QR' terlebih dahulu.",
-            "Validasi Error",
-            JOptionPane.WARNING_MESSAGE);
-        return;
-    }
-    
-    // Konfirmasi - tampilkan full text untuk user
-    int confirm = JOptionPane.showConfirmDialog(this,
-        "Simpan data siswa dengan informasi:\n\n" +
-        "NIS           : " + nis + "\n" +
-        "Nama Siswa    : " + namaSiswa + "\n" +
-        "Kelas         : " + idKelas + "\n" +
-        "Jenis Kelamin : " + jenisKelaminDisplay + "\n\n" +
-        "Apakah Anda yakin ingin menyimpan data ini?",
-        "Konfirmasi Simpan Data",
-        JOptionPane.YES_NO_OPTION,
-        JOptionPane.QUESTION_MESSAGE);
-    
-    if (confirm == JOptionPane.YES_OPTION) {
-        // ✅ GENERATE DAN SAVE QR CODE KE FILE
-        String qrFolderPath = "qr_codes"; // Folder untuk menyimpan QR
-        String qrFileName = "QR_" + nis + ".png";
-        String qrFilePath = qrFolderPath + File.separator + qrFileName;
-        
-        // Generate QR Code file
-        boolean qrGenerated = QRCodeGenerator.generateQRFile(qrCode, qrFilePath, 300, 300);
-        
-        if (!qrGenerated) {
+
+        if (!nis.matches("\\d+")) {
             JOptionPane.showMessageDialog(this,
-                "⚠ Gagal membuat file QR Code!\n" +
-                "Data siswa tidak akan disimpan.",
-                "Error QR Code",
-                JOptionPane.ERROR_MESSAGE);
+                    "NIS harus berupa angka!",
+                    "Validasi Error",
+                    JOptionPane.WARNING_MESSAGE);
+            tNIS.requestFocus();
             return;
         }
-        
-        // Simpan data siswa ke database
-        Siswa siswa = new Siswa();
-        siswa.setNis(nis);
-        siswa.setNamaSiswa(namaSiswa);
-        siswa.setIdKelas(idKelas);
-        siswa.setJenisKelamin(jenisKelamin);
-        siswa.setQrCode(qrCode);
-        
-        SiswaDAO siswaDAO = new SiswaDAO();
+
+        if (namaSiswa.isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                    "Nama siswa tidak boleh kosong!",
+                    "Validasi Error",
+                    JOptionPane.WARNING_MESSAGE);
+            tNama.requestFocus();
+            return;
+        }
+
+        if (idKelas == 0 || cKelas.getSelectedIndex() == 0) {
+            JOptionPane.showMessageDialog(this,
+                    "Kelas harus dipilih!",
+                    "Validasi Error",
+                    JOptionPane.WARNING_MESSAGE);
+            cKelas.requestFocus();
+            return;
+        }
+
+        if (cJK.getSelectedIndex() == 0) {
+            JOptionPane.showMessageDialog(this,
+                    "Jenis kelamin harus dipilih!",
+                    "Validasi Error",
+                    JOptionPane.WARNING_MESSAGE);
+            cJK.requestFocus();
+            return;
+        }
+
+        if (qrCode.isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                    "QR Code belum dibuat!\n"
+                    + "Klik tombol 'Buat QR' terlebih dahulu.",
+                    "Validasi Error",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // Konfirmasi - tampilkan full text untuk user
+        int confirm = JOptionPane.showConfirmDialog(this,
+                "Simpan data siswa dengan informasi:\n\n"
+                + "NIS           : " + nis + "\n"
+                + "Nama Siswa    : " + namaSiswa + "\n"
+                + "Kelas         : " + idKelas + "\n"
+                + "Jenis Kelamin : " + jenisKelaminDisplay + "\n\n"
+                + "Apakah Anda yakin ingin menyimpan data ini?",
+                "Konfirmasi Simpan Data",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE);
+
+        if (confirm == JOptionPane.YES_OPTION) {
+            // ✅ GENERATE DAN SAVE QR CODE KE FILE
+            String qrFolderPath = "qr_codes"; // Folder untuk menyimpan QR
+            String qrFileName = "QR_" + nis + ".png";
+            String qrFilePath = qrFolderPath + File.separator + qrFileName;
+
+            // Generate QR Code file
+            boolean qrGenerated = QRCodeGenerator.generateQRFile(qrCode, qrFilePath, 300, 300);
+
+            if (!qrGenerated) {
+                JOptionPane.showMessageDialog(this,
+                        "⚠ Gagal membuat file QR Code!\n"
+                        + "Data siswa tidak akan disimpan.",
+                        "Error QR Code",
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // Simpan data siswa ke database
+            Siswa siswa = new Siswa();
+            siswa.setNis(nis);
+            siswa.setNamaSiswa(namaSiswa);
+            siswa.setIdKelas(idKelas);
+            siswa.setJenisKelamin(jenisKelamin);
+            siswa.setQrCode(qrCode);
+
+            SiswaDAO siswaDAO = new SiswaDAO();
             boolean success = siswaDAO.updateSiswa(siswa);
-        
-        if (success) {
-            JOptionPane.showMessageDialog(this,
-                "✓ Data siswa berhasil disimpan!\n" +
-                "✓ QR Code tersimpan di: " + qrFilePath,
-                "Berhasil",
-                JOptionPane.INFORMATION_MESSAGE);
-            
-            resetForm();
-            dispose();
-            
-        } else {
-            JOptionPane.showMessageDialog(this,
-                "✗ Gagal menyimpan data siswa!\n\n" +
-                "Kemungkinan penyebab:\n" +
-                "• NIS sudah terdaftar\n" +
-                "• Koneksi database bermasalah\n" +
-                "• Data tidak valid\n\n" +
-                "File QR Code telah dibuat di: " + qrFilePath,
-                "Error",
-                JOptionPane.ERROR_MESSAGE);
+
+            if (success) {
+                JOptionPane.showMessageDialog(this,
+                        "✓ Data siswa berhasil disimpan!\n"
+                        + "✓ QR Code tersimpan di: " + qrFilePath,
+                        "Berhasil",
+                        JOptionPane.INFORMATION_MESSAGE);
+
+                resetForm();
+                dispose();
+
+            } else {
+                JOptionPane.showMessageDialog(this,
+                        "✗ Gagal menyimpan data siswa!\n\n"
+                        + "Kemungkinan penyebab:\n"
+                        + "• NIS sudah terdaftar\n"
+                        + "• Koneksi database bermasalah\n"
+                        + "• Data tidak valid\n\n"
+                        + "File QR Code telah dibuat di: " + qrFilePath,
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+            }
         }
-    }
-    
+
 
     }//GEN-LAST:event_btnSimpanActionPerformed
 
@@ -466,82 +413,8 @@ public class dialogUbahSiswa extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_btnBatalActionPerformed
 
-    private void bBuatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bBuatActionPerformed
-        try {
-            // Ambil data dari form
-            String nis = tNIS.getText().trim();
-            String namaSiswa = tNama.getText().trim();
-
-            // Validasi minimal NIS
-            if (nis.isEmpty()) {
-                JOptionPane.showMessageDialog(this,
-                        "NIS harus diisi terlebih dahulu!",
-                        "Peringatan",
-                        JOptionPane.WARNING_MESSAGE);
-                tNIS.requestFocus();
-                return;
-            }
-
-            if (namaSiswa.isEmpty()) {
-                JOptionPane.showMessageDialog(this,
-                        "Nama Siswa harus diisi terlebih dahulu!",
-                        "Peringatan",
-                        JOptionPane.WARNING_MESSAGE);
-                tNama.requestFocus();
-                return;
-            }
-
-            String kelas = cKelas.getSelectedItem().toString();
-            String jenisKelamin = cJK.getSelectedItem().toString();
-
-            // Buat data untuk QR Code
-            String qrData = "NIS: " + nis + "\n"
-                    + "Nama: " + namaSiswa + "\n"
-                    + "Kelas: " + kelas + "\n"
-                    + "Jenis Kelamin: " + jenisKelamin;
-
-            // Generate QR Code
-            int size = 300;
-            String charset = "UTF-8";
-
-            Map<EncodeHintType, Object> hints = new HashMap<>();
-            hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H);
-            hints.put(EncodeHintType.CHARACTER_SET, charset);
-            hints.put(EncodeHintType.MARGIN, 1);
-
-            BitMatrix matrix = new MultiFormatWriter().encode(
-                    qrData,
-                    BarcodeFormat.QR_CODE,
-                    size,
-                    size,
-                    hints
-            );
-
-            // Convert ke BufferedImage
-            BufferedImage qrImage = MatrixToImageWriter.toBufferedImage(matrix);
-
-            // Tampilkan di label
-            ImageIcon icon = new ImageIcon(qrImage);
-            lblCode.setIcon(icon);
-
-            JOptionPane.showMessageDialog(this,
-                    "✓ QR Code berhasil dibuat!",
-                    "Berhasil",
-                    JOptionPane.INFORMATION_MESSAGE);
-
-        } catch (WriterException e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this,
-                    "✗ Gagal membuat QR Code: " + e.getMessage(),
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE);
-        }
-        
-    }//GEN-LAST:event_bBuatActionPerformed
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton bBuat;
     private javax.swing.JButton btnBatal;
     private javax.swing.JButton btnSimpan;
     private javax.swing.JComboBox<String> cJK;
@@ -553,9 +426,6 @@ public class dialogUbahSiswa extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JLabel lableCode;
-    private javax.swing.JLabel lblCode;
     private javax.swing.JTextField tNIS;
     private javax.swing.JTextField tNama;
     // End of variables declaration//GEN-END:variables
