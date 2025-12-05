@@ -136,19 +136,18 @@ public class SiswaDAO {
         return list;
     }
 
-    public boolean updateSiswa(Siswa siswa) {
-        String sql = "UPDATE siswa SET nis=?, nama_siswa=?, id_kelas=?, jenis_kelamin=?, qr_code=? WHERE id_siswa=?";
+   public boolean updateSiswa(Siswa siswa) {
+        String sql = "UPDATE siswa SET nama_siswa=?, id_kelas=?, jenis_kelamin=? WHERE id_siswa=?";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, siswa.getNis());
-            ps.setString(2, siswa.getNamaSiswa());
-            ps.setInt(3, siswa.getIdKelas());
-            ps.setString(4, siswa.getJenisKelamin());
-            ps.setString(5, siswa.getQrCode());
-            ps.setInt(6, siswa.getIdSiswa());
+            
+            ps.setString(1, siswa.getNamaSiswa());
+            ps.setInt(2, siswa.getIdKelas());
+            ps.setString(3, siswa.getJenisKelamin());
+            ps.setInt(4, siswa.getIdSiswa());
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
-            return false;
+            return false;   
         }
     }
 
@@ -231,4 +230,6 @@ public class SiswaDAO {
         
         return listKelas;
     }
+    
+    
 }
