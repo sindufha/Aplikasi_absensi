@@ -291,56 +291,48 @@ private SiswaDAO siswaDAO;
 
     private void bHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bHapusActionPerformed
         int selectedRow = tblSiswa.getSelectedRow();
+if (selectedRow == -1) {
+    JOptionPane.showMessageDialog(this,
+            "Pilih data siswa yang akan dinonaktifkan!",
+            "Peringatan",
+            JOptionPane.WARNING_MESSAGE);
+    return;
+}
 
-        if (selectedRow == -1) {
-            JOptionPane.showMessageDialog(this,
-                    "Pilih data siswa yang akan dihapus!",
-                    "Peringatan",
-                    JOptionPane.WARNING_MESSAGE);
-            return;
-        }
+// Ambil data dari baris yang dipilih
+int nis = Integer.parseInt(tblSiswa.getValueAt(selectedRow, 1).toString());
+String namaSiswa = tblSiswa.getValueAt(selectedRow, 2).toString();
 
-        // Ambil data dari baris yang dipilih
-        String nis = tblSiswa.getValueAt(selectedRow, 1).toString();
-        String namaSiswa = tblSiswa.getValueAt(selectedRow, 2).toString();
+// Konfirmasi nonaktifkan
+int confirm = JOptionPane.showConfirmDialog(this,
+        "Apakah Anda yakin ingin menonaktifkan siswa ini?\n\n"
+        + "NIS  : " + nis + "\n"
+        + "Nama : " + namaSiswa + "\n\n"
+        + "Data siswa dan riwayat absensi tetap tersimpan.",
+        "Konfirmasi Nonaktifkan Siswa",
+        JOptionPane.YES_NO_OPTION,
+        JOptionPane.QUESTION_MESSAGE);
 
-        // ✅ Ambil id_siswa (sesuaikan dengan kolom di tabel)
-        // Jika id_siswa ada di kolom tersembunyi atau kolom tertentu
-        int idSiswa = Integer.parseInt(tblSiswa.getValueAt(selectedRow, 0).toString());
-
-        // Konfirmasi hapus
-        int confirm = JOptionPane.showConfirmDialog(this,
-                "Apakah Anda yakin ingin menghapus data siswa?\n\n"
-                + "NIS  : " + nis + "\n"
-                + "Nama : " + namaSiswa + "\n\n"
-                + "Data yang dihapus tidak dapat dikembalikan!",
-                "Konfirmasi Hapus",
-                JOptionPane.YES_NO_OPTION,
-                JOptionPane.WARNING_MESSAGE);
-
-        if (confirm == JOptionPane.YES_OPTION) {
-            SiswaDAO siswaDAO = new SiswaDAO();
-
-            // ✅ Panggil method hapusSiswa dengan parameter int idSiswa
-            boolean success = siswaDAO.hapusSiswa(idSiswa);
-
-            if (success) {
-                JOptionPane.showMessageDialog(this,
-                        "√ Data siswa berhasil dihapus!",
-                        "Berhasil",
-                        JOptionPane.INFORMATION_MESSAGE);
-
-                // Load ulang langsung dari database
-                List<Siswa> listSiswa = siswaDAO.getAllSiswa();
-                loadTableData(listSiswa);
-
-            } else {
-                JOptionPane.showMessageDialog(this,
-                        "✗ Gagal menghapus data siswa!",
-                        "Error",
-                        JOptionPane.ERROR_MESSAGE);
-            }
-        }
+if (confirm == JOptionPane.YES_OPTION) {
+    SiswaDAO siswaDAO = new SiswaDAO();
+    boolean success = siswaDAO.nonaktifkanSiswa(nis);
+    
+    if (success) {
+        JOptionPane.showMessageDialog(this,
+                "√ Siswa berhasil dinonaktifkan!",
+                "Berhasil",
+                JOptionPane.INFORMATION_MESSAGE);
+        // Load ulang langsung dari database
+        List<Siswa> listSiswa = siswaDAO.getAllSiswa();
+        loadTableData(listSiswa);
+    } else {
+        JOptionPane.showMessageDialog(this,
+                "✗ Gagal menonaktifkan siswa!",
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+    }
+}
+loadAllSiswa();
 
     }//GEN-LAST:event_bHapusActionPerformed
 
