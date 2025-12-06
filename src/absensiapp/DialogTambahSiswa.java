@@ -16,6 +16,7 @@ import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import java.awt.HeadlessException;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -48,14 +49,14 @@ public class DialogTambahSiswa extends javax.swing.JDialog {
         initComponents();
        
     }
-// Method untuk load semua ComboBox saat form dibuka
+    // Method untuk load semua ComboBox saat form dibuka
 
     private void loadComboBox() {
         loadComboBoxJenisKelamin();
         loadComboBoxKelas();
     }
 
-// Method untuk load ComboBox Jenis Kelamin
+    // Method untuk load ComboBox Jenis Kelamin
     private void loadComboBoxJenisKelamin() {
         cJK.removeAllItems();
         cJK.addItem("-- Pilih Jenis Kelamin --");
@@ -64,7 +65,7 @@ public class DialogTambahSiswa extends javax.swing.JDialog {
         cJK.setSelectedIndex(0);
     }
 
-// Method untuk load ComboBox Kelas dari database
+    // Method untuk load ComboBox Kelas dari database
     private void loadComboBoxKelas() {
         cKelas.removeAllItems();
         cKelas.addItem("-- Pilih Kelas --");
@@ -115,6 +116,7 @@ public class DialogTambahSiswa extends javax.swing.JDialog {
         cJK = new javax.swing.JComboBox<>();
         jPanel3 = new javax.swing.JPanel();
         lblCode = new javax.swing.JLabel();
+        lableCode = new javax.swing.JLabel();
         bBuat = new javax.swing.JButton();
         btnBatal = new javax.swing.JButton();
         btnSimpan = new javax.swing.JButton();
@@ -148,6 +150,9 @@ public class DialogTambahSiswa extends javax.swing.JDialog {
 
         lblCode.setText("QR");
 
+        lableCode.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lableCode.setText("QR");
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -156,11 +161,15 @@ public class DialogTambahSiswa extends javax.swing.JDialog {
                 .addGap(135, 135, 135)
                 .addComponent(lblCode)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addComponent(lableCode, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(128, 128, 128)
+                .addComponent(lableCode, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblCode)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -310,17 +319,36 @@ public class DialogTambahSiswa extends javax.swing.JDialog {
     }//GEN-LAST:event_btnBatalActionPerformed
 
     private void btnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSimpanActionPerformed
-      String nis = tNIS.getText().trim();
+                                        
+  String nis = tNIS.getText().trim();
     String namaSiswa = tNama.getText().trim();
-    String jenisKelamin = cJK.getSelectedItem().toString();
     
-    // Ambil ID kelas dari ComboBox
-    int idKelas = 0;
-    if (cKelas.getSelectedIndex() > 0) { // Index 0 adalah "-- Pilih Kelas --"
-        idKelas = (Integer) cKelas.getSelectedItem();
+    // ✅ CONVERT JENIS KELAMIN KE FORMAT DATABASE
+    String jenisKelaminDisplay = cJK.getSelectedItem().toString();
+    String jenisKelamin = "";
+    
+    if (jenisKelaminDisplay.equals("Laki-laki")) {
+        jenisKelamin = "L";
+    } else if (jenisKelaminDisplay.equals("Perempuan")) {
+        jenisKelamin = "P";
     }
     
-    String qrCode = nis; // Atau ambil dari field QR Code
+    // Parse kelas
+    int idKelas = 0;
+    if (cKelas.getSelectedIndex() > 0) {
+        try {
+            String selectedKelas = cKelas.getSelectedItem().toString();
+            idKelas = Integer.parseInt(selectedKelas);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this,
+                "Format kelas tidak valid!",
+                "Validasi Error",
+                JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+    }
+    
+    String qrCode = nis;
     
     // Validasi input
     if (nis.isEmpty()) {
@@ -377,20 +405,37 @@ public class DialogTambahSiswa extends javax.swing.JDialog {
         return;
     }
     
-    // Konfirmasi
+    // Konfirmasi - tampilkan full text untuk user
     int confirm = JOptionPane.showConfirmDialog(this,
         "Simpan data siswa dengan informasi:\n\n" +
         "NIS           : " + nis + "\n" +
         "Nama Siswa    : " + namaSiswa + "\n" +
         "Kelas         : " + idKelas + "\n" +
-        "Jenis Kelamin : " + jenisKelamin + "\n\n" +
+        "Jenis Kelamin : " + jenisKelaminDisplay + "\n\n" +
         "Apakah Anda yakin ingin menyimpan data ini?",
         "Konfirmasi Simpan Data",
         JOptionPane.YES_NO_OPTION,
         JOptionPane.QUESTION_MESSAGE);
     
     if (confirm == JOptionPane.YES_OPTION) {
-        // Buat object Siswa
+        // ✅ GENERATE DAN SAVE QR CODE KE FILE
+        String qrFolderPath = "qr_codes"; // Folder untuk menyimpan QR
+        String qrFileName = "QR_" + nis + ".png";
+        String qrFilePath = qrFolderPath + File.separator + qrFileName;
+        
+        // Generate QR Code file
+        boolean qrGenerated = QRCodeGenerator.generateQRFile(qrCode, qrFilePath, 300, 300);
+        
+        if (!qrGenerated) {
+            JOptionPane.showMessageDialog(this,
+                "⚠ Gagal membuat file QR Code!\n" +
+                "Data siswa tidak akan disimpan.",
+                "Error QR Code",
+                JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        // Simpan data siswa ke database
         Siswa siswa = new Siswa();
         siswa.setNis(nis);
         siswa.setNamaSiswa(namaSiswa);
@@ -398,16 +443,17 @@ public class DialogTambahSiswa extends javax.swing.JDialog {
         siswa.setJenisKelamin(jenisKelamin);
         siswa.setQrCode(qrCode);
         
-        // Panggil method dari SiswaDAO
         SiswaDAO siswaDAO = new SiswaDAO();
         boolean success = siswaDAO.tambahSiswa(siswa);
         
         if (success) {
             JOptionPane.showMessageDialog(this,
-                "✓ Data siswa berhasil disimpan!",
+                "✓ Data siswa berhasil disimpan!\n" +
+                "✓ QR Code tersimpan di: " + qrFilePath,
                 "Berhasil",
                 JOptionPane.INFORMATION_MESSAGE);
             
+            resetForm();
             dispose();
             
         } else {
@@ -416,18 +462,19 @@ public class DialogTambahSiswa extends javax.swing.JDialog {
                 "Kemungkinan penyebab:\n" +
                 "• NIS sudah terdaftar\n" +
                 "• Koneksi database bermasalah\n" +
-                "• Data tidak valid",
+                "• Data tidak valid\n\n" +
+                "File QR Code telah dibuat di: " + qrFilePath,
                 "Error",
                 JOptionPane.ERROR_MESSAGE);
         }
     }
-
+    
 
        
     }//GEN-LAST:event_btnSimpanActionPerformed
 
     private void bBuatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bBuatActionPerformed
-         try {
+        try {
         // Ambil data dari form
         String nis = tNIS.getText().trim();
         String namaSiswa = tNama.getText().trim();
@@ -480,9 +527,14 @@ public class DialogTambahSiswa extends javax.swing.JDialog {
         // Convert ke BufferedImage
         BufferedImage qrImage = MatrixToImageWriter.toBufferedImage(matrix);
         
+        // Resize ke ukuran panel (150x127)
+        Image scaledImage = qrImage.getScaledInstance(150, 127, Image.SCALE_SMOOTH);
+        ImageIcon icon = new ImageIcon(scaledImage);
+        
         // Tampilkan di label
-        ImageIcon icon = new ImageIcon(qrImage);
+        lblCode.setText(""); // Hapus text "QR"
         lblCode.setIcon(icon);
+        lblCode.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         
         JOptionPane.showMessageDialog(this,
             "✓ QR Code berhasil dibuat!",
@@ -513,6 +565,7 @@ public class DialogTambahSiswa extends javax.swing.JDialog {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JLabel lableCode;
     private javax.swing.JLabel lblCode;
     private javax.swing.JTextField tNIS;
     private javax.swing.JTextField tNama;
