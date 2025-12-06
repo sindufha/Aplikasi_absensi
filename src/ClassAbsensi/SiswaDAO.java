@@ -154,17 +154,17 @@ public class SiswaDAO {
         }
     }
 
-    public boolean hapusSiswa(int idSiswa) {
-        String sql = "DELETE FROM siswa WHERE id_siswa = ?";
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, idSiswa);
-            return ps.executeUpdate() > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
+   public boolean nonaktifkanSiswa(int nis) {
+    String sql = "UPDATE siswa SET status = 'Nonaktif' WHERE nis = ?";
+    try (Connection conn = Koneksi.getKoneksi();
+            PreparedStatement ps = conn.prepareStatement(sql)) {
+        ps.setInt(1, nis);
+        return ps.executeUpdate() > 0;
+    } catch (SQLException e) {
+        e.printStackTrace();
+        return false;
     }
-
+}
     public boolean isNisExist(String nis) {
         String sql = "SELECT COUNT(*) FROM siswa WHERE nis = ?";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
