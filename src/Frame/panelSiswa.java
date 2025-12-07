@@ -45,9 +45,9 @@ private SiswaDAO siswaDAO;
         model.addColumn("Nama Siswa");
         model.addColumn("Kelas");
         model.addColumn("Jenis Kelamin");
+        model.addColumn("Status");  // ✅ Tambah kolom status
 
         List<Siswa> listSiswa = siswaDAO.getAllSiswa();
-
         int no = 1;
         for (Siswa siswa : listSiswa) {
             model.addRow(new Object[]{
@@ -55,10 +55,10 @@ private SiswaDAO siswaDAO;
                 siswa.getNis(),
                 siswa.getNamaSiswa(),
                 siswa.getIdKelas(),
-                siswa.getJenisKelamin()
+                siswa.getJenisKelamin(),
+                siswa.getStatus() // ✅ Tampilkan status
             });
         }
-
         tblSiswa.setModel(model);
     }
 

@@ -8,7 +8,7 @@ public class Siswa {
     private String jenisKelamin;
     private String qrCode;
     private String namaKelas; // TAMBAHAN - dari join dengan tabel kelas
-    
+    private String status;
     // Constructor kosong
     public Siswa() {
     }
@@ -90,6 +90,13 @@ public class Siswa {
         this.namaKelas = namaKelas;
     }
     
+    public String getStatus() {
+    return status;
+}
+
+public void setStatus(String status) {
+    this.status = status;
+}
     @Override
     public String toString() {
         return "Siswa{" +

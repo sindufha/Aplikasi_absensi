@@ -31,17 +31,17 @@ public class SiswaDAO {
     public List<Siswa> getAllSiswa() {
         List<Siswa> list = new ArrayList<>();
         String sql = "SELECT * FROM siswa ORDER BY nama_siswa";
-        try (Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
+        try (Connection conn = Koneksi.getKoneksi(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
                 Siswa siswa = new Siswa(
-                    rs.getInt("id_siswa"),
-                    rs.getString("nis"),
-                    rs.getString("nama_siswa"),
-                    rs.getInt("id_kelas"),
-                    rs.getString("jenis_kelamin"),
-                    rs.getString("qr_code")
+                        rs.getInt("id_siswa"),
+                        rs.getString("nis"),
+                        rs.getString("nama_siswa"),
+                        rs.getInt("id_kelas"),
+                        rs.getString("jenis_kelamin"),
+                        rs.getString("qr_code")
                 );
+                siswa.setStatus(rs.getString("status"));  // ✅ Set status
                 list.add(siswa);
             }
         } catch (SQLException e) {
