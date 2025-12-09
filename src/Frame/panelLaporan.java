@@ -24,6 +24,26 @@ public class panelLaporan extends javax.swing.JPanel {
     public panelLaporan() {
         initComponents();
         tampilkanData();
+        
+        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("EEEE, dd MMMM yyyy", new java.util.Locale("id", "ID"));
+        String tanggalSekarang = sdf.format(new java.util.Date());
+        lblTanggal.setText(tanggalSekarang);
+
+        // Ambil data dari DAO
+        panelLaporan absensiDAO = new panelLaporan(); // atau AbsensiDAO
+
+        lbl_siswahadir.setText(String.valueOf(absensiDAO.getJumlahAbsensiHariIni("Hadir")));
+        lbl_siswaizin.setText(String.valueOf(absensiDAO.getJumlahAbsensiHariIni("Izin")));
+        lbl_siswasakit.setText(String.valueOf(absensiDAO.getJumlahAbsensiHariIni("Sakit")));
+        lbl_alva.setText(String.valueOf(absensiDAO.getJumlahAbsensiHariIni("Alpha")));
+    }
+    catch (Exception e
+
+    
+        ) {
+        JOptionPane.showMessageDialog(this, "Gagal mengambil data: " + e.getMessage());
+    
+    
     }
     
      private String getTanggal(com.toedter.calendar.JDateChooser chooser) {
@@ -124,7 +144,7 @@ public class panelLaporan extends javax.swing.JPanel {
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
-        jLabel10 = new javax.swing.JLabel();
+        lblTanggal = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
         lbl_siswahadir = new javax.swing.JLabel();
         lbl_siswaizin = new javax.swing.JLabel();
@@ -276,9 +296,9 @@ public class panelLaporan extends javax.swing.JPanel {
         jLabel9.setForeground(new java.awt.Color(255, 255, 255));
         jLabel9.setText("Siswa Sakit : ");
 
-        jLabel10.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
-        jLabel10.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel10.setText("Hari ini");
+        lblTanggal.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        lblTanggal.setForeground(new java.awt.Color(255, 255, 255));
+        lblTanggal.setText("Hari ini");
 
         jLabel11.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         jLabel11.setForeground(new java.awt.Color(255, 255, 255));
@@ -321,7 +341,7 @@ public class panelLaporan extends javax.swing.JPanel {
                             .addComponent(lbl_siswasakit)
                             .addComponent(lbl_siswaizin)
                             .addComponent(lbl_siswahadir)
-                            .addComponent(jLabel10))))
+                            .addComponent(lblTanggal))))
                 .addContainerGap(198, Short.MAX_VALUE))
         );
         jPanelCustom2Layout.setVerticalGroup(
@@ -332,7 +352,7 @@ public class panelLaporan extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
                 .addGroup(jPanelCustom2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
-                    .addComponent(jLabel10))
+                    .addComponent(lblTanggal))
                 .addGap(18, 18, 18)
                 .addGroup(jPanelCustom2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
@@ -455,7 +475,6 @@ public class panelLaporan extends javax.swing.JPanel {
     private com.toedter.calendar.JDateChooser jDateChooser1;
     private com.toedter.calendar.JDateChooser jDateChooser2;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel2;
@@ -470,6 +489,7 @@ public class panelLaporan extends javax.swing.JPanel {
     private ClassTambahan.JPanelCustom jPanelCustom1;
     private ClassTambahan.JPanelCustom jPanelCustom2;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lblTanggal;
     private javax.swing.JLabel lbl_alva;
     private javax.swing.JLabel lbl_siswahadir;
     private javax.swing.JLabel lbl_siswaizin;

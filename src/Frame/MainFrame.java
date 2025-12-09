@@ -374,6 +374,7 @@ private void setupResponsiveLayout() {
 
     private void btnLaporanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLaporanActionPerformed
       sidebar.setActive(btnLaporan);
+      
 
     }//GEN-LAST:event_btnLaporanActionPerformed
 
