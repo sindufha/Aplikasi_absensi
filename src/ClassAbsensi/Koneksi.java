@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package ClassAbsensi;
 
 import java.sql.Connection;
@@ -11,23 +7,32 @@ import java.sql.SQLException;
 public class Koneksi {
     private static Connection conn;
     
+    private static final String URL = "jdbc:mysql://localhost:3306/absensi2";
+    private static final String USER = "root";
+    private static final String PASSWORD = "";
+    
     public static Connection getKoneksi() {
         try {
             if (conn == null || conn.isClosed()) {
-                String url = "jdbc:mysql://localhost:3306/absensi2";
-                String user = "root";
-                String password = "";
-                
-                Class.forName("com.mysql.cj.jdbc.Driver");
-                conn = DriverManager.getConnection(url, user, password);
-                System.out.println("Koneksi berhasil!");
+                conn = DriverManager.getConnection(URL, USER, PASSWORD);
+                System.out.println("✅ Koneksi database berhasil!");
             }
-        } catch (ClassNotFoundException e) {
-            System.out.println("Driver tidak ditemukan: " + e.getMessage());
         } catch (SQLException e) {
-            System.out.println("Koneksi gagal: " + e.getMessage());
+            System.err.println("❌ Koneksi database gagal: " + e.getMessage());
+            e.printStackTrace();
         }
         return conn;
     }
-    
+    public static void closeConnection() {
+        try {
+            if (conn != null && !conn.isClosed()) {
+                conn.close();
+                System.out.println("🔒 Koneksi database ditutup");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }
+    
+

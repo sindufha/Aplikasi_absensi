@@ -1,5 +1,5 @@
-
 package Frame;
+
 import ClassAbsensi.SidebarButtonManager;
 import ClassAbsensi.QRScannerPanel;
 import com.formdev.flatlaf.FlatLightLaf;
@@ -14,11 +14,13 @@ import javax.swing.UIManager;
 import ClassTambahan.JPanelCustom;
 import java.awt.Dimension;
 import java.awt.Image;
+
 /**
  *
  * @author MyBook Hype AMD
  */
 public class MainFrame extends javax.swing.JFrame {
+
     private SidebarButtonManager sidebar;
     private ClassTambahan.JPanelCustom Sidebar;
 
@@ -27,7 +29,7 @@ public class MainFrame extends javax.swing.JFrame {
      */
     public MainFrame() {
         initComponents();
-        
+
         btnDashboard.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 20, 1, 1));
         btnDashboard.setHorizontalAlignment(SwingConstants.LEFT);
         btnDashboard.setMargin(new Insets(5, 20, 5, 5));
@@ -35,50 +37,49 @@ public class MainFrame extends javax.swing.JFrame {
         btnSiswa.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 20, 1, 1));
         btnSiswa.setHorizontalAlignment(SwingConstants.LEFT);
         btnSiswa.setMargin(new Insets(5, 20, 5, 5));
-        
+
         btnAbsensi.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 20, 1, 1));
         btnAbsensi.setHorizontalAlignment(SwingConstants.LEFT);
         btnAbsensi.setMargin(new Insets(5, 20, 5, 5));
-        
+
         btnLaporan.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 20, 1, 1));
         btnLaporan.setHorizontalAlignment(SwingConstants.LEFT);
         btnLaporan.setMargin(new Insets(5, 20, 5, 5));
-        
+
         btnPengaturan.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 20, 1, 1));
         btnPengaturan.setHorizontalAlignment(SwingConstants.LEFT);
         btnPengaturan.setMargin(new Insets(5, 20, 5, 5));
-        
+
         sidebar = new SidebarButtonManager(
-            btnDashboard, btnSiswa,btnAbsensi,btnLaporan,btnPengaturan
+                btnDashboard, btnSiswa, btnAbsensi, btnLaporan, btnPengaturan
         );
-    sidebar.setButtonIcons(btnDashboard, 
-        "src/ikon_white/home-white.png", 
-        "src/ikon_blue/home-blue-35.png");
-    
-    sidebar.setButtonIcons(btnSiswa, 
-        "src/ikon_white/student-white.png", 
-        "src/ikon_blue/student-blue-35.png");
-    
-    sidebar.setButtonIcons(btnAbsensi, 
-        "src/ikon_white/checklist-white.png", 
-        "src/ikon_blue/checklist-blue-35.png");
-    
-    sidebar.setButtonIcons(btnLaporan, 
-        "src/ikon_white/notes-white.png", 
-        "src/ikon_blue/notes-blue-35.png");
-    
-    sidebar.setButtonIcons(btnPengaturan, 
-        "src/ikon_white/gear-white.png", 
-        "src/ikon_blue/gear-blue-35.png");
-    
-    
- 
+        sidebar.setButtonIcons(btnDashboard,
+                "src/ikon_white/home-white.png",
+                "src/ikon_blue/home-blue-35.png");
+
+        sidebar.setButtonIcons(btnSiswa,
+                "src/ikon_white/student-white.png",
+                "src/ikon_blue/student-blue-35.png");
+
+        sidebar.setButtonIcons(btnAbsensi,
+                "src/ikon_white/checklist-white.png",
+                "src/ikon_blue/checklist-blue-35.png");
+
+        sidebar.setButtonIcons(btnLaporan,
+                "src/ikon_white/notes-white.png",
+                "src/ikon_blue/notes-blue-35.png");
+
+        sidebar.setButtonIcons(btnPengaturan,
+                "src/ikon_white/gear-white.png",
+                "src/ikon_blue/gear-blue-35.png");
+
     }
-private void setupResponsiveLayout() {
+
+    private void setupResponsiveLayout() {
         // Set initial size
-        
+
         setLocationRelativeTo(null);
-        
+
         // Add resize listener
         this.addComponentListener(new java.awt.event.ComponentAdapter() {
             @Override
@@ -86,30 +87,29 @@ private void setupResponsiveLayout() {
                 handleResize();
             }
         });
-        
+
         // Initial resize
         handleResize();
     }
-    
+
     private void handleResize() {
         int w = getWidth();
         int h = getHeight();
-        
+
         // Sidebar: fixed 260px width, full height
         panelSidebar.setBounds(0, 0, 260, h);
-        
+
         // Topbar: start at x=260, grow horizontal, height 50px
-         panelTopbar.setBounds(0, 0, w, 50);
-        
+        panelTopbar.setBounds(0, 0, w, 50);
+
         // Content area: start at (260, 50), fill remaining space
         content.setBounds(260, 50, w - 260, h - 50);
-        
+
         // Force refresh
         revalidate();
         repaint();
     }
-    
-    
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -164,7 +164,7 @@ private void setupResponsiveLayout() {
         jLabel4.setText("Tekan Tombol Diatas");
 
         btnScan.setBackground(new java.awt.Color(8, 86, 210));
-        btnScan.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Ikon_white/icons8-qr-96.png"))); // NOI18N
+        btnScan.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Ikon_white/icons8-qr-60.png"))); // NOI18N
         btnScan.setBorder(null);
         btnScan.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -259,14 +259,17 @@ private void setupResponsiveLayout() {
             .addComponent(btnAbsensi, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(btnLaporan, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(btnPengaturan, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(btnScan, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE)
-            .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(onlineStatus, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE)
+            .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelSidebarLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnScan)
+                .addGap(95, 95, 95))
         );
         panelSidebarLayout.setVerticalGroup(
             panelSidebarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -275,9 +278,9 @@ private void setupResponsiveLayout() {
                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addComponent(btnDashboard, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnSiswa, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -287,17 +290,17 @@ private void setupResponsiveLayout() {
                 .addComponent(btnLaporan, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnPengaturan, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGap(30, 30, 30)
                 .addComponent(btnScan)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel5)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel6)
-                .addGap(33, 33, 33)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(onlineStatus)
-                .addGap(61, 61, 61))
+                .addContainerGap(102, Short.MAX_VALUE))
         );
 
         jPanel1.add(panelSidebar);
@@ -333,12 +336,9 @@ private void setupResponsiveLayout() {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    
-    
-    
-    
+
     private void btnScanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnScanActionPerformed
-    sidebar.setActive(null);
+        sidebar.setActive(null);
         content.removeAll();
         content.add(new QRScanner());
 
@@ -349,7 +349,7 @@ private void setupResponsiveLayout() {
 
     private void btnPengaturanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPengaturanActionPerformed
         sidebar.setActive(btnPengaturan);
-        panelPengaturan ad = new panelPengaturan();
+        panelPengaturan1 ad = new panelPengaturan1();
         content.removeAll();
         content.add(ad);
         content.repaint();
@@ -357,12 +357,12 @@ private void setupResponsiveLayout() {
     }//GEN-LAST:event_btnPengaturanActionPerformed
 
     private void btnLaporanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLaporanActionPerformed
-      sidebar.setActive(btnLaporan);
+        sidebar.setActive(btnLaporan);
 
     }//GEN-LAST:event_btnLaporanActionPerformed
 
     private void btnAbsensiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAbsensiActionPerformed
-     sidebar.setActive(btnAbsensi);
+        sidebar.setActive(btnAbsensi);
         panelAbsensi ab = new panelAbsensi();
         content.removeAll();
         content.add(ab);
@@ -371,20 +371,18 @@ private void setupResponsiveLayout() {
     }//GEN-LAST:event_btnAbsensiActionPerformed
 
     private void btnSiswaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSiswaActionPerformed
-sidebar.setActive(btnSiswa);
-        addSiswa as = new addSiswa();
+        sidebar.setActive(btnSiswa);
+        panelSiswa ps = new panelSiswa();
         content.removeAll();
-        content.add(as);
+        content.add(ps);
 
         content.repaint();
         content.revalidate();
     }//GEN-LAST:event_btnSiswaActionPerformed
 
     private void btnDashboardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDashboardActionPerformed
-       sidebar.setActive(btnDashboard);
+        sidebar.setActive(btnDashboard);
     }//GEN-LAST:event_btnDashboardActionPerformed
-                         
-
 
     /**
      * @param args the command line arguments
@@ -406,7 +404,7 @@ sidebar.setActive(btnSiswa);
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new MainFrame().setVisible(true);
-                
+
             }
         });
     }
