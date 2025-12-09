@@ -3,12 +3,13 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
 package Frame;
+import ClassAbsensi.Kelas;
+import ClassAbsensi.KelasDAO;
 import ClassAbsensi.Siswa;
 import ClassAbsensi.SiswaDAO;
 import ClassAbsensi.User;
 import PanelPengaturan.dialogUbahUser;
-import absensiapp.DialogTambahSiswa;
-import absensiapp.dialogUbahSiswa;
+import dialog.dialogUbahSiswa;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
 import com.formdev.flatlaf.FlatDarkLaf;
@@ -19,47 +20,40 @@ import javax.swing.RowFilter;
 import javax.swing.SwingUtilities;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
+import dialog.DialogTambahSiswa;
 
-import absensiapp.DialogTambahSiswa;
-import absensiapp.dialogUbahSiswa;
 /**
  *
  * @author MyBook Hype AMD
  */
 public class panelSiswa extends javax.swing.JPanel {
 private SiswaDAO siswaDAO;
+private KelasDAO kelasDAO;
+private DefaultTableModel model;
     /**
      * Creates new form panelSiswa
      */
     public panelSiswa() {
         initComponents();
         siswaDAO = new SiswaDAO();
+        kelasDAO = new KelasDAO();
+        initTableModel();
         loadComboBoxKelas(); // Load kelas dari database
-        tampilkanDataSiswa();
+        refreshTableData();
     }
-
-    private void tampilkanDataSiswa() {
-        DefaultTableModel model = new DefaultTableModel();
+private void initTableModel() {
+        model = new DefaultTableModel();
         model.addColumn("No");
         model.addColumn("NIS");
         model.addColumn("Nama Siswa");
         model.addColumn("Kelas");
         model.addColumn("Jenis Kelamin");
-        model.addColumn("Status");  // ✅ Tambah kolom status
-
-        List<Siswa> listSiswa = siswaDAO.getAllSiswa();
-        int no = 1;
-        for (Siswa siswa : listSiswa) {
-            model.addRow(new Object[]{
-                no++,
-                siswa.getNis(),
-                siswa.getNamaSiswa(),
-                siswa.getIdKelas(),
-                siswa.getJenisKelamin(),
-                siswa.getStatus() // ✅ Tampilkan status
-            });
-        }
+        model.addColumn("Status");
+        
         tblSiswa.setModel(model);
+    }
+    public void tampilkanDataSiswa() {
+        refreshTableData();
     }
 
     private void filterSiswaByKelas() {
@@ -80,7 +74,7 @@ private SiswaDAO siswaDAO;
         }
     }
 
-    private void loadTableData(List<Siswa> listSiswa) {
+    public void loadTableData(List<Siswa> listSiswa) {
         DefaultTableModel model = (DefaultTableModel) tblSiswa.getModel();
         model.setRowCount(0);
 
@@ -91,27 +85,31 @@ private SiswaDAO siswaDAO;
                 siswa.getNis(), // NIS
                 siswa.getNamaSiswa(), // Nama Siswa
                 siswa.getIdKelas(), // Kelas
-                siswa.getJenisKelamin() // Jenis Kelamin
+                siswa.getJenisKelamin(), // Jenis Kelamin
+                siswa.getStatus()
             });
         }
     }
 
     private void loadAllSiswa() {
-        SiswaDAO siswaDB = new SiswaDAO();
-        List<Siswa> listSiswa = siswaDB.getAllSiswa();
-        loadTableData(listSiswa);
+        refreshTableData();
     }
-
+    public void refreshTableData() {
+        List<Siswa> allSiswa = siswaDAO.getAllSiswa();
+        loadTableData(allSiswa);
+}
     private void loadComboBoxKelas() {
-        cbFilter.removeAllItems();
-        cbFilter.addItem("-- Semua Kelas --");
-
-        List<Integer> listKelas = siswaDAO.getDistinctKelas();
-
-        for (Integer idKelas : listKelas) {
-            cbFilter.addItem(idKelas.toString());
-        }
+    cbFilter.removeAllItems();
+    cbFilter.addItem("-- Semua Kelas --");
+    
+    // Load semua kelas dari database
+    List<Kelas> listKelas = kelasDAO.loadAllKelas();
+    
+    // Tambahkan tingkat kelas ke ComboBox
+    for (Kelas kelas : listKelas) {
+        cbFilter.addItem(String.valueOf(kelas.getTingkat()));
     }
+}
 
     
     /**
@@ -284,11 +282,37 @@ private SiswaDAO siswaDAO;
     }// </editor-fold>//GEN-END:initComponents
 
     private void bUbahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bUbahActionPerformed
-      new dialogUbahSiswa().setVisible(true);
+      int selectedRow = tblSiswa.getSelectedRow();
+    
+    if (selectedRow == -1) {
+        JOptionPane.showMessageDialog(this,
+                "Pilih data siswa yang akan diubah!",
+                "Peringatan",
+                JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+    
+    // Ambil data dari tabel yang dipilih
+    String nis = tblSiswa.getValueAt(selectedRow, 1).toString();
+    String nama = tblSiswa.getValueAt(selectedRow, 2).toString();
+    String kelas = tblSiswa.getValueAt(selectedRow, 3).toString();
+    String jk = tblSiswa.getValueAt(selectedRow, 4).toString();
+    
+    String jenisKelamin = "";
+if (jk.equals("L")) {
+    jenisKelamin = "Laki-laki";
+} else if (jk.equals("P")) {
+    jenisKelamin = "Perempuan";
+}
+
+// Kirim ke dialog
+dialogUbahSiswa dialog = new dialogUbahSiswa(nis, nama, kelas, jenisKelamin);
+dialog.setVisible(true);
     }//GEN-LAST:event_bUbahActionPerformed
 
     private void bTambahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bTambahActionPerformed
       new DialogTambahSiswa().setVisible(true);
+      refreshTableData();
     }//GEN-LAST:event_bTambahActionPerformed
 
     private void bHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bHapusActionPerformed

@@ -372,7 +372,7 @@ private void setupResponsiveLayout() {
     }//GEN-LAST:event_btnAbsensiActionPerformed
 
     private void btnSiswaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSiswaActionPerformed
-        sidebar.setActive(btnSiswa);
+      sidebar.setActive(btnSiswa);
         panelSiswa ps = new panelSiswa();
         content.removeAll();
         content.add(ps);

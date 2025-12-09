@@ -87,14 +87,16 @@ public class QRCodeGenerator {
      * @return path file yang di-generate
      */
     public static String generateAndSaveSiswaQR(String nis) {
-        String folderPath = "qrcodes";
-        String fileName = "siswa_" + nis + ".png";
-        String fullPath = folderPath + "/" + fileName;
-        
-        boolean success = generateQRFile(nis, fullPath, 300, 300);
-        
-        return success ? fullPath : null;
-    }
+    String folderPath = "qrcodes";
+    String fileName = "siswa_" + nis + ".png";
+    String fullPath = folderPath + "/" + fileName;
+    
+    // ✅ Generate QR dengan format "QRXXXX" (sesuai yang dicari di scanner)
+    String qrData = "QR" + nis;
+    boolean success = generateQRFile(qrData, fullPath, 300, 300);
+    
+    return success ? fullPath : null;
+}
     
     public static ImageIcon loadQRCodeForPreview(String filePath, int previewSize){
         try {

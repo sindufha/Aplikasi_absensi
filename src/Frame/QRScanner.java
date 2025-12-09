@@ -37,10 +37,16 @@ public class QRScanner extends JPanel {
    public QRScanner() {
         initComponents(); // Auto-generated NetBeans
         setupComponents(); // Custom method kita
+        addComponentListener(new java.awt.event.ComponentAdapter() {
+            @Override
+            public void componentHidden(java.awt.event.ComponentEvent e) {
+                cleanup();
+            }
+        });
     }
 private void setupComponents() {
     // Inisialisasi DAO
-    absensiDAO = new AbsensiDAO();
+    absensiDAO = new AbsensiDAO();   
     
     // Setup table model
     tableModel = (DefaultTableModel) tableAbsensi.getModel();
@@ -367,52 +373,53 @@ private void prosesAbsensi(String qrCodeData) {
     boolean sudahAbsen = absensiDAO.sudahAbsenHariIni(siswa.getIdSiswa(), today);
     
     // PERBAIKAN: Buat variabel final untuk siswa info
-    final String nis = siswa.getNis();
+    final int nis = siswa.getNis();
     final String nama = siswa.getNamaSiswa();
     final String kelas = siswa.getNamaKelas() != null ? siswa.getNamaKelas() : "-";
     
     if (sudahAbsen) {
-        boolean success = absensiDAO.updateAbsensiPulang(siswa.getIdSiswa(), today);
-        
-        if (success) {
-            lblScanStatus.setText("✓ Absen Pulang: " + nama);
-            lblScanStatus.setForeground(new Color(46, 204, 113));
-            Toolkit.getDefaultToolkit().beep();
-            
-            SwingUtilities.invokeLater(() -> {
-                JOptionPane.showMessageDialog(this,
-                    "Absen Pulang Berhasil!\n\n" +
-                    "NIS: " + nis + "\n" +
-                    "Nama: " + nama + "\n" +
-                    "Kelas: " + kelas,
-                    "Absen Pulang",
-                    JOptionPane.INFORMATION_MESSAGE);
-            });
-        }
-    } else {
-        boolean success = absensiDAO.insertAbsensiMasuk(siswa.getIdSiswa(), "QR");
-        
-        if (success) {
-            lblScanStatus.setText("✓ Absen Masuk: " + nama);
-            lblScanStatus.setForeground(new Color(46, 204, 113));
-            Toolkit.getDefaultToolkit().beep();
-            
-            SwingUtilities.invokeLater(() -> {
-                JOptionPane.showMessageDialog(this,
-                    "Absen Masuk Berhasil!\n\n" +
-                    "NIS: " + nis + "\n" +
-                    "Nama: " + nama + "\n" +
-                    "Kelas: " + kelas,
-                    "Absen Masuk",
-                    JOptionPane.INFORMATION_MESSAGE);
-            });
-        } else {
-            lblScanStatus.setText("❌ Gagal menyimpan absensi!");
-            lblScanStatus.setForeground(new Color(231, 76, 60));
-        }
-    }
+    // ❌ TOLAK - Sudah scan hari ini
+    lblScanStatus.setText("❌ Sudah absen hari ini!");
+    lblScanStatus.setForeground(new Color(231, 76, 60));
+    Toolkit.getDefaultToolkit().beep();
     
-    loadAbsensiHariIni();
+    SwingUtilities.invokeLater(() -> {
+        JOptionPane.showMessageDialog(this,
+            "Siswa sudah absen hari ini!\n\n" +
+            "NIS: " + nis + "\n" +
+            "Nama: " + nama + "\n" +
+            "Kelas: " + kelas + "\n\n" +
+            "Gunakan Absensi Manual untuk koreksi.",
+            "Sudah Absen",
+            JOptionPane.WARNING_MESSAGE);
+    });
+    return; // ✅ Keluar, tidak proses lebih lanjut
+} else {
+    // ✅ INSERT ABSENSI BARU (INI YANG HILANG!)
+    boolean success = absensiDAO.insertAbsensiMasuk(siswa.getIdSiswa(), "QR");
+    
+    if (success) {
+        lblScanStatus.setText("✓ Absen Masuk: " + nama);
+        lblScanStatus.setForeground(new Color(46, 204, 113));
+        Toolkit.getDefaultToolkit().beep();
+        
+        SwingUtilities.invokeLater(() -> {
+            JOptionPane.showMessageDialog(this,
+                "Absen Masuk Berhasil!\n\n" +
+                "NIS: " + nis + "\n" +
+                "Nama: " + nama + "\n" +
+                "Kelas: " + kelas,
+                "Absen Masuk",
+                JOptionPane.INFORMATION_MESSAGE);
+        });
+    } else {
+        lblScanStatus.setText("❌ Gagal menyimpan absensi!");
+        lblScanStatus.setForeground(new Color(231, 76, 60));
+        System.out.println("❌ insertAbsensiMasuk return false");
+    }
+}
+
+loadAbsensiHariIni();
 }
 
 private void loadAbsensiHariIni() {

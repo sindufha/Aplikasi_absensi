@@ -181,99 +181,125 @@ private void loadDataSiswa() {
             JOptionPane.INFORMATION_MESSAGE);
     }
 private void simpanAbsensi() {
-        int rowCount = tblAbsensiMnl.getRowCount();
-        
-        if (rowCount == 0) {
-            JOptionPane.showMessageDialog(this,
-                "Tidak ada data untuk disimpan!\nMuat data siswa terlebih dahulu.",
-                "Peringatan",
-                JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-        
-        // Konfirmasi
-        int confirm = JOptionPane.showConfirmDialog(this,
-            "Simpan absensi untuk " + rowCount + " siswa?",
-            "Konfirmasi",
-            JOptionPane.YES_NO_OPTION);
-        
-        if (confirm != JOptionPane.YES_OPTION) {
-            return;
-        }
-        
-        // Ambil tanggal hari ini
-        Date tanggal = new java.sql.Date(System.currentTimeMillis());
-        
-        int berhasil = 0;
-        int gagal = 0;
-        int diupdate = 0;
-        
-        for (int i = 0; i < rowCount; i++) {
-            try {
-                String nis = tblAbsensiMnl.getValueAt(i, 1).toString();
-                String status = tblAbsensiMnl.getValueAt(i, 4).toString();
-                
-                // Ambil id_siswa dari NIS
-                Siswa siswa = siswaDAO.getSiswaByNis(nis);
-                
-                if (siswa != null) {
-                    // Cek apakah sudah absen hari ini
-                    if (absensiDAO.sudahAbsenHariIni(siswa.getIdSiswa(), (java.sql.Date) tanggal)) {
-                        // Update jika sudah ada
-                        if (absensiDAO.updateAbsensiManual(siswa.getIdSiswa(), (java.sql.Date) tanggal, status, "")) {
-                            berhasil++;
-                            diupdate++;
-                        } else {
-                            gagal++;
-                        }
+    int rowCount = tblAbsensiMnl.getRowCount();
+    
+    if (rowCount == 0) {
+        JOptionPane.showMessageDialog(this,
+            "Tidak ada data untuk disimpan!\nMuat data siswa terlebih dahulu.",
+            "Peringatan",
+            JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+    
+    // Konfirmasi
+    int confirm = JOptionPane.showConfirmDialog(this,
+        "Simpan absensi untuk " + rowCount + " siswa?",
+        "Konfirmasi",
+        JOptionPane.YES_NO_OPTION);
+    
+    if (confirm != JOptionPane.YES_OPTION) {
+        return;
+    }
+    
+    // Ambil tanggal hari ini
+    Date tanggal = new java.sql.Date(System.currentTimeMillis());
+    
+    int berhasil = 0;
+    int gagal = 0;
+    int diupdate = 0;
+    
+    for (int i = 0; i < rowCount; i++) {
+        try {
+            // ✅ Ambil NIS dari tabel dan convert ke int
+            Object nisObj = tblAbsensiMnl.getValueAt(i, 1);
+            int nis = 0;
+            
+            // Handle jika NIS berupa String atau Integer
+            if (nisObj instanceof Integer) {
+                nis = (Integer) nisObj;
+            } else if (nisObj instanceof String) {
+                nis = Integer.parseInt(nisObj.toString());
+            }
+            
+            String status = tblAbsensiMnl.getValueAt(i, 4).toString();
+            
+            // ✅ Ambil siswa berdasarkan NIS (int)
+            Siswa siswa = siswaDAO.getSiswaByNis(nis);
+            
+            if (siswa != null) {
+                // Cek apakah sudah absen hari ini
+                if (absensiDAO.sudahAbsenHariIni(siswa.getIdSiswa(), (java.sql.Date) tanggal)) {
+                    // Update jika sudah ada
+                    if (absensiDAO.updateAbsensiManual(siswa.getIdSiswa(), (java.sql.Date) tanggal, status, "")) {
+                        berhasil++;
+                        diupdate++;
                     } else {
-                        // Insert baru jika belum ada
-                        if (absensiDAO.insertAbsensiManual(siswa.getIdSiswa(), (java.sql.Date) tanggal, status, "")) {
-                            berhasil++;
-                        } else {
-                            gagal++;
-                        }
+                        gagal++;
                     }
                 } else {
-                    gagal++;
-                    System.err.println("❌ Siswa dengan NIS " + nis + " tidak ditemukan!");
+                    // Insert baru jika belum ada
+                    if (absensiDAO.insertAbsensiManual(siswa.getIdSiswa(), (java.sql.Date) tanggal, status, "")) {
+                        berhasil++;
+                    } else {
+                        gagal++;
+                    }
                 }
-                
-            } catch (Exception e) {
-                e.printStackTrace();
+            } else {
                 gagal++;
+                System.err.println("❌ Siswa dengan NIS " + nis + " tidak ditemukan!");
             }
-        }
-        
-        // Tampilkan hasil
-        String message;
-        if (diupdate > 0) {
-            message = String.format(
-                "Absensi berhasil disimpan!\n\n" +
-                "Berhasil disimpan: %d siswa\n" +
-                "Diupdate (sudah ada): %d siswa\n" +
-                "Gagal: %d siswa",
-                berhasil - diupdate, diupdate, gagal
-            );
-        } else {
-            message = String.format(
-                "Absensi berhasil disimpan!\n\n" +
-                "Berhasil: %d siswa\n" +
-                "Gagal: %d siswa",
-                berhasil, gagal
-            );
-        }
-        
-        JOptionPane.showMessageDialog(this,
-            message,
-            "Info",
-            JOptionPane.INFORMATION_MESSAGE);
-        
-        // Clear tabel setelah simpan jika tidak ada error
-        if (gagal == 0) {
-            model.setRowCount(0);
+            
+        } catch (NumberFormatException e) {
+            System.err.println("❌ Format NIS tidak valid pada baris " + (i + 1));
+            e.printStackTrace();
+            gagal++;
+        } catch (Exception e) {
+            System.err.println("❌ Error pada baris " + (i + 1));
+            e.printStackTrace();
+            gagal++;
         }
     }
+    
+    // Tampilkan hasil
+    String message;
+    if (diupdate > 0) {
+        message = String.format(
+            "✓ Absensi berhasil disimpan!\n\n" +
+            "Berhasil disimpan: %d siswa\n" +
+            "Diupdate (sudah ada): %d siswa\n" +
+            "Gagal: %d siswa",
+            berhasil - diupdate, diupdate, gagal
+        );
+    } else {
+        message = String.format(
+            "✓ Absensi berhasil disimpan!\n\n" +
+            "Berhasil: %d siswa\n" +
+            "Gagal: %d siswa",
+            berhasil, gagal
+        );
+    }
+    
+    int messageType = (gagal > 0) ? JOptionPane.WARNING_MESSAGE : JOptionPane.INFORMATION_MESSAGE;
+    
+    JOptionPane.showMessageDialog(this,
+        message,
+        "Info Simpan Absensi",
+        messageType);
+    
+    // Clear tabel setelah simpan jika tidak ada error
+    if (gagal == 0) {
+        model.setRowCount(0);
+        JOptionPane.showMessageDialog(this,
+            "Tabel berhasil dikosongkan.\nSilakan muat data siswa baru jika diperlukan.",
+            "Info",
+            JOptionPane.INFORMATION_MESSAGE);
+    } else {
+        JOptionPane.showMessageDialog(this,
+            "Beberapa data gagal disimpan.\nPeriksa log error dan coba lagi untuk data yang gagal.",
+            "Peringatan",
+            JOptionPane.WARNING_MESSAGE);
+    }
+}
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
