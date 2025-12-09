@@ -8,7 +8,7 @@ import java.awt.Color;
 import java.awt.Font;
 import javax.swing.table.JTableHeader;
 import ClassAbsensi.User;
-import ClassAbsensi.UserDAO;
+import ClassAbsensi.UserDB;
 import javax.swing.table.DefaultTableModel;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -17,12 +17,12 @@ import javax.swing.SwingUtilities;
  *
  * @author MyBook Hype AMD
  */
-public class panelKelolaUser1 extends javax.swing.JPanel {
+public class panelKelolaUser extends javax.swing.JPanel {
 
     /**
      * Creates new form panelKelolaUser
      */
-    public panelKelolaUser1() {
+    public panelKelolaUser() {
         initComponents();
         colorTable();
         tblUser.setColumnSelectionAllowed(false);
@@ -45,7 +45,7 @@ public class panelKelolaUser1 extends javax.swing.JPanel {
     model.addColumn("Role");
     
     // Pakai UserDAO untuk ambil semua user
-    UserDAO userDAO = new UserDAO();
+    UserDB userDAO = new UserDB();
     List<User> listUser = userDAO.getAllUsers();
     
     for (User user : listUser) {
@@ -65,7 +65,7 @@ public void colorTable(){
             JTableHeader header = tblUser.getTableHeader();
             header.setBackground(new Color(0, 153, 255)); // biru
             header.setForeground(Color.WHITE);            // teks putih
-            header.setFont(new Font("Segoe UI", Font.BOLD, 14));
+            header.setFont(new Font("Segoe UI", Font.BOLD, 12));
             tblUser.setGridColor(new Color(0xE2E8F0)); // Abu sangat terang
 
             // === CUSTOM SELECTION COLOR ===
@@ -173,8 +173,7 @@ public void colorTable(){
         jPanelCustom4.setRoundTopLeft(22);
         jPanelCustom4.setRoundTopRight(22);
 
-        jLabel21.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
-        jLabel21.setForeground(new java.awt.Color(51, 65, 85));
+        jLabel21.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         jLabel21.setText("Username");
 
         tUsername.setBackground(new java.awt.Color(248, 250, 252));
@@ -182,16 +181,14 @@ public void colorTable(){
         tUsername.setForeground(new java.awt.Color(30, 41, 59));
         tUsername.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(147, 197, 253), 2, true));
 
-        jLabel20.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
-        jLabel20.setForeground(new java.awt.Color(51, 65, 85));
+        jLabel20.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         jLabel20.setText("Password");
 
         tPassword.setBackground(new java.awt.Color(248, 250, 252));
         tPassword.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         tPassword.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(147, 197, 253), 2, true));
 
-        jLabel19.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
-        jLabel19.setForeground(new java.awt.Color(51, 65, 85));
+        jLabel19.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         jLabel19.setText("Nama");
 
         tNama.setBackground(new java.awt.Color(248, 250, 252));
@@ -199,8 +196,7 @@ public void colorTable(){
         tNama.setForeground(new java.awt.Color(30, 41, 59));
         tNama.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(147, 197, 253), 2, true));
 
-        jLabel18.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
-        jLabel18.setForeground(new java.awt.Color(51, 65, 85));
+        jLabel18.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         jLabel18.setText("Role");
 
         cRole.setBackground(new java.awt.Color(248, 250, 252));
@@ -216,23 +212,20 @@ public void colorTable(){
             .addGroup(jPanelCustom4Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanelCustom4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanelCustom4Layout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addComponent(jLabel18, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(204, Short.MAX_VALUE))
+                    .addComponent(tPassword, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(tNama)
+                    .addComponent(cRole, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(tUsername)
                     .addGroup(jPanelCustom4Layout.createSequentialGroup()
                         .addGroup(jPanelCustom4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(tPassword, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(tNama)
                             .addGroup(jPanelCustom4Layout.createSequentialGroup()
-                                .addGroup(jPanelCustom4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel21)
-                                    .addComponent(jLabel20)
-                                    .addComponent(jLabel19, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addComponent(cRole, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(tUsername))
-                        .addContainerGap())))
+                                .addGap(6, 6, 6)
+                                .addComponent(jLabel18, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jLabel21)
+                            .addComponent(jLabel19, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel20))
+                        .addGap(0, 130, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         jPanelCustom4Layout.setVerticalGroup(
             jPanelCustom4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -240,12 +233,12 @@ public void colorTable(){
                 .addContainerGap()
                 .addComponent(jLabel21)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(tUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(12, 12, 12)
                 .addComponent(jLabel20)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(tPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel19)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(tNama, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -253,7 +246,7 @@ public void colorTable(){
                 .addComponent(jLabel18)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cRole, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(53, Short.MAX_VALUE))
+                .addContainerGap(29, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -264,12 +257,11 @@ public void colorTable(){
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(16, 16, 16)
-                        .addComponent(jLabel1)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jLabel1))
+                    .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jPanelCustom4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -279,8 +271,8 @@ public void colorTable(){
                                 .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jButton8, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 531, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap())
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 505, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(64, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -289,15 +281,15 @@ public void colorTable(){
                 .addComponent(jLabel1)
                 .addGap(12, 12, 12)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanelCustom4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 388, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton8, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 388, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanelCustom4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jButton8, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(382, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -446,7 +438,7 @@ public void colorTable(){
         user.setRole(role);
         
         // Panggil method dari UserDAO
-        UserDAO userDAO = new UserDAO();
+        UserDB userDAO = new UserDB();
         boolean success = userDAO.addUser(user);
         
         if (success) {
@@ -497,7 +489,7 @@ public void colorTable(){
         JOptionPane.WARNING_MESSAGE);
     
     if (confirm == JOptionPane.YES_OPTION) {
-        UserDAO userDAO = new UserDAO();
+        UserDB userDAO = new UserDB();
         boolean success = userDAO.deleteUser(Integer.parseInt(userId));
         
         if (success) {

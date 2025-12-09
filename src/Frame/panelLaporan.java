@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
 package Frame;
+import ClassAbsensi.AbsensiDAO;
 import ClassAbsensi.Koneksi;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -25,25 +26,6 @@ public class panelLaporan extends javax.swing.JPanel {
         initComponents();
         tampilkanData();
         
-        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("EEEE, dd MMMM yyyy", new java.util.Locale("id", "ID"));
-        String tanggalSekarang = sdf.format(new java.util.Date());
-        lblTanggal.setText(tanggalSekarang);
-
-        // Ambil data dari DAO
-        panelLaporan absensiDAO = new panelLaporan(); // atau AbsensiDAO
-
-        lbl_siswahadir.setText(String.valueOf(absensiDAO.getJumlahAbsensiHariIni("Hadir")));
-        lbl_siswaizin.setText(String.valueOf(absensiDAO.getJumlahAbsensiHariIni("Izin")));
-        lbl_siswasakit.setText(String.valueOf(absensiDAO.getJumlahAbsensiHariIni("Sakit")));
-        lbl_alva.setText(String.valueOf(absensiDAO.getJumlahAbsensiHariIni("Alpha")));
-    }
-    catch (Exception e
-
-    
-        ) {
-        JOptionPane.showMessageDialog(this, "Gagal mengambil data: " + e.getMessage());
-    
-    
     }
     
      private String getTanggal(com.toedter.calendar.JDateChooser chooser) {
@@ -80,6 +62,8 @@ public class panelLaporan extends javax.swing.JPanel {
     });
 }
      public void tampilkanData() {
+         
+         
     DefaultTableModel model = (DefaultTableModel) absensi.getModel();
     model.setRowCount(0);
 
@@ -108,10 +92,24 @@ public class panelLaporan extends javax.swing.JPanel {
             }
             model.addRow(row);
         }
+        
+            java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("EEEE, dd MMMM yyyy", new java.util.Locale("id", "ID"));
+        String tanggalSekarang = sdf.format(new java.util.Date());
+        lblTanggal.setText(tanggalSekarang);
+
+        // Ambil data dari DAO
+        AbsensiDAO  absensiDAO = new AbsensiDAO(); // atau AbsensiDAO
+
+        lbl_siswahadir.setText(String.valueOf(absensiDAO.getJumlahAbsensiHariIni("Hadir")));
+        lbl_siswaizin.setText(String.valueOf(absensiDAO.getJumlahAbsensiHariIni("Izin")));
+        lbl_siswasakit.setText(String.valueOf(absensiDAO.getJumlahAbsensiHariIni("Sakit")));
+        lbl_alva.setText(String.valueOf(absensiDAO.getJumlahAbsensiHariIni("Alpha")));
 
     } catch (Exception e) {
         JOptionPane.showMessageDialog(this, "Gagal mengambil data: " + e.getMessage());
     }
+    
+
 }
 
      

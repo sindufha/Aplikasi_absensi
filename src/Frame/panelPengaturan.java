@@ -37,13 +37,6 @@ public class panelPengaturan extends javax.swing.JPanel {
 
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jPanel2 = new javax.swing.JPanel();
-        btnData = new javax.swing.JButton();
-        btnJam = new javax.swing.JButton();
-        btnKelolauser = new javax.swing.JButton();
-        btnLogout = new javax.swing.JButton();
-        jLabel2 = new javax.swing.JLabel();
-        jSeparator1 = new javax.swing.JSeparator();
         pengaturanBox = new javax.swing.JPanel();
 
         jPanel1.setBackground(new java.awt.Color(44, 62, 80));
@@ -66,83 +59,6 @@ public class panelPengaturan extends javax.swing.JPanel {
             .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 46, Short.MAX_VALUE)
         );
 
-        jPanel2.setBackground(new java.awt.Color(248, 249, 250));
-
-        btnData.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
-        btnData.setForeground(new java.awt.Color(44, 62, 80));
-        btnData.setText("Data Sekolah");
-        btnData.setBorder(null);
-        btnData.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnDataActionPerformed(evt);
-            }
-        });
-
-        btnJam.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
-        btnJam.setForeground(new java.awt.Color(44, 62, 80));
-        btnJam.setText("Jam Absensi");
-        btnJam.setBorder(null);
-        btnJam.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnJamActionPerformed(evt);
-            }
-        });
-
-        btnKelolauser.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
-        btnKelolauser.setForeground(new java.awt.Color(44, 62, 80));
-        btnKelolauser.setText("Kelola User");
-        btnKelolauser.setBorder(null);
-        btnKelolauser.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnKelolauserActionPerformed(evt);
-            }
-        });
-
-        btnLogout.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
-        btnLogout.setForeground(new java.awt.Color(44, 62, 80));
-        btnLogout.setText("Logout");
-        btnLogout.setBorder(null);
-        btnLogout.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btnLogoutMouseClicked(evt);
-            }
-        });
-
-        jLabel2.setBackground(new java.awt.Color(153, 153, 255));
-        jLabel2.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel2.setText("Menu");
-        jLabel2.setOpaque(true);
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(btnJam, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(btnKelolauser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(btnLogout, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(btnData, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
-            .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jSeparator1)
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0)
-                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(14, 14, 14)
-                .addComponent(btnData, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(btnJam, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(btnKelolauser, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(btnLogout, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(318, Short.MAX_VALUE))
-        );
-
         pengaturanBox.setBackground(new java.awt.Color(255, 255, 255));
         pengaturanBox.setLayout(new java.awt.CardLayout());
 
@@ -152,45 +68,16 @@ public class panelPengaturan extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0)
+                .addGap(262, 262, 262)
                 .addComponent(pengaturanBox, javax.swing.GroupLayout.DEFAULT_SIZE, 873, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(pengaturanBox, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addComponent(pengaturanBox, javax.swing.GroupLayout.DEFAULT_SIZE, 671, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
-
-    private void btnDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDataActionPerformed
-        sidebar.setActive(btnData);
-        panelDataSekolah pds = new panelDataSekolah();
-        pengaturanBox.removeAll();
-        pengaturanBox.add(pds);
-        pengaturanBox.repaint();
-        pengaturanBox.revalidate();
-    }//GEN-LAST:event_btnDataActionPerformed
-
-    private void btnJamActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnJamActionPerformed
-       sidebar.setActive(btnJam);
-    }//GEN-LAST:event_btnJamActionPerformed
-
-    private void btnKelolauserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnKelolauserActionPerformed
-        sidebar.setActive(btnKelolauser);
-        panelKelolaUser1 pk = new panelKelolaUser1();
-        pengaturanBox.removeAll();
-        pengaturanBox.add(pk);
-        pengaturanBox.repaint();
-        pengaturanBox.revalidate();
-    }//GEN-LAST:event_btnKelolauserActionPerformed
-
-    private void btnLogoutMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnLogoutMouseClicked
-        sidebar.setActive(btnLogout);
-    }//GEN-LAST:event_btnLogoutMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

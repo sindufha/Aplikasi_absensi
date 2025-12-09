@@ -1,7 +1,7 @@
 package Frame;
 
 
-import ClassAbsensi.LoginDAO;
+import ClassAbsensi.LoginDB;
 import ClassAbsensi.User;
 import com.formdev.flatlaf.FlatLightLaf;
 import javax.swing.JOptionPane;
@@ -142,7 +142,7 @@ public class FrameLogin extends javax.swing.JFrame {
     }
     
     // Panggil LoginDAO untuk cek ke database
-    LoginDAO loginDAO = new LoginDAO();
+    LoginDB loginDAO = new LoginDB();
     User user = loginDAO.login(username, password);
     
     // Cek hasil login
