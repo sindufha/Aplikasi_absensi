@@ -29,7 +29,20 @@ public class AbsensiDAO {
         
         return false;
     }
-    
+    public int getJumlahAbsensiHariIni(String status) {
+    String sql = "SELECT COUNT(*) FROM absensi WHERE DATE(waktu_masuk) = CURDATE() AND status = ?";
+    try (Connection conn = Koneksi.getKoneksi();
+            PreparedStatement ps = conn.prepareStatement(sql)) {
+        ps.setString(1, status);
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()) {
+            return rs.getInt(1);
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return 0;
+}
     /**
      * Ambil data siswa berdasarkan QR Code
      */
