@@ -359,7 +359,11 @@ private void setupResponsiveLayout() {
 
     private void btnLaporanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLaporanActionPerformed
       sidebar.setActive(btnLaporan);
-      
+      panelLaporan pd = new panelLaporan();
+        content.removeAll();
+        content.add(pd);
+        content.repaint();
+        content.revalidate();
 
     }//GEN-LAST:event_btnLaporanActionPerformed
 

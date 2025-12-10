@@ -86,9 +86,12 @@ public class QRCodeGenerator {
      * @param nis NIS siswa
      * @return path file yang di-generate
      */
-    public static String generateAndSaveSiswaQR(String nis) {
+    public static String generateAndSaveSiswaQR(String nis, String namaSiswa) {
     String folderPath = "qrcodes";
-    String fileName = "siswa_" + nis + ".png";
+    
+    // ✅ Format nama file: NamaSiswa_NIS.png
+    String cleanName = namaSiswa.replaceAll("[^a-zA-Z0-9\\s]", "").replaceAll("\\s+", "_");
+    String fileName = cleanName + "_" + nis + ".png";
     String fullPath = folderPath + "/" + fileName;
     
     // ✅ Generate QR dengan format "QRXXXX" (sesuai yang dicari di scanner)

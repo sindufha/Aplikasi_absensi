@@ -15,13 +15,7 @@ public class Koneksi {
         try {
             if (conn == null || conn.isClosed()) {
                 conn = DriverManager.getConnection(URL, USER, PASSWORD);
-                System.out.println("✅ Koneksi database berhasil!");
-                String url = "jdbc:mysql://localhost:3306/absensi_sdi";
-                String user = "root";
-                String password = "";
-                
-                Class.forName("com.mysql.cj.jdbc.Driver");
-                conn = DriverManager.getConnection(url, user, password);
+
                 System.out.println("Koneksi berhasil!");
             }
         } catch (SQLException e) {

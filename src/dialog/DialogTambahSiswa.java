@@ -428,7 +428,7 @@ private panelSiswa panelsiswa;
     if (confirm == JOptionPane.YES_OPTION) {
         try {
             // ✅ GENERATE QR CODE OTOMATIS
-            String qrFilePath = QRCodeGenerator.generateAndSaveSiswaQR(nisStr);
+            String qrFilePath = QRCodeGenerator.generateAndSaveSiswaQR(nisStr, namaSiswa);
             
             if (qrFilePath == null) {
                 JOptionPane.showMessageDialog(this,
