@@ -1,22 +1,22 @@
-package ClassAbsensi;
-
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package absensiapp;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
-import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
-
 /**
- * Class untuk generate QR Code
+ *
+ * @author siti novi triana
  */
-public class QRCodeGenerator {
-    
+public class QRCodeGenerator {  
     /**
      * Generate QR Code dan return BufferedImage
      * @param data Data yang mau di-encode (NIS, nama, dll)
@@ -86,39 +86,14 @@ public class QRCodeGenerator {
      * @param nis NIS siswa
      * @return path file yang di-generate
      */
-    public static String generateAndSaveSiswaQR(String nis, String namaSiswa) {
-    String folderPath = "qrcodes";
-    
-    // ✅ Format nama file: NamaSiswa_NIS.png
-    String cleanName = namaSiswa.replaceAll("[^a-zA-Z0-9\\s]", "").replaceAll("\\s+", "_");
-    String fileName = cleanName + "_" + nis + ".png";
-    String fullPath = folderPath + "/" + fileName;
-    
-    // ✅ Generate QR dengan format "QRXXXX" (sesuai yang dicari di scanner)
-    String qrData = "QR" + nis;
-    boolean success = generateQRFile(qrData, fullPath, 300, 300);
-    
-    return success ? fullPath : null;
-}
-    
-    public static ImageIcon loadQRCodeForPreview(String filePath, int previewSize){
-        try {
-            
-            BufferedImage originalImage = ImageIO.read(new File(filePath));
-            
-            if (originalImage == null) {
-                return null;
-            }
-
-            // resize dengan kualitas bagus
-            Image scaledImage = originalImage.getScaledInstance(previewSize,
-                    previewSize,
-                    Image.SCALE_SMOOTH
-            );
-            return new ImageIcon(scaledImage);
-        } catch (IOException e) {
-            System.out.println("Error Loading QR Code: "+e.getMessage());
-            return null;
-        }
+    public static String generateAndSaveSiswaQR(String nis) {
+        String folderPath = "qrcodes";
+        String fileName = "siswa_" + nis + ".png";
+        String fullPath = folderPath + "/" + fileName;
+        
+        boolean success = generateQRFile(nis, fullPath, 300, 300);
+        
+        return success ? fullPath : null;
     }
 }
+

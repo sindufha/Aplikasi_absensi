@@ -1,54 +1,37 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package ClassAbsensi;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-/**
- *
- * @author MyBook Hype AMD
- */
 public class Koneksi {
-    private static final String URL = "jdbc:mysql://localhost:3306/absensi_sdi";
+    private static Connection conn;
     
-    private static final String USERNAME = "root";
+    private static final String URL = "jdbc:mysql://localhost:3306/absensiapp";
+    private static final String USER = "root";
     private static final String PASSWORD = "";
-    private static Connection connection = null;
+    
     public static Connection getKoneksi() {
         try {
-            if (connection == null || connection.isClosed()) {
-                // Load MySQL JDBC Driver
-                Class.forName("com.mysql.cj.jdbc.Driver");
-                
-                // Buat koneksi
-                connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-                System.out.println("Database connected successfully!");
+            if (conn == null || conn.isClosed()) {
+                conn = DriverManager.getConnection(URL, USER, PASSWORD);
+
+                System.out.println("Koneksi berhasil!");
             }
-            return connection;
-            
-        } catch (ClassNotFoundException e) {
-            System.err.println("MySQL JDBC Driver not found!");
-            e.printStackTrace();
-            return null;
-            
         } catch (SQLException e) {
-            System.err.println("Failed to connect to database!");
+            System.err.println("❌ Koneksi database gagal: " + e.getMessage());
             e.printStackTrace();
-            return null;
         }
+        return conn;
     }
     public static void closeConnection() {
         try {
-            if (connection != null && !connection.isClosed()) {
-                connection.close();
-                System.out.println("Database connection closed.");
+            if (conn != null && !conn.isClosed()) {
+                conn.close();
+                System.out.println("🔒 Koneksi database ditutup");
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
-    
 }

@@ -3,6 +3,16 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
 package Frame;
+import ClassAbsensi.AbsensiDAO;
+import ClassAbsensi.Koneksi;
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.sql.*;
+import java.awt.event.*;
+import com.toedter.calendar.JDateChooser;
+import java.text.SimpleDateFormat;
+import javax.swing.JOptionPane;
+
 
 /**
  *
@@ -10,13 +20,103 @@ package Frame;
  */
 public class panelLaporan extends javax.swing.JPanel {
 
+    
     /**
      * Creates new form panelLaporan
      */
     public panelLaporan() {
         initComponents();
+        tampilkanData();
+        
+    }
+    
+     private String getTanggal(com.toedter.calendar.JDateChooser chooser) {
+    if (chooser.getDate() == null) return null;
+    java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
+    return sdf.format(chooser.getDate());
+}
+     public static void main(String[] args) {
+
+    // Gunakan tampilan GUI bawaan sistem (opsional)
+    try {
+        for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+            if ("Nimbus".equals(info.getName())) {
+                UIManager.setLookAndFeel(info.getClassName());
+                break;
+            }
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
     }
 
+    java.awt.EventQueue.invokeLater(new Runnable() {
+        public void run() {
+            JFrame frame = new JFrame("Panel Laporan");
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+            // Tambahkan panelLaporan ke frame
+            frame.setContentPane(new panelLaporan());
+
+            frame.pack();            // sesuaikan ukuran otomatis
+            frame.setLocationRelativeTo(null); // center
+            frame.setVisible(true);  // tampilkan frame
+        }
+    });
+}
+     public void tampilkanData() {
+         
+         
+    DefaultTableModel model = (DefaultTableModel) absensi.getModel();
+    model.setRowCount(0);
+
+    try {
+        Connection con = Koneksi.getKoneksi();
+        String sql = "SELECT * FROM absensi";
+        PreparedStatement pst = con.prepareStatement(sql);
+        ResultSet rs = pst.executeQuery();
+
+        ResultSetMetaData meta = rs.getMetaData();
+        int columnCount = meta.getColumnCount();
+
+        model.setColumnCount(columnCount);
+
+        // Set nama kolom otomatis
+        String[] columnNames = new String[columnCount];
+        for (int i = 0; i < columnCount; i++) {
+            columnNames[i] = meta.getColumnName(i + 1);
+        }
+        model.setColumnIdentifiers(columnNames);
+
+        while (rs.next()) {
+            Object[] row = new Object[columnCount];
+            for (int i = 0; i < columnCount; i++) {
+                row[i] = rs.getObject(i + 1);
+            }
+            model.addRow(row);
+        }
+        
+            java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("EEEE, dd MMMM yyyy", new java.util.Locale("id", "ID"));
+        String tanggalSekarang = sdf.format(new java.util.Date());
+        lblTanggal.setText(tanggalSekarang);
+
+        // Ambil data dari DAO
+        AbsensiDAO  absensiDAO = new AbsensiDAO(); // atau AbsensiDAO
+
+        lbl_siswahadir.setText(String.valueOf(absensiDAO.getJumlahAbsensiHariIni("Hadir")));
+        lbl_siswaizin.setText(String.valueOf(absensiDAO.getJumlahAbsensiHariIni("Izin")));
+        lbl_siswasakit.setText(String.valueOf(absensiDAO.getJumlahAbsensiHariIni("Sakit")));
+        lbl_alva.setText(String.valueOf(absensiDAO.getJumlahAbsensiHariIni("Alpha")));
+
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Gagal mengambil data: " + e.getMessage());
+    }
+    
+
+}
+
+     
+
+   
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -26,19 +126,419 @@ public class panelLaporan extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPanel1 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jPanelCustom1 = new ClassTambahan.JPanelCustom();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jDateChooser1 = new com.toedter.calendar.JDateChooser();
+        jLabel4 = new javax.swing.JLabel();
+        jDateChooser2 = new com.toedter.calendar.JDateChooser();
+        jButton1 = new javax.swing.JButton();
+        btn_tampilkan = new javax.swing.JButton();
+        jLabel16 = new javax.swing.JLabel();
+        jComboBox1 = new javax.swing.JComboBox<>();
+        jPanelCustom2 = new ClassTambahan.JPanelCustom();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        lblTanggal = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        lbl_siswahadir = new javax.swing.JLabel();
+        lbl_siswaizin = new javax.swing.JLabel();
+        lbl_siswasakit = new javax.swing.JLabel();
+        lbl_alva = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        absensi = new javax.swing.JTable();
+
+        jPanel1.setBackground(new java.awt.Color(44, 62, 80));
+
+        jLabel1.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel1.setText("Laporan");
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(15, 15, 15)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 46, Short.MAX_VALUE)
+        );
+
+        jPanelCustom1.setBackground(new java.awt.Color(220, 235, 255));
+        jPanelCustom1.setRoundBottomLeft(22);
+        jPanelCustom1.setRoundBottomRight(22);
+        jPanelCustom1.setRoundTopLeft(22);
+        jPanelCustom1.setRoundTopRight(22);
+
+        jLabel2.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(44, 62, 80));
+        jLabel2.setText("Filter Laporan");
+
+        jLabel3.setForeground(new java.awt.Color(44, 62, 80));
+        jLabel3.setText("Pilih Tanggal");
+
+        jDateChooser1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(200, 200, 200)));
+
+        jLabel4.setText("sd");
+
+        jDateChooser2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(200, 200, 200)));
+
+        jButton1.setBackground(new java.awt.Color(34, 139, 34));
+        jButton1.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jButton1.setForeground(new java.awt.Color(255, 255, 255));
+        jButton1.setText("Export PDF");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        btn_tampilkan.setBackground(new java.awt.Color(138, 43, 226));
+        btn_tampilkan.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        btn_tampilkan.setForeground(new java.awt.Color(255, 255, 255));
+        btn_tampilkan.setText("Tampilkan");
+        btn_tampilkan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_tampilkanActionPerformed(evt);
+            }
+        });
+
+        jLabel16.setText("Jenis Laporan");
+
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Harian", "Mingguan", "Bulanan" }));
+
+        javax.swing.GroupLayout jPanelCustom1Layout = new javax.swing.GroupLayout(jPanelCustom1);
+        jPanelCustom1.setLayout(jPanelCustom1Layout);
+        jPanelCustom1Layout.setHorizontalGroup(
+            jPanelCustom1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelCustom1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanelCustom1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanelCustom1Layout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelCustom1Layout.createSequentialGroup()
+                        .addGroup(jPanelCustom1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanelCustom1Layout.createSequentialGroup()
+                                .addComponent(jLabel16)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jComboBox1, 0, 146, Short.MAX_VALUE))
+                            .addGroup(jPanelCustom1Layout.createSequentialGroup()
+                                .addComponent(jLabel3)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jDateChooser1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanelCustom1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanelCustom1Layout.createSequentialGroup()
+                                .addGap(24, 24, 24)
+                                .addComponent(jLabel4)
+                                .addGap(40, 40, 40)
+                                .addComponent(jDateChooser2, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanelCustom1Layout.createSequentialGroup()
+                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(btn_tampilkan, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(24, 24, 24))))
+        );
+        jPanelCustom1Layout.setVerticalGroup(
+            jPanelCustom1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelCustom1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel2)
+                .addGap(18, 18, 18)
+                .addGroup(jPanelCustom1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jDateChooser2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jDateChooser1, javax.swing.GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanelCustom1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel16)
+                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 155, Short.MAX_VALUE)
+                .addGroup(jPanelCustom1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(btn_tampilkan, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE))
+                .addGap(14, 14, 14))
+        );
+
+        jPanelCustom2.setBackground(new java.awt.Color(153, 153, 255));
+        jPanelCustom2.setRoundBottomLeft(22);
+        jPanelCustom2.setRoundBottomRight(22);
+        jPanelCustom2.setRoundTopLeft(22);
+        jPanelCustom2.setRoundTopRight(22);
+
+        jLabel5.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel5.setText("Ringkasan");
+
+        jLabel6.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        jLabel6.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel6.setText("Tanggal :");
+
+        jLabel7.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        jLabel7.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel7.setText("Siswa Hadir : ");
+
+        jLabel8.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        jLabel8.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel8.setText("Siswa Izin :");
+
+        jLabel9.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        jLabel9.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel9.setText("Siswa Sakit : ");
+
+        lblTanggal.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        lblTanggal.setForeground(new java.awt.Color(255, 255, 255));
+        lblTanggal.setText("Hari ini");
+
+        jLabel11.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        jLabel11.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel11.setText("Siswa Alpa :");
+
+        lbl_siswahadir.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        lbl_siswahadir.setForeground(new java.awt.Color(255, 255, 255));
+        lbl_siswahadir.setText("19");
+
+        lbl_siswaizin.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        lbl_siswaizin.setForeground(new java.awt.Color(255, 255, 255));
+        lbl_siswaizin.setText("1");
+
+        lbl_siswasakit.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        lbl_siswasakit.setForeground(new java.awt.Color(255, 255, 255));
+        lbl_siswasakit.setText("4");
+
+        lbl_alva.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        lbl_alva.setForeground(new java.awt.Color(255, 255, 255));
+        lbl_alva.setText("8");
+
+        javax.swing.GroupLayout jPanelCustom2Layout = new javax.swing.GroupLayout(jPanelCustom2);
+        jPanelCustom2.setLayout(jPanelCustom2Layout);
+        jPanelCustom2Layout.setHorizontalGroup(
+            jPanelCustom2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelCustom2Layout.createSequentialGroup()
+                .addGap(22, 22, 22)
+                .addGroup(jPanelCustom2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel5)
+                    .addGroup(jPanelCustom2Layout.createSequentialGroup()
+                        .addGroup(jPanelCustom2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel6)
+                            .addComponent(jLabel7)
+                            .addComponent(jLabel8)
+                            .addComponent(jLabel9)
+                            .addComponent(jLabel11))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanelCustom2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lbl_alva)
+                            .addComponent(lbl_siswasakit)
+                            .addComponent(lbl_siswaizin)
+                            .addComponent(lbl_siswahadir)
+                            .addComponent(lblTanggal, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(131, Short.MAX_VALUE))
+        );
+        jPanelCustom2Layout.setVerticalGroup(
+            jPanelCustom2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelCustom2Layout.createSequentialGroup()
+                .addGap(17, 17, 17)
+                .addComponent(jLabel5)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanelCustom2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(lblTanggal))
+                .addGap(18, 18, 18)
+                .addGroup(jPanelCustom2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel7)
+                    .addComponent(lbl_siswahadir))
+                .addGap(18, 18, 18)
+                .addGroup(jPanelCustom2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel8)
+                    .addComponent(lbl_siswaizin))
+                .addGap(18, 18, 18)
+                .addGroup(jPanelCustom2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel9)
+                    .addComponent(lbl_siswasakit))
+                .addGap(18, 18, 18)
+                .addGroup(jPanelCustom2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel11)
+                    .addComponent(lbl_alva))
+                .addGap(40, 40, 40))
+        );
+
+        absensi.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        absensi.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                absensiMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(absensi);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(23, 23, 23)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1015, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jPanelCustom1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jPanelCustom2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(43, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jPanelCustom1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanelCustom2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(34, 34, 34)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 298, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(15, 15, 15))
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btn_tampilkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_tampilkanActionPerformed
+        // TODO add your handling code here:
+        tampilkanData();
+    }//GEN-LAST:event_btn_tampilkanActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        JFileChooser chooser = new JFileChooser();
+        chooser.setSelectedFile(new java.io.File("laporan.pdf"));
+
+    int result = chooser.showSaveDialog(this);
+    if (result == JFileChooser.APPROVE_OPTION) {
+        String path = chooser.getSelectedFile().getAbsolutePath();
+        
+        if (!path.toLowerCase().endsWith(".pdf")) {
+             path += ".pdf";
+        }
+
+        exportPDF(absensi, path);
+    }
+        
+        
+
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void absensiMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_absensiMouseClicked
+        // TODO add your handling code here:
+        int row = absensi.rowAtPoint(evt.getPoint());
+
+    // Ambil data berdasarkan index
+    String no = absensi.getValueAt(row, 0).toString();
+    String nis = absensi.getValueAt(row, 1).toString();
+    String nama = absensi.getValueAt(row, 2).toString();
+    String kelas = absensi.getValueAt(row, 3).toString();
+    String waktu = absensi.getValueAt(row, 4).toString();
+    String status = absensi.getValueAt(row, 5).toString();
+
+    // Jika waktu adalah format tanggal
+    try {
+        java.util.Date tgl = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(waktu);
+        
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    
+    }//GEN-LAST:event_absensiMouseClicked
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTable absensi;
+    private javax.swing.JButton btn_tampilkan;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JComboBox<String> jComboBox1;
+    private com.toedter.calendar.JDateChooser jDateChooser1;
+    private com.toedter.calendar.JDateChooser jDateChooser2;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JPanel jPanel1;
+    private ClassTambahan.JPanelCustom jPanelCustom1;
+    private ClassTambahan.JPanelCustom jPanelCustom2;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lblTanggal;
+    private javax.swing.JLabel lbl_alva;
+    private javax.swing.JLabel lbl_siswahadir;
+    private javax.swing.JLabel lbl_siswaizin;
+    private javax.swing.JLabel lbl_siswasakit;
     // End of variables declaration//GEN-END:variables
+
+    public void exportPDF(JTable jTable1, String path) {
+        try {
+        // Pastikan folder tujuan tersedia
+        java.io.File file = new java.io.File(path);
+        java.io.File parent = file.getParentFile();
+        if (!parent.exists()) parent.mkdirs();
+
+        // Membuat dokumen PDF
+        com.itextpdf.text.Document doc = new com.itextpdf.text.Document();
+        com.itextpdf.text.pdf.PdfWriter.getInstance(doc, new java.io.FileOutputStream(path));
+
+        doc.open();
+
+        // Membuat tabel PDF sesuai kolom JTable
+        com.itextpdf.text.pdf.PdfPTable pdfTable = new com.itextpdf.text.pdf.PdfPTable(absensi.getColumnCount());
+
+        // Tambahkan header
+        for (int i = 0; i < absensi.getColumnCount(); i++) {
+            pdfTable.addCell(new com.itextpdf.text.pdf.PdfPCell(
+                    new com.itextpdf.text.Phrase(absensi.getColumnName(i))
+            ));
+        }
+
+        // Tambahkan isi data
+        for (int row = 0; row < absensi.getRowCount(); row++) {
+            for (int col = 0; col < absensi.getColumnCount(); col++) {
+                Object value = absensi.getValueAt(row, col);
+                pdfTable.addCell(value != null ? value.toString() : "");
+            }
+        }
+
+        doc.add(pdfTable);
+        doc.close();
+
+        JOptionPane.showMessageDialog(null,
+            "PDF berhasil disimpan di:\n" + path,
+            "Sukses", JOptionPane.INFORMATION_MESSAGE);
+
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(null,
+            "Gagal export PDF: " + e.getMessage(),
+            "Error", JOptionPane.ERROR_MESSAGE);
+    }  
+    }
 }
