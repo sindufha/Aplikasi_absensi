@@ -3,20 +3,46 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
 package PanelPengaturan;
-
+import ClassAbsensi.Pengaturan;
+import ClassAbsensi.PengaturanDAO;
+import javax.swing.JOptionPane;
 /**
  *
  * @author MyBook Hype AMD
  */
 public class panelDataSekolah extends javax.swing.JPanel {
-
+private PengaturanDAO pengaturanDAO;
     /**
      * Creates new form panelProfik
      */
     public panelDataSekolah() {
         initComponents();
+        
+        setupPanel();
     }
-
+private void loadPengaturan() {
+        Pengaturan p = pengaturanDAO.getPengaturan();
+        
+        if (p != null) {
+            tNamaSekolah.setText(p.getNamaSekolah());
+            tAlamat.setText(p.getAlamatSekolah());
+            tTahunAjaran.setText(p.getTahunAjaranAktif());
+            tNamaKepala.setText(p.getKepalaSekolah());
+            
+            System.out.println("✓ Data pengaturan berhasil dimuat");
+        } else {
+            JOptionPane.showMessageDialog(this,
+                "Gagal memuat data pengaturan!",
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+        }
+    }
+private void setupPanel() {
+        pengaturanDAO = new PengaturanDAO();
+        
+        // Load data dari database dan set ke textfield
+        loadPengaturan();
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -28,7 +54,14 @@ public class panelDataSekolah extends javax.swing.JPanel {
 
         jLabel1 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
+        tNamaSekolah = new javax.swing.JTextField();
+        jLabel9 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        tAlamat = new javax.swing.JTextField();
+        tNamaKepala = new javax.swing.JTextField();
+        tTahunAjaran = new javax.swing.JTextField();
+        btnSimpan = new javax.swing.JButton();
 
         jLabel1.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         jLabel1.setText("Data Sekolah");
@@ -37,23 +70,72 @@ public class panelDataSekolah extends javax.swing.JPanel {
         jLabel7.setForeground(new java.awt.Color(51, 51, 51));
         jLabel7.setText("Nama Sekolah ");
 
-        jLabel2.setText("SDI Khadijah ");
+        tNamaSekolah.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
+
+        jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel9.setForeground(new java.awt.Color(51, 51, 51));
+        jLabel9.setText("Tahun Ajaran");
+
+        jLabel10.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel10.setForeground(new java.awt.Color(51, 51, 51));
+        jLabel10.setText("Alamat Sekolah");
+
+        jLabel11.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel11.setForeground(new java.awt.Color(51, 51, 51));
+        jLabel11.setText("Nama Kepala Sekolah");
+
+        tAlamat.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
+        tAlamat.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tAlamatActionPerformed(evt);
+            }
+        });
+
+        tNamaKepala.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
+        tNamaKepala.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tNamaKepalaActionPerformed(evt);
+            }
+        });
+
+        tTahunAjaran.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
+
+        btnSimpan.setBackground(new java.awt.Color(0, 204, 0));
+        btnSimpan.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        btnSimpan.setForeground(new java.awt.Color(255, 255, 255));
+        btnSimpan.setText("Simpan");
+        btnSimpan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSimpanActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(17, 17, 17)
-                        .addComponent(jLabel1))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(55, 55, 55)
-                        .addComponent(jLabel7)
-                        .addGap(123, 123, 123)
-                        .addComponent(jLabel2)))
-                .addContainerGap(512, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnSimpan, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tTahunAjaran, javax.swing.GroupLayout.PREFERRED_SIZE, 659, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tAlamat, javax.swing.GroupLayout.PREFERRED_SIZE, 659, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tNamaKepala, javax.swing.GroupLayout.PREFERRED_SIZE, 659, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                            .addGap(17, 17, 17)
+                            .addComponent(jLabel1))
+                        .addGroup(layout.createSequentialGroup()
+                            .addGap(55, 55, 55)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jLabel10)
+                                        .addComponent(jLabel7)
+                                        .addComponent(jLabel9)
+                                        .addComponent(jLabel11))
+                                    .addGap(401, 401, 401))
+                                .addComponent(tNamaSekolah, javax.swing.GroupLayout.PREFERRED_SIZE, 659, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addContainerGap(149, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -61,17 +143,116 @@ public class panelDataSekolah extends javax.swing.JPanel {
                 .addGap(16, 16, 16)
                 .addComponent(jLabel1)
                 .addGap(72, 72, 72)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel7)
-                    .addComponent(jLabel2))
-                .addContainerGap(536, Short.MAX_VALUE))
+                .addComponent(jLabel7)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(tNamaSekolah, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel11)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(tNamaKepala, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel10)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(tAlamat, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel9)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(tTahunAjaran, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(33, 33, 33)
+                .addComponent(btnSimpan, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(154, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void tNamaKepalaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tNamaKepalaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tNamaKepalaActionPerformed
+
+    private void tAlamatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tAlamatActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tAlamatActionPerformed
+
+    private void btnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSimpanActionPerformed
+      String namaSekolah = tNamaSekolah.getText().trim();
+        String alamat = tAlamat.getText().trim();
+        String tahunAjaran = tTahunAjaran.getText().trim();
+        String kepalaSekolah = tNamaKepala.getText().trim();
+        
+        // Validasi input
+        if (namaSekolah.isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                "Nama sekolah tidak boleh kosong!",
+                "Validasi",
+                JOptionPane.WARNING_MESSAGE);
+            tNamaSekolah.requestFocus();
+            return;
+        }
+        
+        if (tahunAjaran.isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                "Tahun ajaran tidak boleh kosong!",
+                "Validasi",
+                JOptionPane.WARNING_MESSAGE);
+            tTahunAjaran.requestFocus();
+            return;
+        }
+        
+        // Validasi format tahun ajaran (2024/2025)
+        if (!tahunAjaran.matches("\\d{4}/\\d{4}")) {
+            JOptionPane.showMessageDialog(this,
+                "Format tahun ajaran salah!\nContoh: 2024/2025",
+                "Validasi",
+                JOptionPane.WARNING_MESSAGE);
+            tTahunAjaran.requestFocus();
+            return;
+        }
+        
+        // Konfirmasi
+        int confirm = JOptionPane.showConfirmDialog(this,
+            "Simpan perubahan pengaturan?\n\n" +
+            "Nama Sekolah: " + namaSekolah + "\n" +
+            "Tahun Ajaran: " + tahunAjaran,
+            "Konfirmasi",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.QUESTION_MESSAGE);
+        
+        if (confirm == JOptionPane.YES_OPTION) {
+            // Buat object Pengaturan
+            Pengaturan p = new Pengaturan();
+            p.setId(1);
+            p.setNamaSekolah(namaSekolah);
+            p.setAlamatSekolah(alamat);
+            p.setTahunAjaranAktif(tahunAjaran);
+            p.setKepalaSekolah(kepalaSekolah);
+            
+            // Simpan ke database
+            boolean success = pengaturanDAO.updatePengaturan(p);
+            
+            if (success) {
+                JOptionPane.showMessageDialog(this,
+                    "✓ Pengaturan berhasil disimpan!",
+                    "Sukses",
+                    JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(this,
+                    "✗ Gagal menyimpan pengaturan!",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }//GEN-LAST:event_btnSimpanActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnSimpan;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JTextField tAlamat;
+    private javax.swing.JTextField tNamaKepala;
+    private javax.swing.JTextField tNamaSekolah;
+    private javax.swing.JTextField tTahunAjaran;
     // End of variables declaration//GEN-END:variables
 }
