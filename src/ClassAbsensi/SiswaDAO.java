@@ -120,30 +120,63 @@ public class SiswaDAO {
         return null;
     }
 
-    public List<Siswa> getSiswaByKelas(int idKelas) {
-        List<Siswa> list = new ArrayList<>();
-        String sql = "SELECT * FROM siswa WHERE id_kelas = ? ORDER BY nama_siswa";
-        try (Connection conn = Koneksi.getKoneksi();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, idKelas);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                Siswa siswa = new Siswa(
-                    rs.getInt("id_siswa"),
-                    rs.getInt("nis"), // ✅ Ubah ke getInt
-                    rs.getString("nama_siswa"),
-                    rs.getInt("id_kelas"),
-                    rs.getString("jenis_kelamin"),
-                    rs.getString("qr_code"),
-                    rs.getString("status")
-                );
-                list.add(siswa);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return list;
+    /**
+ * Get siswa by kelas (semua status)
+ */
+public List<Siswa> getSiswaByKelas(int idKelas) {
+    return getSiswaByKelas(idKelas, null);
+}
+
+/**
+ * Get siswa by kelas dengan filter status
+ * @param idKelas ID kelas
+ * @param status Status siswa (Aktif/Tidak Aktif), null untuk semua
+ * @return List siswa
+ */
+public List<Siswa> getSiswaByKelas(int idKelas, String status) {
+    List<Siswa> list = new ArrayList<>();
+    
+    String sql = "SELECT * FROM siswa WHERE id_kelas = ?";
+    if (status != null && !status.isEmpty()) {
+        sql += " AND status = ?";
     }
+    sql += " ORDER BY nama_siswa ASC";
+    
+    try (Connection conn = Koneksi.getKoneksi();
+         PreparedStatement ps = conn.prepareStatement(sql)) {
+        
+        ps.setInt(1, idKelas);
+        if (status != null && !status.isEmpty()) {
+            ps.setString(2, status);
+        }
+        
+        ResultSet rs = ps.executeQuery();
+        
+        while (rs.next()) {
+            Siswa siswa = new Siswa();
+            siswa.setNis(rs.getInt("nis"));
+            siswa.setNamaSiswa(rs.getString("nama_siswa"));
+            siswa.setIdKelas(rs.getInt("id_kelas"));
+            siswa.setJenisKelamin(rs.getString("jenis_kelamin"));
+            siswa.setQrCode(rs.getString("qr_code"));
+            siswa.setStatus(rs.getString("status"));
+            list.add(siswa);
+        }
+        
+    } catch (SQLException e) {
+        System.err.println("Error getSiswaByKelas: " + e.getMessage());
+        e.printStackTrace();
+    }
+    
+    return list;
+}
+
+/**
+ * Get siswa aktif by kelas
+ */
+public List<Siswa> getSiswaAktifByKelas(int idKelas) {
+    return getSiswaByKelas(idKelas, "Aktif");
+}
 
     public boolean updateSiswa(Siswa siswa) {
         String sql = "UPDATE siswa SET nama_siswa=?, id_kelas=?, jenis_kelamin=?, status=? WHERE nis=?"; // ✅ WHERE menggunakan nis
