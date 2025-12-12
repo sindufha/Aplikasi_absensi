@@ -143,4 +143,45 @@ public class KelasDAO {
         
         return 0;
     }
+    public List<Absensi> getAbsensiByKelasAndBulan(int idKelas, int bulan, int tahun) {
+    List<Absensi> listAbsensi = new ArrayList<>();
+    // Sesuaikan query dengan struktur tabel yang benar
+    // Kemungkinan relasi: a.id_siswa = s.id_siswa atau a.nis_siswa = s.nis
+    String query = "SELECT a.*, s.nis, s.nama_siswa " +
+                   "FROM absensi a " +
+                   "INNER JOIN siswa s ON a.id_siswa = s.id_siswa " +
+                   "WHERE s.id_kelas = ? " +
+                   "AND MONTH(a.tanggal) = ? " +
+                   "AND YEAR(a.tanggal) = ? " +
+                   "ORDER BY a.tanggal, s.nama_siswa";
+    
+    try (Connection conn = Koneksi.getKoneksi();
+         PreparedStatement pstmt = conn.prepareStatement(query)) {
+        
+        pstmt.setInt(1, idKelas);
+        pstmt.setInt(2, bulan);
+        pstmt.setInt(3, tahun);
+        
+        try (ResultSet rs = pstmt.executeQuery()) {
+            while (rs.next()) {
+                Absensi absensi = new Absensi();
+                absensi.setIdAbsensi(rs.getInt("id_absensi"));
+                absensi.setIdSiswa(rs.getInt("id_siswa")); // Gunakan id_siswa dari tabel absensi
+                absensi.setNis(rs.getString("nis")); // Ambil nis dari tabel siswa (hasil JOIN)
+                absensi.setNamaSiswa(rs.getString("nama_siswa"));
+                absensi.setTanggal(rs.getDate("tanggal"));
+                absensi.setStatus(rs.getString("status"));
+                absensi.setKeterangan(rs.getString("keterangan"));
+                
+                listAbsensi.add(absensi);
+            }
+        }
+        
+    } catch (SQLException e) {
+        System.err.println("Error mengambil data absensi: " + e.getMessage());
+        e.printStackTrace();
+    }
+    
+    return listAbsensi;
+}
 }
