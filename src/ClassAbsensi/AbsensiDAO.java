@@ -401,6 +401,7 @@ public boolean updateWaktuAbsensi(int idSiswa, Date tanggal) {
     return false;
 }
 
+
 public List<Absensi> getAbsensiByTanggalKelas(Date tanggal, int idKelas) {
     List<Absensi> list = new ArrayList<>();
     String sql = "SELECT a.*, s.nis, s.nama_siswa, k.tingkat " +  // ✅ tingkat
@@ -441,5 +442,119 @@ public List<Absensi> getAbsensiByTanggalKelas(Date tanggal, int idKelas) {
     }
     
     return list;
+}
+public java.util.Map<String, Object> getJamAbsensi() {
+    java.util.Map<String, Object> jamAbsensi = new java.util.HashMap<>();
+    String sql = "SELECT jam_masuk, toleransi FROM jam_absensi WHERE id = 1"; // Hapus jam_pulang
+    
+    try (Connection conn = Koneksi.getKoneksi();
+         Statement stmt = conn.createStatement();
+         ResultSet rs = stmt.executeQuery(sql)) {
+        
+        if (rs.next()) {
+            jamAbsensi.put("jam_masuk", rs.getTime("jam_masuk"));
+            jamAbsensi.put("toleransi", rs.getInt("toleransi"));
+        } else {
+            // Default
+            jamAbsensi.put("jam_masuk", java.sql.Time.valueOf("07:00:00"));
+            jamAbsensi.put("toleransi", 15);
+        }
+        
+    } catch (SQLException e) {
+        System.err.println("❌ Error getJamAbsensi: " + e.getMessage());
+        e.printStackTrace();
+        
+        // Return default jika error
+        jamAbsensi.put("jam_masuk", java.sql.Time.valueOf("07:00:00"));
+        jamAbsensi.put("toleransi", 15);
+    }
+    
+    return jamAbsensi;
+}
+
+/**
+ * Update pengaturan jam absensi
+ */
+public boolean updateJamAbsensi(String jamMasuk, int toleransi) {
+    String sql = "UPDATE jam_absensi SET jam_masuk = ?, toleransi = ? WHERE id = 1";
+    
+    try (Connection conn = Koneksi.getKoneksi();
+         PreparedStatement ps = conn.prepareStatement(sql)) {
+        
+        ps.setTime(1, java.sql.Time.valueOf(jamMasuk + ":00"));
+        ps.setInt(2, toleransi);
+        
+        int result = ps.executeUpdate();
+        
+        if (result > 0) {
+            System.out.println("✅ Jam absensi berhasil diupdate");
+            return true;
+        } else {
+            return insertJamAbsensi(jamMasuk, toleransi);
+        }
+        
+    } catch (SQLException e) {
+        System.err.println("❌ Error updateJamAbsensi: " + e.getMessage());
+        e.printStackTrace();
+        return false;
+    }
+}
+
+private boolean insertJamAbsensi(String jamMasuk, int toleransi) {
+    String sql = "INSERT INTO jam_absensi (id, jam_masuk, toleransi) VALUES (1, ?, ?)";
+    
+    try (Connection conn = Koneksi.getKoneksi();
+         PreparedStatement ps = conn.prepareStatement(sql)) {
+        
+        ps.setTime(1, java.sql.Time.valueOf(jamMasuk + ":00"));
+        ps.setInt(2, toleransi);
+        
+        int result = ps.executeUpdate();
+        System.out.println("✅ Jam absensi berhasil dibuat");
+        return result > 0;
+        
+    } catch (SQLException e) {
+        System.err.println("❌ Error insertJamAbsensi: " + e.getMessage());
+        e.printStackTrace();
+        return false;
+    }
+}
+public List<Absensi> getAbsensiByBulan(int bulan, int tahun) {
+    List<Absensi> listAbsensi = new ArrayList<>();
+    String query = "SELECT a.*, s.nis, s.nama_siswa, k.tingkat " +
+                   "FROM absensi a " +
+                   "INNER JOIN siswa s ON a.id_siswa = s.id_siswa " +
+                   "INNER JOIN kelas k ON s.id_kelas = k.id_kelas " +
+                   "WHERE MONTH(a.tanggal) = ? " +
+                   "AND YEAR(a.tanggal) = ? " +
+                   "ORDER BY a.tanggal DESC, k.tingkat, s.nama_siswa";
+    
+    try (Connection conn = Koneksi.getKoneksi();
+         PreparedStatement pstmt = conn.prepareStatement(query)) {
+        
+        pstmt.setInt(1, bulan);
+        pstmt.setInt(2, tahun);
+        
+        try (ResultSet rs = pstmt.executeQuery()) {
+            while (rs.next()) {
+                Absensi absensi = new Absensi();
+                absensi.setIdAbsensi(rs.getInt("id_absensi"));
+                absensi.setIdSiswa(rs.getInt("id_siswa"));
+                absensi.setNis(rs.getString("nis"));
+                absensi.setNamaSiswa(rs.getString("nama_siswa"));
+                absensi.setTanggal(rs.getDate("tanggal"));
+                absensi.setStatus(rs.getString("status"));
+                absensi.setKeterangan(rs.getString("keterangan"));
+                
+                listAbsensi.add(absensi);
+            }
+        }
+        
+    } catch (SQLException e) {
+        System.err.println("Error mengambil data absensi bulan: " + e.getMessage());
+        e.printStackTrace();
+    }
+    
+    return listAbsensi;
 }
 }
