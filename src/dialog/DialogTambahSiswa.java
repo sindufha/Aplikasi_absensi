@@ -102,8 +102,7 @@ private panelSiswa panelsiswa;
         tNama.setText("");
         cKelas.setSelectedIndex(0);
         cJK.setSelectedIndex(0);
-        lblCode.setIcon(null);
-        lblCode.setText("QR Code Preview");
+        
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -123,10 +122,6 @@ private panelSiswa panelsiswa;
         cKelas = new javax.swing.JComboBox<>();
         jLabel5 = new javax.swing.JLabel();
         cJK = new javax.swing.JComboBox<>();
-        jPanel3 = new javax.swing.JPanel();
-        lblCode = new javax.swing.JLabel();
-        lableCode = new javax.swing.JLabel();
-        bBuat = new javax.swing.JButton();
         btnBatal = new javax.swing.JButton();
         btnSimpan = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
@@ -152,63 +147,21 @@ private panelSiswa panelsiswa;
 
         cJK.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
-        jPanel3.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel3.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        jPanel3.setMaximumSize(new java.awt.Dimension(150, 127));
-        jPanel3.setPreferredSize(new java.awt.Dimension(150, 127));
-
-        lblCode.setText("QR");
-
-        lableCode.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lableCode.setText("QR");
-
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(135, 135, 135)
-                .addComponent(lblCode)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addComponent(lableCode, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addComponent(lableCode, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblCode)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        bBuat.setText("Buat QR");
-        bBuat.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bBuatActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(14, 14, 14)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(cKelas, 0, 378, Short.MAX_VALUE)
-                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(tNama)
-                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(tNIS)
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(cJK, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(bBuat)
-                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cKelas, 0, 378, Short.MAX_VALUE)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tNama)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tNIS)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cJK, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(26, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -230,11 +183,7 @@ private panelSiswa panelsiswa;
                 .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(cJK, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(bBuat)
-                .addContainerGap(26, Short.MAX_VALUE))
+                .addContainerGap(25, Short.MAX_VALUE))
         );
 
         btnBatal.setBackground(new java.awt.Color(149, 165, 166));
@@ -299,21 +248,22 @@ private panelSiswa panelsiswa;
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(59, 59, 59)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnBatal, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnSimpan, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 541, Short.MAX_VALUE)))
+                    .addGap(0, 388, Short.MAX_VALUE)))
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnBatalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBatalActionPerformed
@@ -339,7 +289,7 @@ private panelSiswa panelsiswa;
         idKelas = Integer.parseInt(kelasStr);
     }
     
-    // Validasi input
+    // ========== VALIDASI INPUT ==========
     if (nisStr.isEmpty()) {
         JOptionPane.showMessageDialog(this,
                 "NIS tidak boleh kosong!",
@@ -412,75 +362,57 @@ private panelSiswa panelsiswa;
     // Convert jenis kelamin ke format database (L/P)
     String jk = jenisKelamin.equals("Laki-Laki") ? "L" : "P";
     
-    // Konfirmasi
+    // ========== KONFIRMASI ==========
     int confirm = JOptionPane.showConfirmDialog(this,
             "Simpan data siswa baru dengan informasi:\n\n"
             + "NIS           : " + nis + "\n"
             + "Nama Siswa    : " + namaSiswa + "\n"
             + "Kelas         : " + idKelas + "\n"
             + "Jenis Kelamin : " + jenisKelamin + "\n\n"
-            + "QR Code akan di-generate otomatis.\n"
-            + "Apakah Anda yakin ingin menyimpan data ini?",
+            + "Data QR Code akan disimpan di database.\n"
+            + "File QR dapat di-download di menu Generate QR.\n\n"
+            + "Apakah Anda yakin?",
             "Konfirmasi Tambah Data",
             JOptionPane.YES_NO_OPTION,
             JOptionPane.QUESTION_MESSAGE);
     
     if (confirm == JOptionPane.YES_OPTION) {
         try {
-            // ✅ GENERATE QR CODE OTOMATIS
-            String qrFilePath = QRCodeGenerator.generateAndSaveSiswaQR(nisStr, namaSiswa);
-            
-            if (qrFilePath == null) {
-                JOptionPane.showMessageDialog(this,
-                        "Gagal membuat QR Code!\nSilakan coba lagi.",
-                        "Error",
-                        JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-            
-            // QR Code berhasil dibuat, sekarang simpan data siswa
+            // ========== BUAT OBJECT SISWA ==========
             Siswa siswa = new Siswa();
             siswa.setNis(nis);
             siswa.setNamaSiswa(namaSiswa);
             siswa.setIdKelas(idKelas);
             siswa.setJenisKelamin(jk);
-            siswa.setQrCode("QR" + nisStr); // Simpan path file QR Code
+            siswa.setQrCode("QR" + nis); // ✅ Simpan sebagai string QR code
             siswa.setStatus("Aktif");
             
-            // Simpan ke database
+            // ========== SIMPAN KE DATABASE ==========
             boolean success = siswaDAO.tambahSiswa(siswa);
             
             if (success) {
-                // ✅ Tampilkan preview QR Code (opsional)
-                if (lblCode != null) { // Jika ada label untuk preview QR
-                    ImageIcon qrIcon = QRCodeGenerator.loadQRCodeForPreview(qrFilePath, 150);
-                    if (qrIcon != null) {
-                        lblCode.setIcon(qrIcon);
-                        lblCode.setText("");
-                    }
-                }
-                
                 JOptionPane.showMessageDialog(this,
-                        "✓ Data siswa berhasil ditambahkan!\n"
-                        + "✓ QR Code berhasil dibuat!\n\n"
-                        + "File QR Code: " + qrFilePath,
+                        "✓ Data siswa berhasil ditambahkan!\n\n"
+                        + "NIS: " + nis + "\n"
+                        + "Nama: " + namaSiswa + "\n"
+                        + "QR Code: QR" + nis + "\n\n"
+                        + "Untuk mendapatkan file QR Code (PNG),\n"
+                        + "silakan download di menu Generate QR.",
                         "Berhasil",
                         JOptionPane.INFORMATION_MESSAGE);
-                if (getParent() instanceof panelSiswa) {
-        panelSiswa parent = (panelSiswa) getParent();
-        parent.refreshTableData(); // Panggil method refresh
-    }
-                dispose(); // Atau dispose()
                 
-            } else {
-                // Hapus file QR Code jika gagal simpan ke database
-                File qrFile = new File(qrFilePath);
-                if (qrFile.exists()) {
-                    qrFile.delete();
+                // Refresh table di panel siswa
+                if (getParent() instanceof panelSiswa) {
+                    panelSiswa parent = (panelSiswa) getParent();
+                    parent.refreshTableData();
                 }
                 
+                dispose();
+                
+            } else {
                 JOptionPane.showMessageDialog(this,
-                        "✗ Gagal menyimpan data siswa ke database!",
+                        "✗ Gagal menyimpan data siswa ke database!\n"
+                        + "Silakan coba lagi atau hubungi administrator.",
                         "Error",
                         JOptionPane.ERROR_MESSAGE);
             }
@@ -499,13 +431,8 @@ private panelSiswa panelsiswa;
        
     }//GEN-LAST:event_btnSimpanActionPerformed
 
-    private void bBuatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bBuatActionPerformed
-       
-    }//GEN-LAST:event_bBuatActionPerformed
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton bBuat;
     private javax.swing.JButton btnBatal;
     private javax.swing.JButton btnSimpan;
     private javax.swing.JComboBox<String> cJK;
@@ -517,9 +444,6 @@ private panelSiswa panelsiswa;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JLabel lableCode;
-    private javax.swing.JLabel lblCode;
     private javax.swing.JTextField tNIS;
     private javax.swing.JTextField tNama;
     // End of variables declaration//GEN-END:variables
