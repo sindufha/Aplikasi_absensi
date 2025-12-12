@@ -9,6 +9,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import ClassAbsensi.pengaturansidebar;
 import PanelPengaturan.*;
+import ClassAbsensi.Pengaturan;
+import ClassAbsensi.PengaturanDAO;
 /**
  *
  * @author MyBook Hype AMD
@@ -173,6 +175,11 @@ public class panelPengaturan1 extends javax.swing.JPanel {
 
     private void btnJamActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnJamActionPerformed
        sidebar.setActive(btnJam);
+       panelJamAbsen pj = new panelJamAbsen();
+        pengaturanBox.removeAll();
+        pengaturanBox.add(pj);
+        pengaturanBox.repaint();
+        pengaturanBox.revalidate();
     }//GEN-LAST:event_btnJamActionPerformed
 
     private void btnKelolauserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnKelolauserActionPerformed
