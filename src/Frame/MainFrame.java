@@ -490,9 +490,9 @@ private void setupPanelResize(JPanel panel) {
 
     private void btnGenerateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerateActionPerformed
         sidebar.setActive(btnGenerate);
-        panelGenerateQR pq = new panelGenerateQR();
+        
         content.removeAll();
-        content.add(pq);
+       
         content.repaint();
         content.revalidate();
     }//GEN-LAST:event_btnGenerateActionPerformed
