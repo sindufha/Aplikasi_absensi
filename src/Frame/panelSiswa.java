@@ -21,6 +21,14 @@ import javax.swing.SwingUtilities;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import dialog.DialogTambahSiswa;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Font;
+import javax.swing.BorderFactory;
+import javax.swing.JLabel;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.JTableHeader;
 
 /**
  *
@@ -40,18 +48,66 @@ private DefaultTableModel model;
         initTableModel();
         loadComboBoxKelas(); // Load kelas dari database
         refreshTableData();
+        
     }
 private void initTableModel() {
-        model = new DefaultTableModel();
-        model.addColumn("No");
-        model.addColumn("NIS");
-        model.addColumn("Nama Siswa");
-        model.addColumn("Kelas");
-        model.addColumn("Jenis Kelamin");
-        model.addColumn("Status");
+
+    model = new DefaultTableModel() {
+        @Override
+        public boolean isCellEditable(int row, int column) {
+            return false;
+        }
+    };
+
+    model.addColumn("No");
+    model.addColumn("NIS");
+    model.addColumn("Nama Siswa");
+    model.addColumn("Kelas");
+    model.addColumn("Jenis Kelamin");
+    model.addColumn("Status");
+
+    tblSiswa.setModel(model);
+    tblSiswa.getColumnModel().getColumn(0).setPreferredWidth(60);
+    tblSiswa.getColumnModel().getColumn(1).setPreferredWidth(120);
+    tblSiswa.getColumnModel().getColumn(2).setPreferredWidth(200);
+    tblSiswa.getColumnModel().getColumn(3).setPreferredWidth(90);
+    tblSiswa.getColumnModel().getColumn(4).setPreferredWidth(180);
+    
+    tblSiswa.setRowHeight(45);
+    tblSiswa.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+    tblSiswa.setIntercellSpacing(new Dimension(0, 0));
+    
+    JTableHeader header = tblSiswa.getTableHeader();
+    header.setBackground(new Color(249, 250, 251));
+    header.setForeground(new Color(50, 0, 128));
+    header.setFont(new Font("Segoe UI", Font.BOLD, 12));
+    header.setPreferredSize(new Dimension(header.getWidth(), 48));
+    
+    header.setDefaultRenderer(new DefaultTableCellRenderer() {
+    @Override
+    public Component getTableCellRendererComponent(JTable table, Object value,
+            boolean isSelected, boolean hasFocus, int row, int column) {
+        JLabel label = new JLabel(value.toString());
+        label.setFont(new Font("Segoe UI", Font.BOLD, 15));
+        label.setForeground(new Color(50, 0, 128));
+        label.setBackground(new Color(249, 250, 251));
+        label.setOpaque(true);
         
-        tblSiswa.setModel(model);
+        label.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createMatteBorder(0, 0, 1, 0, new Color(220, 220, 220)),
+            BorderFactory.createEmptyBorder(10, 15, 10, 15)
+        ));
+        
+        label.setHorizontalAlignment(column == 0 || column == 3 ? JLabel.CENTER : JLabel.LEFT);
+        return label;
     }
+});
+    
+    DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+    centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+    tblSiswa.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+    tblSiswa.getColumnModel().getColumn(3).setCellRenderer(centerRenderer);
+}
     public void tampilkanDataSiswa() {
         refreshTableData();
     }
@@ -170,7 +226,15 @@ private void initTableModel() {
             new String [] {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         tblSiswa.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tblSiswaMouseClicked(evt);
@@ -418,10 +482,7 @@ loadAllSiswa();
             bUbah.setEnabled(true);
             bHapus.setEnabled(true);
 
-            // Jika double click, langsung buka dialog edit
-            if (evt.getClickCount() == 2) {
-                bUbahActionPerformed(null);
-            }
+            
         }
 
         
