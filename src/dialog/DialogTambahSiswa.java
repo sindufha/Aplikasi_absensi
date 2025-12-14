@@ -5,36 +5,13 @@
 package dialog;
 import ClassAbsensi.Kelas;
 import ClassAbsensi.KelasDAO;
-import ClassAbsensi.Koneksi;
-import ClassAbsensi.QRCodeGenerator;
-import ClassAbsensi.Koneksi;
 import ClassAbsensi.Siswa;
 import ClassAbsensi.SiswaDAO;
 import Frame.panelSiswa;
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.EncodeHintType;
-import com.google.zxing.MultiFormatWriter;
-import com.google.zxing.WriterException;
-import com.google.zxing.client.j2se.MatrixToImageWriter;
-import com.google.zxing.common.BitMatrix;
-import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
-import java.awt.HeadlessException;
-import java.awt.Image;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.HashMap;
+
 import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
+
 
 /**
  *
@@ -53,7 +30,6 @@ private panelSiswa panelsiswa;
        loadComboBox();
        panelsiswa = new panelSiswa();
     }
-    // Method untuk load semua ComboBox saat form dibuka
 
     private void loadComboBox() {
         loadComboBoxJenisKelamin();

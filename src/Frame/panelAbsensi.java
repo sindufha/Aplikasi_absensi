@@ -47,9 +47,8 @@ public class panelAbsensi extends javax.swing.JPanel {
         siswaDAO = new SiswaDAO();
         setupTable();
         loadComboBoxKelas();
-        setupResponsiveTable();
+        
         updateTanggalInfo();
-        tblAbsensi.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
         Timer t = new Timer(1000,(e)->{
         java.sql.Time waktu = new java.sql.Time(System.currentTimeMillis());
         waktuRealTime.setText(String.valueOf(waktu));
@@ -57,61 +56,9 @@ public class panelAbsensi extends javax.swing.JPanel {
         });
          t.start();
                 }
-    private void setupResponsiveTable() {
-    this.addComponentListener(new java.awt.event.ComponentAdapter() {
-        @Override
-        public void componentResized(java.awt.event.ComponentEvent e) {
-            handlePanelResize();
-        }
-    });
-    
-    if (tblAbsensi != null) {
-        tblAbsensi.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
-    }
-    
-    handlePanelResize();
-}
+   
 
-private void handlePanelResize() {
-    int panelWidth = getWidth();
-    int panelHeight = getHeight();
-    
-    if (panelWidth <= 0 || panelHeight <= 0) return;
-    
-    int margin = 20;
-    
-    // Hitung tinggi komponen di atas tabel
-    int headerHeight = margin;
-    
-    if (jPanel1 != null && jPanel1.isVisible()) {
-        headerHeight += jPanel1.getHeight() + 10;
-    }
-    
-    if (jPanel2 != null && jPanel2.isVisible()) {
-        headerHeight += jPanel2.getHeight() + 10;
-    }
-    
-    if (btnSimpanAbsen != null && btnSimpanAbsen.isVisible()) {
-        headerHeight += btnSimpanAbsen.getHeight() + 15;
-    }
-    
-    // Resize panelTblAbsen dan scrollPane
-    if (panelTblAbsen != null) {
-        int tabelHeight = panelHeight - headerHeight - margin;
-        panelTblAbsen.setBounds(margin, headerHeight, 
-                                panelWidth - (margin * 2), tabelHeight);
-        
-        // Resize scrollPane di dalamnya
-        if (jScrollPane1 != null) {
-            jScrollPane1.setBounds(0, 0, 
-                                  panelTblAbsen.getWidth(), 
-                                  panelTblAbsen.getHeight());
-        }
-    }
-    
-    revalidate();
-    repaint();
-}
+
     private void loadComboBoxKelas() {
         
         cbKelas.removeAllItems();
@@ -374,11 +321,10 @@ private void simpanAbsensi() {
         cbKelas = new javax.swing.JComboBox<>();
         jLabel8 = new javax.swing.JLabel();
         btnSimpanAbsen = new javax.swing.JButton();
-        panelTblAbsen = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        tblAbsensi = new javax.swing.JTable();
         jLabel3 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tblAbsensi = new javax.swing.JTable();
 
         addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -497,8 +443,12 @@ private void simpanAbsensi() {
             }
         });
 
-        panelTblAbsen.setBackground(new java.awt.Color(255, 255, 255));
-        panelTblAbsen.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true));
+        jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(51, 51, 51));
+        jLabel3.setText("Absen Siswa");
+
+        jLabel5.setForeground(new java.awt.Color(51, 51, 57));
+        jLabel5.setText("Daftar Siswa Muncul Disini");
 
         jScrollPane1.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 20, 10, 20));
 
@@ -528,66 +478,42 @@ private void simpanAbsensi() {
         tblAbsensi.setShowVerticalLines(false);
         jScrollPane1.setViewportView(tblAbsensi);
 
-        jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jLabel3.setForeground(new java.awt.Color(51, 51, 51));
-        jLabel3.setText("Absen Siswa");
-
-        jLabel5.setForeground(new java.awt.Color(51, 51, 57));
-        jLabel5.setText("Daftar Siswa Muncul Disini");
-
-        javax.swing.GroupLayout panelTblAbsenLayout = new javax.swing.GroupLayout(panelTblAbsen);
-        panelTblAbsen.setLayout(panelTblAbsenLayout);
-        panelTblAbsenLayout.setHorizontalGroup(
-            panelTblAbsenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelTblAbsenLayout.createSequentialGroup()
-                .addGap(23, 23, 23)
-                .addGroup(panelTblAbsenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1)
-                    .addGroup(panelTblAbsenLayout.createSequentialGroup()
-                        .addGroup(panelTblAbsenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel5)
-                            .addComponent(jLabel3))
-                        .addGap(0, 835, Short.MAX_VALUE)))
-                .addContainerGap())
-        );
-        panelTblAbsenLayout.setVerticalGroup(
-            panelTblAbsenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelTblAbsenLayout.createSequentialGroup()
-                .addGap(14, 14, 14)
-                .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel5)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 301, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(74, 74, 74))
-        );
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
-                .addGap(49, 49, 49)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(panelTblAbsen, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(28, 28, 28)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(447, 447, 447)
-                        .addComponent(btnSimpanAbsen)))
-                .addGap(64, 64, 64))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel5)
+                            .addComponent(jLabel3))
+                        .addGap(774, 774, 774)
+                        .addComponent(btnSimpanAbsen)
+                        .addGap(18, 18, 18))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 1077, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(15, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(31, 31, 31)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnSimpanAbsen, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addComponent(panelTblAbsen, javax.swing.GroupLayout.PREFERRED_SIZE, 384, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel5))
+                    .addComponent(btnSimpanAbsen, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 345, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(62, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -628,7 +554,6 @@ private void simpanAbsensi() {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblTanggal;
-    private javax.swing.JPanel panelTblAbsen;
     private javax.swing.JTable tblAbsensi;
     private javax.swing.JLabel waktuRealTime;
     // End of variables declaration//GEN-END:variables

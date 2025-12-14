@@ -12,18 +12,10 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
-/**
- * Class untuk generate QR Code
- */
+
 public class QRCodeGenerator {
     
-    /**
-     * Generate QR Code dan return BufferedImage
-     * @param data Data yang mau di-encode (NIS, nama, dll)
-     * @param width Lebar QR Code (pixel)
-     * @param height Tinggi QR Code (pixel)
-     * @return BufferedImage QR Code
-     */
+ 
     public static BufferedImage generateQRImage(String data, int width, int height) {
         try {
             QRCodeWriter qrCodeWriter = new QRCodeWriter();
@@ -37,14 +29,6 @@ public class QRCodeGenerator {
         }
     }
     
-    /**
-     * Generate QR Code dan save ke file
-     * @param data Data yang mau di-encode
-     * @param filePath Path file output (misal: "qrcodes/siswa_001.png")
-     * @param width Lebar QR Code
-     * @param height Tinggi QR Code
-     * @return true jika berhasil, false jika gagal
-     */
     public static boolean generateQRFile(String data, String filePath, int width, int height) {
         try {
             // Generate QR Code image
@@ -72,20 +56,11 @@ public class QRCodeGenerator {
         }
     }
     
-    /**
-     * Generate QR Code untuk siswa berdasarkan NIS
-     * @param nis NIS siswa
-     * @return BufferedImage QR Code
-     */
+
     public static BufferedImage generateSiswaQR(String nis) {
         return generateQRImage(nis, 300, 300);
     }
-    
-    /**
-     * Generate dan save QR Code siswa ke folder qrcodes/
-     * @param nis NIS siswa
-     * @return path file yang di-generate
-     */
+
     public static String generateAndSaveSiswaQR(String nis, String namaSiswa) {
     String folderPath = "qrcodes";
     
