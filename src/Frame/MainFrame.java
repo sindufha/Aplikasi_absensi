@@ -176,7 +176,7 @@ private void setupLogoutMenu() {
             User currentUser = session.getCurrentUser();
 
             // Update label dengan data user
-            btnUser.setText("User: " + currentUser.getNama() + " (" + currentUser.getRole() + ")");
+            btnUser.setText("User: " + currentUser.getNama() );
 
             // Atau bisa juga seperti ini untuk format yang berbeda:
             // lblCurrentUser.setText(currentUser.getNama());
