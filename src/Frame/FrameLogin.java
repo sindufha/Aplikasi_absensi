@@ -11,9 +11,6 @@ import ClassAbsensi.Session;
 
 public class FrameLogin extends javax.swing.JFrame {
 
-    /**
-     * Creates new form CharisFrame
-     */
     public FrameLogin() {
         initComponents();
     }
