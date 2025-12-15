@@ -8,6 +8,9 @@ import ClassAbsensi.Absensi;
 import ClassAbsensi.AbsensiDAO;
 import ClassAbsensi.KelasDAO;
 import ClassAbsensi.SiswaDAO;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -19,7 +22,7 @@ import org.jfree.data.category.DefaultCategoryDataset;
  *
  * @author MyBook Hype AMD
  */
-public class panelDashboard extends javax.swing.JPanel {
+public class panelDashboard extends javax.swing.JPanel{
 private SiswaDAO siswaDAO;
 private KelasDAO kelasDAO;
 private AbsensiDAO absensiDAO;
@@ -108,129 +111,140 @@ private void loadAbsensiHariIni() {
     }
 }
 
-     private void tampilkanChart() {
-        try {
-            // Ambil data absensi dari database
-            List<Absensi> listAbsensi = absensiDAO.getAbsensiHariIni();
-            int totalSiswa = siswaDAO.getTotalSiswa();
+    private void tampilkanChart() {
+    try {
+        // Null check
+        if (absensiDAO == null || siswaDAO == null) {
+            System.err.println("⚠ DAO belum diinisialisasi!");
+            return;
+        }
+        
+        // Buat dataset untuk line chart
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+        
+        // Ambil data 7 hari terakhir
+        SimpleDateFormat sdf = new SimpleDateFormat("d MMM");
+        Calendar cal = Calendar.getInstance();
+        
+        for (int i = 6; i >= 0; i--) {
+            cal.setTime(new Date());
+            cal.add(Calendar.DAY_OF_MONTH, -i);
             
-            // Hitung jumlah per kategori
-            int hadir = 0;
-            int izin = 0;
-            int sakit = 0;
-            int alfa = 0;
-            int terlambat = 0;
+            java.sql.Date tanggal = new java.sql.Date(cal.getTimeInMillis());
+            String labelTanggal = i == 0 ? "Hari ini" : sdf.format(tanggal);
+            
+            // Hitung total hadir untuk hari ini
+            List<Absensi> listAbsensi = absensiDAO.getAbsensiByTanggal(tanggal, tanggal);
+            int totalHadir = 0;
             
             for (Absensi absensi : listAbsensi) {
                 String status = absensi.getStatus().toLowerCase();
-                
-                if (status.contains("hadir")) {
-                    hadir++;
-                } else if (status.contains("izin")) {
-                    izin++;
-                } else if (status.contains("sakit")) {
-                    sakit++;
-                } else if (status.contains("alfa") || status.contains("alpa")) {
-                    alfa++;
-                } else if (status.contains("telat") || status.contains("terlambat")) {
-                    terlambat++;
+                if (status.contains("hadir") || status.contains("telat") || status.contains("terlambat")) {
+                    totalHadir++;
                 }
             }
             
-            // Hitung persentase (hindari pembagian dengan 0)
-            double persenHadir = totalSiswa > 0 ? (hadir * 100.0 / totalSiswa) : 0;
-            double persenIzin = totalSiswa > 0 ? (izin * 100.0 / totalSiswa) : 0;
-            double persenSakit = totalSiswa > 0 ? (sakit * 100.0 / totalSiswa) : 0;
-            double persenTerlambat = totalSiswa > 0 ? (terlambat * 100.0 / totalSiswa) : 0;
-            double persenAlfa = totalSiswa > 0 ? (alfa * 100.0 / totalSiswa) : 0;
-            
-            // Buat dataset dengan data real dari database
-            DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-            dataset.setValue(persenHadir, "Hadir", "Hadir");
-            dataset.setValue(persenIzin, "Izin", "Izin");
-            dataset.setValue(persenSakit, "Sakit", "Sakit");
-            dataset.setValue(persenTerlambat, "Terlambat", "Terlambat");
-            dataset.setValue(persenAlfa, "Alfa", "Alfa");
-
-            // Buat chart VERTICAL
-            JFreeChart chart = ChartFactory.createBarChart(
-                    "Data Absensi SDI Khadijah",
-                    "Keterangan",
-                    "Persentase (%)",
-                    dataset,
-                    PlotOrientation.VERTICAL,
-                    false,
-                    true,
-                    false
-            );
-
-            // Kustomisasi tampilan chart
-            chart.setBackgroundPaint(java.awt.Color.WHITE);
-            chart.getTitle().setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 18));
-
-            // Kustomisasi plot
-            org.jfree.chart.plot.CategoryPlot plot = chart.getCategoryPlot();
-            plot.setBackgroundPaint(java.awt.Color.WHITE);
-            plot.setRangeGridlinePaint(new java.awt.Color(200, 200, 200));
-            plot.setOutlineVisible(false);
-
-            // Kustomisasi bar renderer dengan warna berbeda untuk setiap kategori
-            org.jfree.chart.renderer.category.BarRenderer renderer = new org.jfree.chart.renderer.category.BarRenderer() {
-                @Override
-                public java.awt.Paint getItemPaint(int row, int column) {
-                    // row = series, column = kategori
-                    switch (row) {
-                        case 0:
-                            return new java.awt.Color(0, 255, 255);      // Hadir - Cyan
-                        case 1:
-                            return new java.awt.Color(0, 153, 255);      // Izin - Blue  
-                        case 2:
-                            return new java.awt.Color(0, 102, 255);      // Sakit - Dark Blue
-                        case 3:
-                            return new java.awt.Color(51, 0, 255);       // Terlambat - Purple
-                        case 4:
-                            return new java.awt.Color(255, 51, 0);       // Alfa - Red
-                        default:
-                            return java.awt.Color.GRAY;
-                    }
-                }
-            };
-
-            plot.setRenderer(renderer);
-            renderer.setBarPainter(new org.jfree.chart.renderer.category.StandardBarPainter());
-            renderer.setShadowVisible(false);
-            renderer.setDrawBarOutline(false);
-            renderer.setItemMargin(0.0);  
-            renderer.setMinimumBarLength(0.9);
-            
-            // Atur lebar kategori agar bar lebih besar
-            org.jfree.chart.axis.CategoryAxis domainAxis = plot.getDomainAxis();
-            domainAxis.setTickLabelFont(new java.awt.Font("Segoe UI", java.awt.Font.PLAIN, 12));
-            domainAxis.setCategoryMargin(0.1);  // Atur margin antar kategori (0.0 - 0.5)
-            domainAxis.setLowerMargin(0.01);    // Margin bawah
-            domainAxis.setUpperMargin(0.01);    // Margin atas
-
-            org.jfree.chart.axis.NumberAxis rangeAxis = (org.jfree.chart.axis.NumberAxis) plot.getRangeAxis();
-            rangeAxis.setTickLabelFont(new java.awt.Font("Segoe UI", java.awt.Font.PLAIN, 12));
-            rangeAxis.setRange(0, 100);
-            
-            // Buat ChartPanel
-            ChartPanel chartPanel = new ChartPanel(chart);
-            chartPanel.setPreferredSize(new java.awt.Dimension(600, 470));
-            chartPanel.setBackground(java.awt.Color.WHITE);
-
-            // Tambahkan ke panelChart
-            panelChart.removeAll();
-            panelChart.setLayout(new java.awt.BorderLayout());
-            panelChart.add(chartPanel, java.awt.BorderLayout.CENTER);
-            panelChart.revalidate();
-            panelChart.repaint();
-            
-        } catch (Exception e) {
-            System.err.println("Error membuat chart: " + e.getMessage());
-            e.printStackTrace();
+            // Tambahkan ke dataset
+            dataset.addValue(totalHadir, "Siswa Hadir", labelTanggal);
         }
+        
+        // Buat LINE CHART
+        JFreeChart chart = ChartFactory.createLineChart(
+                "Grafik Kehadiran 7 Hari Terakhir",
+                "Tanggal",
+                "Jumlah Siswa",
+                dataset,
+                PlotOrientation.VERTICAL,
+                false,
+                true,
+                false
+        );
+        
+        // Kustomisasi tampilan chart
+        chart.setBackgroundPaint(new java.awt.Color(30, 192, 213)); // Purple background
+        chart.getTitle().setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 16));
+        chart.getTitle().setPaint(java.awt.Color.WHITE);
+        
+        // Kustomisasi plot
+        org.jfree.chart.plot.CategoryPlot plot = chart.getCategoryPlot();
+        plot.setBackgroundPaint(new java.awt.Color(30, 192, 213)); // Purple
+        plot.setRangeGridlinePaint(new java.awt.Color(200, 150, 210)); // Light purple gridlines
+        plot.setOutlineVisible(false);
+        plot.setDomainGridlinesVisible(false);
+        
+        // Kustomisasi line renderer
+        org.jfree.chart.renderer.category.LineAndShapeRenderer renderer = 
+            new org.jfree.chart.renderer.category.LineAndShapeRenderer();
+        
+        // Set line properties
+        renderer.setSeriesPaint(0, java.awt.Color.BLUE); // White line
+        renderer.setSeriesStroke(0, new java.awt.BasicStroke(
+            3.0f, // Line width
+            java.awt.BasicStroke.CAP_ROUND,
+            java.awt.BasicStroke.JOIN_ROUND
+        ));
+        
+        // Set shape properties (titik)
+        renderer.setSeriesShape(0, new java.awt.geom.Ellipse2D.Double(-5, -5, 10, 10)); // Circle dengan diameter 10
+        renderer.setSeriesShapesVisible(0, true);
+        renderer.setSeriesShapesFilled(0, true);
+        
+        // Set renderer ke plot
+        plot.setRenderer(renderer);
+        
+        // Kustomisasi X-Axis (tanggal)
+        org.jfree.chart.axis.CategoryAxis domainAxis = plot.getDomainAxis();
+        domainAxis.setTickLabelFont(new java.awt.Font("Segoe UI", java.awt.Font.PLAIN, 11));
+        domainAxis.setTickLabelPaint(java.awt.Color.WHITE);
+        domainAxis.setAxisLinePaint(java.awt.Color.WHITE);
+        domainAxis.setTickMarksVisible(false);
+        domainAxis.setLabelPaint(java.awt.Color.WHITE);
+        domainAxis.setCategoryMargin(0.0);
+        domainAxis.setLowerMargin(0.05);
+        domainAxis.setUpperMargin(0.05);
+        
+        // Kustomisasi Y-Axis (jumlah siswa)
+        org.jfree.chart.axis.NumberAxis rangeAxis = (org.jfree.chart.axis.NumberAxis) plot.getRangeAxis();
+        rangeAxis.setTickLabelFont(new java.awt.Font("Segoe UI", java.awt.Font.PLAIN, 11));
+        rangeAxis.setTickLabelPaint(java.awt.Color.WHITE);
+        rangeAxis.setAxisLinePaint(java.awt.Color.WHITE);
+        rangeAxis.setTickMarksVisible(false);
+        rangeAxis.setLabelPaint(java.awt.Color.WHITE);
+        rangeAxis.setStandardTickUnits(org.jfree.chart.axis.NumberAxis.createIntegerTickUnits());
+        
+        // Auto range untuk Y-axis
+        rangeAxis.setAutoRange(true);
+        rangeAxis.setAutoRangeIncludesZero(true);
+        
+        // Buat ChartPanell
+        ChartPanel chartPanel = new ChartPanel(chart);
+        chartPanel.setPreferredSize(new java.awt.Dimension(
+            panelChart.getWidth() > 0 ? panelChart.getWidth() : 650, 
+            340 // Tinggi chart seperti di gambar
+        ));
+        chartPanel.setMinimumSize(new java.awt.Dimension(400, 180));
+        chartPanel.setMaximumSize(new java.awt.Dimension(1000, 250));
+        chartPanel.setBackground(new java.awt.Color(255, 255, 255));
+        
+        // Disable zoom
+        chartPanel.setDomainZoomable(false);
+        chartPanel.setRangeZoomable(false);
+        
+        // Tambahkan ke panelChart
+        panelChart.removeAll();
+        panelChart.setLayout(new java.awt.BorderLayout());
+        panelChart.add(chartPanel, java.awt.BorderLayout.CENTER);
+        panelChart.revalidate();
+        panelChart.repaint();
+        
+        System.out.println("✅ Line chart berhasil ditampilkan");
+        
+    } catch (Exception e) {
+        System.err.println("Error membuat chart: " + e.getMessage());
+        e.printStackTrace();
     }
+}
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
