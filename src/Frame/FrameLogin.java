@@ -35,6 +35,7 @@ public class FrameLogin extends javax.swing.JFrame {
         tPassword = new ClassTambahan.PasswordField();
         tUsername = new ClassTambahan.TextField();
         jLabel3 = new javax.swing.JLabel();
+        showPassword = new javax.swing.JCheckBox();
         btnLogin = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
@@ -58,7 +59,7 @@ public class FrameLogin extends javax.swing.JFrame {
                 tPasswordActionPerformed(evt);
             }
         });
-        getContentPane().add(tPassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 280, 270, 40));
+        getContentPane().add(tPassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 250, 270, 40));
 
         tUsername.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         tUsername.setText("Username");
@@ -68,7 +69,7 @@ public class FrameLogin extends javax.swing.JFrame {
         tUsername.setRoundBottomRight(5);
         tUsername.setRoundTopLeft(5);
         tUsername.setRoundTopRight(5);
-        getContentPane().add(tUsername, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 220, 270, 40));
+        getContentPane().add(tUsername, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 190, 270, 40));
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Ikon_white/book-login.png"))); // NOI18N
@@ -76,6 +77,16 @@ public class FrameLogin extends javax.swing.JFrame {
         jLabel3.setAlignmentY(0.0F);
         jLabel3.setIconTextGap(30);
         getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 10, 400, 70));
+
+        showPassword.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        showPassword.setForeground(new java.awt.Color(255, 255, 255));
+        showPassword.setText("Show Password");
+        showPassword.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                showPasswordActionPerformed(evt);
+            }
+        });
+        getContentPane().add(showPassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 300, -1, -1));
 
         btnLogin.setBackground(new java.awt.Color(0, 51, 51));
         btnLogin.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
@@ -181,6 +192,17 @@ public class FrameLogin extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_tPasswordActionPerformed
 
+    private void showPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showPasswordActionPerformed
+        // TODO add your handling code here:
+          if (showPassword.isSelected()) {
+            tPassword.setEchoChar((char) 0);
+            
+        }else{
+            tPassword.setEchoChar('*');
+        }
+        
+    }//GEN-LAST:event_showPasswordActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -213,6 +235,7 @@ public class FrameLogin extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JCheckBox showPassword;
     private ClassTambahan.PasswordField tPassword;
     private ClassTambahan.TextField tUsername;
     // End of variables declaration//GEN-END:variables
