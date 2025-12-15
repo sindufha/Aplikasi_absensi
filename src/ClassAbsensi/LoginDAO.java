@@ -1,7 +1,7 @@
 package ClassAbsensi;
 import java.sql.*;
 
-public class LoginDB {
+public class LoginDAO {
     
     public User login(String username, String password) {
         Connection conn = null;
