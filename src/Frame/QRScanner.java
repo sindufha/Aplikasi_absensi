@@ -37,10 +37,16 @@ public class QRScanner extends JPanel {
    public QRScanner() {
         initComponents(); // Auto-generated NetBeans
         setupComponents(); // Custom method kita
+        addComponentListener(new java.awt.event.ComponentAdapter() {
+            @Override
+            public void componentHidden(java.awt.event.ComponentEvent e) {
+                cleanup();
+            }
+        });
     }
 private void setupComponents() {
     // Inisialisasi DAO
-    absensiDAO = new AbsensiDAO();
+    absensiDAO = new AbsensiDAO();   
     
     // Setup table model
     tableModel = (DefaultTableModel) tableAbsensi.getModel();
@@ -57,16 +63,9 @@ private void setupComponents() {
     tableAbsensi.getTableHeader().setReorderingAllowed(false);
     
     // Set button colors
-    btnConnect.setBackground(new Color(52, 152, 219));
+    btnConnect.setBackground(new Color(46, 204, 113)); // Hijau untuk "Mulai"
     btnConnect.setForeground(Color.WHITE);
-    
-    btnStartScan.setBackground(new Color(46, 204, 113));
-    btnStartScan.setForeground(Color.WHITE);
-    btnStartScan.setEnabled(false);
-    
-    btnStopScan.setBackground(new Color(231, 76, 60));
-    btnStopScan.setForeground(Color.WHITE);
-    btnStopScan.setEnabled(false);
+    btnConnect.setText("Mulai");
     
     // Set camera panel
     cameraPanel.setBackground(Color.BLACK);
@@ -139,30 +138,28 @@ private void connectCamera() {
                 webcam.open();
 
                 SwingUtilities.invokeLater(() -> {
-                    // PERBAIKAN: Clear panel dengan benar
                     cameraPanel.removeAll();
-                    
-                    // PERBAIKAN: Set layout null atau FlowLayout
                     cameraPanel.setLayout(new java.awt.BorderLayout());
                     
                     webcamPanel = new WebcamPanel(webcam);
-                    webcamPanel.setFPSDisplayed(true); // Show FPS untuk debug
-                    webcamPanel.setDisplayDebugInfo(true); // Show debug info
+                    webcamPanel.setFPSDisplayed(true);
+                    webcamPanel.setDisplayDebugInfo(true);
                     
-                    // PERBAIKAN: Add ke center
                     cameraPanel.add(webcamPanel, java.awt.BorderLayout.CENTER);
-                    
-                    // PENTING: Revalidate dan repaint
                     cameraPanel.revalidate();
                     cameraPanel.repaint();
                     cameraPanel.updateUI();
 
                     lblStatus.setText("Terhubung ✓");
                     lblStatus.setForeground(new Color(46, 204, 113));
-                    btnConnect.setText("Disconnect");
-                    btnStartScan.setEnabled(true);
+                    btnConnect.setText("Stop");
+                    btnConnect.setBackground(new Color(231, 76, 60)); // Merah untuk stop
+                    cameraComboBox.setEnabled(false); // Disable saat scanning
                     
                     System.out.println("Camera connected: " + webcam.getName());
+                    
+                    // ✅ Langsung mulai scanning
+                    startScanning();
                 });
             }
         } catch (Exception e) {
@@ -185,14 +182,13 @@ public void cleanup() {
     }
 }
 private void disconnectCamera() {
-    // PERBAIKAN: Stop scanning dulu
+    // Stop scanning dulu
     stopScanning();
     
-    // PERBAIKAN: Close webcam dengan aman
     SwingUtilities.invokeLater(() -> {
         try {
             if (webcamPanel != null) {
-                webcamPanel.stop(); // Stop panel dulu
+                webcamPanel.stop();
                 cameraPanel.remove(webcamPanel);
                 webcamPanel = null;
             }
@@ -208,8 +204,11 @@ private void disconnectCamera() {
             
             lblStatus.setText("Terputus");
             lblStatus.setForeground(new Color(231, 76, 60));
-            btnConnect.setText("Connect");
-            btnStartScan.setEnabled(false);
+            btnConnect.setText("Mulai");
+            btnConnect.setBackground(new Color(46, 204, 113)); // Hijau lagi
+            cameraComboBox.setEnabled(true); // Enable kembali
+            lblScanStatus.setText("Scan QR Untuk Absensi");
+            lblScanStatus.setForeground(Color.BLACK);
             
         } catch (Exception e) {
             e.printStackTrace();
@@ -227,9 +226,8 @@ private void startScanning() {
     }
 
     isScanning = true;
-    btnStartScan.setEnabled(false);
-    btnStopScan.setEnabled(true);
-    btnConnect.setEnabled(false);
+    
+   
     lblScanStatus.setText("🔍 Scanning... Tunjukkan QR Code");
     lblScanStatus.setForeground(new Color(52, 152, 219));
 
@@ -287,16 +285,13 @@ private void stopScanning() {
     if (scanThread != null && scanThread.isAlive()) {
         scanThread.interrupt();
         try {
-            scanThread.join(1000); // Tunggu max 1 detik
+            scanThread.join(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
     
     SwingUtilities.invokeLater(() -> {
-        btnStartScan.setEnabled(true);
-        btnStopScan.setEnabled(false);
-        btnConnect.setEnabled(true);
         lblScanStatus.setText("Scan dihentikan");
         lblScanStatus.setForeground(new Color(149, 165, 166));
     });
@@ -367,52 +362,54 @@ private void prosesAbsensi(String qrCodeData) {
     boolean sudahAbsen = absensiDAO.sudahAbsenHariIni(siswa.getIdSiswa(), today);
     
     // PERBAIKAN: Buat variabel final untuk siswa info
-    final String nis = siswa.getNis();
+    final int nis = siswa.getNis();
     final String nama = siswa.getNamaSiswa();
     final String kelas = siswa.getNamaKelas() != null ? siswa.getNamaKelas() : "-";
     
     if (sudahAbsen) {
-        boolean success = absensiDAO.updateAbsensiPulang(siswa.getIdSiswa(), today);
-        
-        if (success) {
-            lblScanStatus.setText("✓ Absen Pulang: " + nama);
-            lblScanStatus.setForeground(new Color(46, 204, 113));
-            Toolkit.getDefaultToolkit().beep();
-            
-            SwingUtilities.invokeLater(() -> {
-                JOptionPane.showMessageDialog(this,
-                    "Absen Pulang Berhasil!\n\n" +
-                    "NIS: " + nis + "\n" +
-                    "Nama: " + nama + "\n" +
-                    "Kelas: " + kelas,
-                    "Absen Pulang",
-                    JOptionPane.INFORMATION_MESSAGE);
-            });
-        }
-    } else {
-        boolean success = absensiDAO.insertAbsensiMasuk(siswa.getIdSiswa(), "QR");
-        
-        if (success) {
-            lblScanStatus.setText("✓ Absen Masuk: " + nama);
-            lblScanStatus.setForeground(new Color(46, 204, 113));
-            Toolkit.getDefaultToolkit().beep();
-            
-            SwingUtilities.invokeLater(() -> {
-                JOptionPane.showMessageDialog(this,
-                    "Absen Masuk Berhasil!\n\n" +
-                    "NIS: " + nis + "\n" +
-                    "Nama: " + nama + "\n" +
-                    "Kelas: " + kelas,
-                    "Absen Masuk",
-                    JOptionPane.INFORMATION_MESSAGE);
-            });
-        } else {
-            lblScanStatus.setText("❌ Gagal menyimpan absensi!");
-            lblScanStatus.setForeground(new Color(231, 76, 60));
-        }
-    }
+    // ❌ TOLAK - Sudah scan hari ini
+    lblScanStatus.setText("❌ Sudah absen hari ini!");
+    lblScanStatus.setForeground(new Color(231, 76, 60));
+    Toolkit.getDefaultToolkit().beep();
     
-    loadAbsensiHariIni();
+    SwingUtilities.invokeLater(() -> {
+        JOptionPane.showMessageDialog(this,
+            "Siswa sudah absen hari ini!\n\n" +
+            "NIS: " + nis + "\n" +
+            "Nama: " + nama + "\n" +
+            "Kelas: " + kelas + "\n\n" +
+            "Gunakan Absensi Manual untuk koreksi.",
+            "Sudah Absen",
+            JOptionPane.WARNING_MESSAGE);
+    });
+    return; // ✅ Keluar, tidak proses lebih lanjut
+} else {
+    // ✅ INSERT ABSENSI BARU (INI YANG HILANG!)
+    boolean success = absensiDAO.insertAbsensiMasuk(siswa.getIdSiswa(), "QR");
+    
+    if (success) {
+    lblScanStatus.setText("✓ Absen Masuk: " + nama);
+    lblScanStatus.setForeground(new Color(46, 204, 113));
+    Toolkit.getDefaultToolkit().beep();
+    
+    // ✅ Notifikasi auto-close 2 detik
+    SwingUtilities.invokeLater(() -> {
+        showAutoCloseNotification(
+            "Absen Masuk Berhasil!\n\n" +
+            "NIS: " + nis + "\n" +
+            "Nama: " + nama + "\n" +
+            "Kelas: " + kelas,
+            2000 // 2 detik
+        );
+    });
+} else {
+    lblScanStatus.setText("❌ Gagal menyimpan absensi!");
+    lblScanStatus.setForeground(new Color(231, 76, 60));
+    System.out.println("❌ insertAbsensiMasuk return false");
+}
+}
+
+loadAbsensiHariIni();
 }
 
 private void loadAbsensiHariIni() {
@@ -432,6 +429,42 @@ private void loadAbsensiHariIni() {
         tableModel.addRow(row);
     }
 }
+private void showAutoCloseNotification(String message, int durationMillis) {
+    JDialog dialog = new JDialog();
+    dialog.setUndecorated(true);
+    dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+    
+    JPanel panel = new JPanel(new BorderLayout());
+    panel.setBackground(Color.WHITE);
+    panel.setBorder(BorderFactory.createCompoundBorder(
+        BorderFactory.createLineBorder(new Color(220, 220, 220), 1),
+        BorderFactory.createEmptyBorder(25, 30, 25, 30)
+    ));
+    
+    // Message
+    JLabel textLabel = new JLabel("<html>" + message.replace("\n", "<br>") + "</html>");
+    textLabel.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+    textLabel.setForeground(new Color(60, 60, 60));
+    textLabel.setHorizontalAlignment(SwingConstants.CENTER);
+    
+    panel.add(textLabel, BorderLayout.CENTER);
+    
+    dialog.add(panel);
+    dialog.pack();
+    dialog.setLocationRelativeTo(this);
+    
+    // Show dialog in non-blocking way
+    new Thread(() -> {
+        dialog.setVisible(true);
+    }).start();
+    
+    // Auto close
+    Timer timer = new Timer(durationMillis, e -> {
+        dialog.dispose();
+    });
+    timer.setRepeats(false);
+    timer.start();
+}
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -446,13 +479,13 @@ private void loadAbsensiHariIni() {
         btnConnect = new javax.swing.JButton();
         lblStatus11 = new javax.swing.JLabel();
         lblCamera = new javax.swing.JLabel();
-        btnStartScan = new javax.swing.JButton();
-        btnStopScan = new javax.swing.JButton();
         lblStatus = new javax.swing.JLabel();
         lblScanStatus = new javax.swing.JLabel();
         btnRefresh = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tableAbsensi = new javax.swing.JTable();
+        jPanel1 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(255, 255, 255));
 
@@ -478,7 +511,7 @@ private void loadAbsensiHariIni() {
         btnConnect.setBackground(new java.awt.Color(42, 149, 255));
         btnConnect.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         btnConnect.setForeground(new java.awt.Color(255, 255, 255));
-        btnConnect.setText("Connect");
+        btnConnect.setText("Mulai");
         btnConnect.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnConnectActionPerformed(evt);
@@ -492,21 +525,6 @@ private void loadAbsensiHariIni() {
         lblCamera.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         lblCamera.setForeground(new java.awt.Color(0, 102, 255));
         lblCamera.setText("Pilih perangkat Kamera");
-
-        btnStartScan.setText("Start");
-        btnStartScan.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnStartScanActionPerformed(evt);
-            }
-        });
-
-        btnStopScan.setText("Stop");
-        btnStopScan.setEnabled(false);
-        btnStopScan.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnStopScanActionPerformed(evt);
-            }
-        });
 
         lblStatus.setText("Belum Terhubung");
 
@@ -532,6 +550,26 @@ private void loadAbsensiHariIni() {
         ));
         jScrollPane1.setViewportView(tableAbsensi);
 
+        jPanel1.setBackground(new java.awt.Color(44, 62, 80));
+
+        jLabel1.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel1.setText("Absensi QR Scan");
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(15, 15, 15)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(873, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 46, Short.MAX_VALUE)
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -542,34 +580,34 @@ private void loadAbsensiHariIni() {
                     .addComponent(lblCamera)
                     .addComponent(cameraPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 474, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(lblStatus11)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(lblStatus))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(btnStartScan, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(btnStopScan, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(cameraComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 297, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(btnConnect, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(27, 27, 27))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(lblScanStatus)
-                                .addGap(46, 46, 46)))
+                                .addComponent(cameraComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 297, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(btnConnect, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(27, 27, 27))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                        .addComponent(lblScanStatus)
+                                        .addGap(46, 46, 46))))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(lblStatus11)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(lblStatus)
+                                .addGap(279, 279, 279)))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(btnRefresh, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(16, Short.MAX_VALUE))
+                            .addComponent(jScrollPane1))))
+                .addGap(22, 22, 22))
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(14, 14, 14)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(cameraPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -580,32 +618,23 @@ private void loadAbsensiHariIni() {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(cameraComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(btnConnect, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 450, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblStatus11)
-                    .addComponent(lblStatus))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnStartScan, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnStopScan, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnRefresh, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(33, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblStatus11)
+                            .addComponent(lblStatus)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(btnRefresh, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(164, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnConnectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConnectActionPerformed
-        // TODO add your handling code here:
-        connectCamera();
+       connectCamera();
     }//GEN-LAST:event_btnConnectActionPerformed
-
-    private void btnStartScanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStartScanActionPerformed
-        startScanning();
-    }//GEN-LAST:event_btnStartScanActionPerformed
-
-    private void btnStopScanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStopScanActionPerformed
-      stopScanning();
-    }//GEN-LAST:event_btnStopScanActionPerformed
 
     private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
         loadAbsensiHariIni();
@@ -615,10 +644,10 @@ private void loadAbsensiHariIni() {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnConnect;
     private javax.swing.JButton btnRefresh;
-    private javax.swing.JButton btnStartScan;
-    private javax.swing.JButton btnStopScan;
     private javax.swing.JComboBox<String> cameraComboBox;
     private javax.swing.JPanel cameraPanel;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblCamera;
     private javax.swing.JLabel lblScanStatus;

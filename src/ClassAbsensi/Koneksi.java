@@ -7,7 +7,7 @@ import java.sql.SQLException;
 public class Koneksi {
     private static Connection conn;
     
-    private static final String URL = "jdbc:mysql://localhost:3306/absensi2";
+    private static final String URL = "jdbc:mysql://localhost:3306/absensiapp";
     private static final String USER = "root";
     private static final String PASSWORD = "";
     
@@ -15,7 +15,8 @@ public class Koneksi {
         try {
             if (conn == null || conn.isClosed()) {
                 conn = DriverManager.getConnection(URL, USER, PASSWORD);
-                System.out.println("✅ Koneksi database berhasil!");
+
+                System.out.println("Koneksi berhasil!");
             }
         } catch (SQLException e) {
             System.err.println("❌ Koneksi database gagal: " + e.getMessage());
@@ -34,5 +35,3 @@ public class Koneksi {
         }
     }
 }
-    
-

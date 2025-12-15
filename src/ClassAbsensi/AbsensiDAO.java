@@ -29,45 +29,62 @@ public class AbsensiDAO {
         
         return false;
     }
-    
+    public int getJumlahAbsensiHariIni(String status) {
+    String sql = "SELECT COUNT(*) FROM absensi WHERE DATE(waktu_masuk) = CURDATE() AND status = ?";
+    try (Connection conn = Koneksi.getKoneksi();
+            PreparedStatement ps = conn.prepareStatement(sql)) {
+        ps.setString(1, status);
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()) {
+            return rs.getInt(1);
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return 0;
+}
     /**
      * Ambil data siswa berdasarkan QR Code
      */
     public Siswa getSiswaByQRCode(String qrCode) {
-        String sql = "SELECT s.*, k.nama_kelas FROM siswa s " +
-                     "JOIN kelas k ON s.id_kelas = k.id_kelas " +
-                     "WHERE s.qr_code = ?";
+    String sql = "SELECT s.*, k.tingkat FROM siswa s " +  // ✅ Pakai tingkat
+                 "JOIN kelas k ON s.id_kelas = k.id_kelas " +
+                 "WHERE s.qr_code = ?";
+    
+    try (Connection conn = Koneksi.getKoneksi();
+         PreparedStatement ps = conn.prepareStatement(sql)) {
         
-        try (Connection conn = Koneksi.getKoneksi();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        ps.setString(1, qrCode);
+        ResultSet rs = ps.executeQuery();
+        
+        if (rs.next()) {
+            Siswa siswa = new Siswa();
+            siswa.setIdSiswa(rs.getInt("id_siswa"));
+            siswa.setNis(rs.getInt("nis"));
+            siswa.setNamaSiswa(rs.getString("nama_siswa"));
+            siswa.setIdKelas(rs.getInt("id_kelas"));
+            siswa.setJenisKelamin(rs.getString("jenis_kelamin"));
+            siswa.setQrCode(rs.getString("qr_code"));
             
-            ps.setString(1, qrCode);
-            ResultSet rs = ps.executeQuery();
+            // ✅ Set nama kelas dari tingkat (misal: "Kelas 1", "Kelas 2")
+            siswa.setNamaKelas("Kelas " + rs.getInt("tingkat"));
             
-            if (rs.next()) {
-                Siswa siswa = new Siswa();
-                siswa.setIdSiswa(rs.getInt("id_siswa"));
-                siswa.setNis(rs.getString("nis"));
-                siswa.setNamaSiswa(rs.getString("nama_siswa"));
-                siswa.setIdKelas(rs.getInt("id_kelas"));
-                siswa.setJenisKelamin(rs.getString("jenis_kelamin"));
-                siswa.setQrCode(rs.getString("qr_code"));
-                siswa.setIdKelas(rs.getInt("id_kelas"));
-                return siswa;
-            }
-            
-        } catch (SQLException e) {
-            e.printStackTrace();
+            return siswa;
         }
         
-        return null;
+    } catch (SQLException e) {
+        e.printStackTrace();
     }
+    
+    return null;
+}
     
     /**
      * Insert absensi masuk
      */
-    public boolean insertAbsensiMasuk(int idSiswa, String metode) {
+   public boolean insertAbsensiMasuk(int idSiswa, String metode) {
     Connection conn = null;
+    PreparedStatement psCheck = null;
     PreparedStatement psJam = null;
     PreparedStatement psInsert = null;
     ResultSet rs = null;
@@ -79,6 +96,22 @@ public class AbsensiDAO {
             System.err.println("Koneksi database null!");
             return false;
         }
+        
+        // ✅ CEK DUPLIKAT DALAM METHOD INI (pakai connection yang sama)
+        String sqlCheck = "SELECT COUNT(*) FROM absensi WHERE id_siswa = ? AND tanggal = CURDATE()";
+        psCheck = conn.prepareStatement(sqlCheck);
+        psCheck.setInt(1, idSiswa);
+        ResultSet rsCheck = psCheck.executeQuery();
+        
+        if (rsCheck.next() && rsCheck.getInt(1) > 0) {
+            System.out.println("⚠️ Siswa sudah absen hari ini!");
+            rsCheck.close();
+            psCheck.close();
+            return false;
+        }
+        
+        rsCheck.close();
+        psCheck.close();
         
         // Step 1: Tentukan status berdasarkan jam masuk
         String status = "Hadir"; // Default
@@ -115,22 +148,21 @@ public class AbsensiDAO {
         
         int result = psInsert.executeUpdate();
         
-        System.out.println("Absensi berhasil disimpan - Status: " + status);
+        System.out.println("✅ Absensi berhasil disimpan - Status: " + status);
         return result > 0;
         
     } catch (SQLException e) {
-        System.err.println("Error insertAbsensiMasuk: " + e.getMessage());
+        System.err.println("❌ Error insertAbsensiMasuk: " + e.getMessage());
         e.printStackTrace();
         return false;
         
     } finally {
-        // Tutup semua resource dengan urutan yang benar
         try {
             if (rs != null) rs.close();
+            if (psCheck != null) psCheck.close();
             if (psJam != null) psJam.close();
             if (psInsert != null) psInsert.close();
-            // JANGAN close connection jika pakai connection pool
-            // if (conn != null) conn.close();
+            // Connection TIDAK di-close karena dikelola oleh Koneksi class
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -140,25 +172,7 @@ public class AbsensiDAO {
     /**
      * Update absensi pulang
      */
-    public boolean updateAbsensiPulang(int idSiswa, Date tanggal) {
-        String sql = "UPDATE absensi SET waktu_pulang = CURTIME() " +
-                     "WHERE id_siswa = ? AND tanggal = ?";
-        
-        try (Connection conn = Koneksi.getKoneksi();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            
-            ps.setInt(1, idSiswa);
-            ps.setDate(2, tanggal);
-            
-            int result = ps.executeUpdate();
-            return result > 0;
-            
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        
-        return false;
-    }
+
     
     /**
      * Tentukan status berdasarkan jam masuk
@@ -200,7 +214,7 @@ public class AbsensiDAO {
      */
     public List<Absensi> getAbsensiHariIni() {
         List<Absensi> list = new ArrayList<>();
-        String sql = "SELECT a.*, s.nis, s.nama_siswa, k.nama_kelas " +
+        String sql = "SELECT a.*, s.nis, s.nama_siswa, k.tingkat " +
                      "FROM absensi a " +
                      "JOIN siswa s ON a.id_siswa = s.id_siswa " +
                      "JOIN kelas k ON s.id_kelas = k.id_kelas " +
@@ -225,7 +239,7 @@ public class AbsensiDAO {
                 // Data dari join
                 absensi.setNis(rs.getString("nis"));
                 absensi.setNamaSiswa(rs.getString("nama_siswa"));
-                absensi.setNamaKelas(rs.getString("nama_kelas"));
+                absensi.setNamaKelas("Kelas " + rs.getInt("tingkat"));
                 
                 list.add(absensi);
             }
@@ -242,7 +256,7 @@ public class AbsensiDAO {
      */
     public List<Absensi> getAbsensiByTanggal(Date tanggalMulai, Date tanggalAkhir) {
         List<Absensi> list = new ArrayList<>();
-        String sql = "SELECT a.*, s.nis, s.nama_siswa, k.nama_kelas " +
+        String sql = "SELECT a.*, s.nis, s.nama_siswa, k.tingkat " +
                      "FROM absensi a " +
                      "JOIN siswa s ON a.id_siswa = s.id_siswa " +
                      "JOIN kelas k ON s.id_kelas = k.id_kelas " +
@@ -270,7 +284,7 @@ public class AbsensiDAO {
                 
                 absensi.setNis(rs.getString("nis"));
                 absensi.setNamaSiswa(rs.getString("nama_siswa"));
-                absensi.setNamaKelas(rs.getString("nama_kelas"));
+                absensi.setNamaKelas("Kelas " + rs.getInt("tingkat"));
                 
                 list.add(absensi);
             }
@@ -304,6 +318,14 @@ public List<String> getAllStatus() {
  * Simpan absensi manual (untuk absensi guru input manual)
  */
 public boolean insertAbsensiManual(int idSiswa, Date tanggal, String status, String keterangan) {
+    // ✅ CEK DULU: Apakah siswa ini sudah absen hari ini?
+    if (sudahAbsenHariIni(idSiswa, tanggal)) {
+        // Kalau sudah ada, UPDATE saja
+        System.out.println("⚠️ Siswa sudah absen hari ini, melakukan UPDATE...");
+        return updateAbsensiManual(idSiswa, tanggal, status, keterangan);
+    }
+    
+    // Kalau belum ada, baru INSERT
     String sql = "INSERT INTO absensi (id_siswa, tanggal, waktu_masuk, status, metode, keterangan) " +
                  "VALUES (?, ?, CURTIME(), ?, 'Manual', ?)";
     
@@ -329,27 +351,7 @@ public boolean insertAbsensiManual(int idSiswa, Date tanggal, String status, Str
 /**
  * Cek apakah siswa sudah absen pada tanggal dan jam tertentu
  */
-public boolean sudahAbsenPadaJam(int idSiswa, Date tanggal, int jamKe) {
-    String sql = "SELECT COUNT(*) FROM absensi WHERE id_siswa = ? AND tanggal = ? AND jam_ke = ?";
-    
-    try (Connection conn = Koneksi.getKoneksi();
-         PreparedStatement ps = conn.prepareStatement(sql)) {
-        
-        ps.setInt(1, idSiswa);
-        ps.setDate(2, tanggal);
-        ps.setInt(3, jamKe);
-        
-        ResultSet rs = ps.executeQuery();
-        if (rs.next()) {
-            return rs.getInt(1) > 0;
-        }
-        
-    } catch (SQLException e) {
-        e.printStackTrace();
-    }
-    
-    return false;
-}
+
 
 /**
  * Update absensi manual (jika sudah ada data sebelumnya)
@@ -377,23 +379,20 @@ public boolean updateAbsensiManual(int idSiswa, Date tanggal, String status, Str
         return false;
     }
 }
-
-public boolean sudahAbsenPadaJamSekarang(int idSiswa, Date tanggal) {
-    int jamKe = getJamKeSekarang();
-    
-    String sql = "SELECT COUNT(*) FROM absensi WHERE id_siswa = ? AND tanggal = ? AND jam_ke = ?";
+public boolean updateWaktuAbsensi(int idSiswa, Date tanggal) {
+    // ✅ Update waktu_masuk terakhir (untuk koreksi)
+    String sql = "UPDATE absensi SET waktu_masuk = CURTIME() " +
+                 "WHERE id_siswa = ? AND tanggal = ?";
     
     try (Connection conn = Koneksi.getKoneksi();
          PreparedStatement ps = conn.prepareStatement(sql)) {
         
         ps.setInt(1, idSiswa);
         ps.setDate(2, tanggal);
-        ps.setInt(3, jamKe);
         
-        ResultSet rs = ps.executeQuery();
-        if (rs.next()) {
-            return rs.getInt(1) > 0;
-        }
+        int result = ps.executeUpdate();
+        System.out.println("✅ Absensi diupdate - ID Siswa: " + idSiswa);
+        return result > 0;
         
     } catch (SQLException e) {
         e.printStackTrace();
@@ -401,41 +400,16 @@ public boolean sudahAbsenPadaJamSekarang(int idSiswa, Date tanggal) {
     
     return false;
 }
-public int getJamKeSekarang() {
-    String sql = "SELECT id, jam_masuk, jam_pulang FROM jam_absensi ORDER BY id";
-    
-    try (Connection conn = Koneksi.getKoneksi();
-         Statement stmt = conn.createStatement();
-         ResultSet rs = stmt.executeQuery(sql)) {
-        
-        Time waktuSekarang = new Time(System.currentTimeMillis());
-        
-        while (rs.next()) {
-            int jamKe = rs.getInt("id");
-            Time jamMasuk = rs.getTime("jam_masuk");
-            Time jamPulang = rs.getTime("jam_pulang");
-            
-            // Cek apakah waktu sekarang berada di antara jam_masuk dan jam_pulang
-            if (waktuSekarang.compareTo(jamMasuk) >= 0 && 
-                waktuSekarang.compareTo(jamPulang) <= 0) {
-                return jamKe;
-            }
-        }
-        
-    } catch (SQLException e) {
-        e.printStackTrace();
-    }
-    
-    return 1; // Default jam ke-1 jika tidak ketemu
-}
+
+
 public List<Absensi> getAbsensiByTanggalKelas(Date tanggal, int idKelas) {
     List<Absensi> list = new ArrayList<>();
-    String sql = "SELECT a.*, s.nis, s.nama_siswa, k.nama_kelas " +
-                 "FROM absensi a " +
-                 "JOIN siswa s ON a.id_siswa = s.id_siswa " +
-                 "JOIN kelas k ON s.id_kelas = k.id_kelas " +
-                 "WHERE a.tanggal = ? AND s.id_kelas = ? " +
-                 "ORDER BY s.nama_siswa";
+    String sql = "SELECT a.*, s.nis, s.nama_siswa, k.tingkat " +  // ✅ tingkat
+             "FROM absensi a " +
+             "JOIN siswa s ON a.id_siswa = s.id_siswa " +
+             "JOIN kelas k ON s.id_kelas = k.id_kelas " +
+             "WHERE a.tanggal = ? AND s.id_kelas = ? " +
+             "ORDER BY s.nama_siswa";
     
     try (Connection conn = Koneksi.getKoneksi();
          PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -458,7 +432,7 @@ public List<Absensi> getAbsensiByTanggalKelas(Date tanggal, int idKelas) {
             
             absensi.setNis(rs.getString("nis"));
             absensi.setNamaSiswa(rs.getString("nama_siswa"));
-            absensi.setNamaKelas(rs.getString("nama_kelas"));
+            absensi.setNamaKelas("Kelas " + rs.getInt("tingkat"));
             
             list.add(absensi);
         }
@@ -468,5 +442,119 @@ public List<Absensi> getAbsensiByTanggalKelas(Date tanggal, int idKelas) {
     }
     
     return list;
+}
+public java.util.Map<String, Object> getJamAbsensi() {
+    java.util.Map<String, Object> jamAbsensi = new java.util.HashMap<>();
+    String sql = "SELECT jam_masuk, toleransi FROM jam_absensi WHERE id = 1"; // Hapus jam_pulang
+    
+    try (Connection conn = Koneksi.getKoneksi();
+         Statement stmt = conn.createStatement();
+         ResultSet rs = stmt.executeQuery(sql)) {
+        
+        if (rs.next()) {
+            jamAbsensi.put("jam_masuk", rs.getTime("jam_masuk"));
+            jamAbsensi.put("toleransi", rs.getInt("toleransi"));
+        } else {
+            // Default
+            jamAbsensi.put("jam_masuk", java.sql.Time.valueOf("07:00:00"));
+            jamAbsensi.put("toleransi", 15);
+        }
+        
+    } catch (SQLException e) {
+        System.err.println("❌ Error getJamAbsensi: " + e.getMessage());
+        e.printStackTrace();
+        
+        // Return default jika error
+        jamAbsensi.put("jam_masuk", java.sql.Time.valueOf("07:00:00"));
+        jamAbsensi.put("toleransi", 15);
+    }
+    
+    return jamAbsensi;
+}
+
+/**
+ * Update pengaturan jam absensi
+ */
+public boolean updateJamAbsensi(String jamMasuk, int toleransi) {
+    String sql = "UPDATE jam_absensi SET jam_masuk = ?, toleransi = ? WHERE id = 1";
+    
+    try (Connection conn = Koneksi.getKoneksi();
+         PreparedStatement ps = conn.prepareStatement(sql)) {
+        
+        ps.setTime(1, java.sql.Time.valueOf(jamMasuk + ":00"));
+        ps.setInt(2, toleransi);
+        
+        int result = ps.executeUpdate();
+        
+        if (result > 0) {
+            System.out.println("✅ Jam absensi berhasil diupdate");
+            return true;
+        } else {
+            return insertJamAbsensi(jamMasuk, toleransi);
+        }
+        
+    } catch (SQLException e) {
+        System.err.println("❌ Error updateJamAbsensi: " + e.getMessage());
+        e.printStackTrace();
+        return false;
+    }
+}
+
+private boolean insertJamAbsensi(String jamMasuk, int toleransi) {
+    String sql = "INSERT INTO jam_absensi (id, jam_masuk, toleransi) VALUES (1, ?, ?)";
+    
+    try (Connection conn = Koneksi.getKoneksi();
+         PreparedStatement ps = conn.prepareStatement(sql)) {
+        
+        ps.setTime(1, java.sql.Time.valueOf(jamMasuk + ":00"));
+        ps.setInt(2, toleransi);
+        
+        int result = ps.executeUpdate();
+        System.out.println("✅ Jam absensi berhasil dibuat");
+        return result > 0;
+        
+    } catch (SQLException e) {
+        System.err.println("❌ Error insertJamAbsensi: " + e.getMessage());
+        e.printStackTrace();
+        return false;
+    }
+}
+public List<Absensi> getAbsensiByBulan(int bulan, int tahun) {
+    List<Absensi> listAbsensi = new ArrayList<>();
+    String query = "SELECT a.*, s.nis, s.nama_siswa, k.tingkat " +
+                   "FROM absensi a " +
+                   "INNER JOIN siswa s ON a.id_siswa = s.id_siswa " +
+                   "INNER JOIN kelas k ON s.id_kelas = k.id_kelas " +
+                   "WHERE MONTH(a.tanggal) = ? " +
+                   "AND YEAR(a.tanggal) = ? " +
+                   "ORDER BY a.tanggal DESC, k.tingkat, s.nama_siswa";
+    
+    try (Connection conn = Koneksi.getKoneksi();
+         PreparedStatement pstmt = conn.prepareStatement(query)) {
+        
+        pstmt.setInt(1, bulan);
+        pstmt.setInt(2, tahun);
+        
+        try (ResultSet rs = pstmt.executeQuery()) {
+            while (rs.next()) {
+                Absensi absensi = new Absensi();
+                absensi.setIdAbsensi(rs.getInt("id_absensi"));
+                absensi.setIdSiswa(rs.getInt("id_siswa"));
+                absensi.setNis(rs.getString("nis"));
+                absensi.setNamaSiswa(rs.getString("nama_siswa"));
+                absensi.setTanggal(rs.getDate("tanggal"));
+                absensi.setStatus(rs.getString("status"));
+                absensi.setKeterangan(rs.getString("keterangan"));
+                
+                listAbsensi.add(absensi);
+            }
+        }
+        
+    } catch (SQLException e) {
+        System.err.println("Error mengambil data absensi bulan: " + e.getMessage());
+        e.printStackTrace();
+    }
+    
+    return listAbsensi;
 }
 }

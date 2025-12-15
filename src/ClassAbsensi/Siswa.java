@@ -2,34 +2,37 @@ package ClassAbsensi;
 
 public class Siswa {
     private int idSiswa;
-    private String nis;
+    private int nis; // Diubah dari String ke int
     private String namaSiswa;
     private int idKelas;
     private String jenisKelamin;
     private String qrCode;
     private String namaKelas; // TAMBAHAN - dari join dengan tabel kelas
+    private String status;
     
     // Constructor kosong
     public Siswa() {
     }
     
     // Constructor lengkap dengan ID
-    public Siswa(int idSiswa, String nis, String namaSiswa, int idKelas, String jenisKelamin, String qrCode) {
+    public Siswa(int idSiswa, int nis, String namaSiswa, int idKelas, String jenisKelamin, String qrCode, String status) {
         this.idSiswa = idSiswa;
         this.nis = nis;
         this.namaSiswa = namaSiswa;
         this.idKelas = idKelas;
         this.jenisKelamin = jenisKelamin;
         this.qrCode = qrCode;
+        this.status = status;
     }
     
     // Constructor tanpa ID (untuk insert)
-    public Siswa(String nis, String namaSiswa, int idKelas, String jenisKelamin, String qrCode) {
+    public Siswa(int nis, String namaSiswa, int idKelas, String jenisKelamin, String qrCode, String status) {
         this.nis = nis;
         this.namaSiswa = namaSiswa;
         this.idKelas = idKelas;
         this.jenisKelamin = jenisKelamin;
         this.qrCode = qrCode;
+        this.status = status;
     }
     
     // Getters dan Setters
@@ -41,11 +44,11 @@ public class Siswa {
         this.idSiswa = idSiswa;
     }
     
-    public String getNis() {
+    public int getNis() { // Return type diubah ke int
         return nis;
     }
     
-    public void setNis(String nis) {
+    public void setNis(int nis) { // Parameter diubah ke int
         this.nis = nis;
     }
     
@@ -90,16 +93,35 @@ public class Siswa {
         this.namaKelas = namaKelas;
     }
     
+    public String getStatus() {
+        return status;
+    }
+    
+    public void setStatus(String status) {
+        this.status = status;
+    }
+    
+    // Method helper untuk validasi NIS
+    public boolean isValidNis() {
+        return nis > 0;
+    }
+    
+    // Method helper untuk convert NIS ke String (untuk QR Code atau display)
+    public String getNisAsString() {
+        return String.valueOf(nis);
+    }
+    
     @Override
     public String toString() {
         return "Siswa{" +
                 "idSiswa=" + idSiswa +
-                ", nis='" + nis + '\'' +
+                ", nis=" + nis +
                 ", namaSiswa='" + namaSiswa + '\'' +
                 ", idKelas=" + idKelas +
                 ", jenisKelamin='" + jenisKelamin + '\'' +
                 ", qrCode='" + qrCode + '\'' +
                 ", namaKelas='" + namaKelas + '\'' +
+                ", status='" + status + '\'' +
                 '}';
     }
 }
