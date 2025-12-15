@@ -199,7 +199,7 @@ public class FrameLogin extends javax.swing.JFrame {
             tPassword.setEchoChar((char) 0);
             
         }else{
-            tPassword.setEchoChar('*');
+            tPassword.setEchoChar('•');
         }
         
     }//GEN-LAST:event_showPasswordActionPerformed
