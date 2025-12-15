@@ -25,6 +25,9 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import ClassAbsensi.User;
+import ClassAbsensi.Session;
+
 /**
  *
  * @author MyBook Hype AMD
@@ -32,12 +35,14 @@ import javax.swing.JPopupMenu;
 public class MainFrame extends javax.swing.JFrame {
     private SidebarButtonManager sidebar;
     private ClassTambahan.JPanelCustom Sidebar;
+    private User userLogin;
 
     public MainFrame() {
         initComponents();
         setupLogoutMenu();
         setupResponsiveLayout();
         handleResize();
+        loadUserData();
         
         btnDashboard.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 20, 1, 1));
         btnDashboard.setHorizontalAlignment(SwingConstants.LEFT);
@@ -163,6 +168,30 @@ private void setupLogoutMenu() {
         }
     });
 }
+    private void loadUserData() {
+        // Ambil data dari session
+        Session session = Session.getInstance();
+
+        if (session.isLoggedIn()) {
+            User currentUser = session.getCurrentUser();
+
+            // Update label dengan data user
+            btnUser.setText("User: " + currentUser.getNama() + " (" + currentUser.getRole() + ")");
+
+            // Atau bisa juga seperti ini untuk format yang berbeda:
+            // lblCurrentUser.setText(currentUser.getNama());
+            // lblRole.setText(currentUser.getRole());
+            // Bisa juga untuk kontrol akses berdasarkan role
+            if (currentUser.getRole().equals("Guru")) {
+                // Sembunyikan menu tertentu untuk Guru
+
+            }
+        } else {
+            // Jika tidak ada user login, redirect ke login
+            this.dispose();
+            new FrameLogin().setVisible(true);
+        }
+    }
 
 private void handleLogout() {
     int confirm = JOptionPane.showConfirmDialog(
