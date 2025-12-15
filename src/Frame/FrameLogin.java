@@ -13,6 +13,7 @@ public class FrameLogin extends javax.swing.JFrame {
 
     public FrameLogin() {
         initComponents();
+        setAutoRequestFocus(false);
     }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -48,8 +49,8 @@ public class FrameLogin extends javax.swing.JFrame {
         });
         getContentPane().add(tPassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 250, 270, 40));
 
+        tUsername.setForeground(new java.awt.Color(0, 0, 0));
         tUsername.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        tUsername.setText("Username");
         tUsername.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Ikon_white/username.png"))); // NOI18N
         tUsername.setIconX(5);
         tUsername.setRoundBottomLeft(5);
