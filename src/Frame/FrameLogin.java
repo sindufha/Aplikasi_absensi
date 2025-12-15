@@ -9,10 +9,6 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import ClassAbsensi.Session;
 
-/**
- *
- * @author MyBook Hype AMD
- */
 public class FrameLogin extends javax.swing.JFrame {
 
     /**
