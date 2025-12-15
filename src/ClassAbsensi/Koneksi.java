@@ -7,7 +7,7 @@ import java.sql.SQLException;
 public class Koneksi {
     private static Connection conn;
     
-    private static final String URL = "jdbc:mysql://localhost:3306/absensiapp2";
+    private static final String URL = "jdbc:mysql://localhost:3306/absensiapp";
     private static final String USER = "root";
     private static final String PASSWORD = "";
     
