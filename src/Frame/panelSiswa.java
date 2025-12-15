@@ -3,52 +3,171 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
 package Frame;
+import ClassAbsensi.Kelas;
+import ClassAbsensi.KelasDAO;
 import ClassAbsensi.Siswa;
 import ClassAbsensi.SiswaDAO;
+import ClassAbsensi.User;
+import PanelPengaturan.dialogUbahUser;
+import dialog.dialogUbahSiswa;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
+import com.formdev.flatlaf.FlatDarkLaf;
+import com.formdev.flatlaf.themes.FlatMacLightLaf;
+import java.awt.Color;
+import javax.swing.JOptionPane;
+import javax.swing.RowFilter;
+import javax.swing.SwingUtilities;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
+import dialog.DialogTambahSiswa;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Font;
+import javax.swing.BorderFactory;
+import javax.swing.JLabel;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.JTableHeader;
 
 /**
  *
  * @author MyBook Hype AMD
  */
 public class panelSiswa extends javax.swing.JPanel {
-
+private SiswaDAO siswaDAO;
+private KelasDAO kelasDAO;
+private DefaultTableModel model;
     /**
      * Creates new form panelSiswa
      */
     public panelSiswa() {
         initComponents();
-        tampilkanDataSiswa();
+        siswaDAO = new SiswaDAO();
+        kelasDAO = new KelasDAO();
+        initTableModel();
+        loadComboBoxKelas(); // Load kelas dari database
+        refreshTableData();
+        
     }
-    
-    private void tampilkanDataSiswa() {
-    DefaultTableModel model = new DefaultTableModel();
+private void initTableModel() {
+
+    model = new DefaultTableModel() {
+        @Override
+        public boolean isCellEditable(int row, int column) {
+            return false;
+        }
+    };
+
     model.addColumn("No");
     model.addColumn("NIS");
     model.addColumn("Nama Siswa");
     model.addColumn("Kelas");
     model.addColumn("Jenis Kelamin");
-    
-    SiswaDAO siswaDAO = new SiswaDAO();
-    List<Siswa> listSiswa = siswaDAO.getAllSiswa();
-    
-    int no = 1;
-    for (Siswa siswa : listSiswa) {
-        model.addRow(new Object[]{
-            no++,
-            siswa.getNis(),
-            siswa.getNamaSiswa(),
-            siswa.getIdKelas(),
-            siswa.getJenisKelamin()
-        });
-    }
-    
+    model.addColumn("Status");
+
     tblSiswa.setModel(model);
+    tblSiswa.getColumnModel().getColumn(0).setPreferredWidth(60);
+    tblSiswa.getColumnModel().getColumn(1).setPreferredWidth(120);
+    tblSiswa.getColumnModel().getColumn(2).setPreferredWidth(200);
+    tblSiswa.getColumnModel().getColumn(3).setPreferredWidth(90);
+    tblSiswa.getColumnModel().getColumn(4).setPreferredWidth(180);
+    
+    tblSiswa.setRowHeight(45);
+    tblSiswa.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+    tblSiswa.setIntercellSpacing(new Dimension(0, 0));
+    
+    JTableHeader header = tblSiswa.getTableHeader();
+    header.setBackground(new Color(249, 250, 251));
+    header.setForeground(new Color(50, 0, 128));
+    header.setFont(new Font("Segoe UI", Font.BOLD, 12));
+    header.setPreferredSize(new Dimension(header.getWidth(), 48));
+    
+    header.setDefaultRenderer(new DefaultTableCellRenderer() {
+    @Override
+    public Component getTableCellRendererComponent(JTable table, Object value,
+            boolean isSelected, boolean hasFocus, int row, int column) {
+        JLabel label = new JLabel(value.toString());
+        label.setFont(new Font("Segoe UI", Font.BOLD, 15));
+        label.setForeground(new Color(50, 0, 128));
+        label.setBackground(new Color(249, 250, 251));
+        label.setOpaque(true);
+        
+        label.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createMatteBorder(0, 0, 1, 0, new Color(220, 220, 220)),
+            BorderFactory.createEmptyBorder(10, 15, 10, 15)
+        ));
+        
+        label.setHorizontalAlignment(column == 0 || column == 3 ? JLabel.CENTER : JLabel.LEFT);
+        return label;
+    }
+});
+    
+    DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+    centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+    tblSiswa.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+    tblSiswa.getColumnModel().getColumn(3).setCellRenderer(centerRenderer);
+}
+    public void tampilkanDataSiswa() {
+        refreshTableData();
+    }
+
+    private void filterSiswaByKelas() {
+        // Ambil id_kelas yang dipilih dari ComboBox
+        int idKelas;
+        idKelas = Integer.parseInt(cbFilter.getSelectedItem().toString());
+
+        if (idKelas > 0) {
+            // Panggil method getSiswaByKelas dari SiswaDB
+            SiswaDAO siswaDB = new SiswaDAO();
+            List<Siswa> listSiswa = siswaDB.getSiswaByKelas(idKelas);
+
+            // Tampilkan data ke table
+            loadTableData(listSiswa);
+        } else {
+            // Jika "Semua Kelas" dipilih, tampilkan semua siswa
+            loadAllSiswa();
+        }
+    }
+
+    public void loadTableData(List<Siswa> listSiswa) {
+        DefaultTableModel model = (DefaultTableModel) tblSiswa.getModel();
+        model.setRowCount(0);
+
+        int no = 1;
+        for (Siswa siswa : listSiswa) {
+            model.addRow(new Object[]{
+                no++, // No
+                siswa.getNis(), // NIS
+                siswa.getNamaSiswa(), // Nama Siswa
+                siswa.getIdKelas(), // Kelas
+                siswa.getJenisKelamin(), // Jenis Kelamin
+                siswa.getStatus()
+            });
+        }
+    }
+
+    private void loadAllSiswa() {
+        refreshTableData();
+    }
+    public void refreshTableData() {
+        List<Siswa> allSiswa = siswaDAO.getAllSiswa();
+        loadTableData(allSiswa);
+}
+    private void loadComboBoxKelas() {
+    cbFilter.removeAllItems();
+    cbFilter.addItem("-- Semua Kelas --");
+    
+    // Load semua kelas dari database
+    List<Kelas> listKelas = kelasDAO.loadAllKelas();
+    
+    // Tambahkan tingkat kelas ke ComboBox
+    for (Kelas kelas : listKelas) {
+        cbFilter.addItem(String.valueOf(kelas.getTingkat()));
+    }
 }
 
-
-
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -63,53 +182,37 @@ public class panelSiswa extends javax.swing.JPanel {
         cbFilter = new javax.swing.JComboBox<>();
         jLabel2 = new javax.swing.JLabel();
         tCari = new javax.swing.JTextField();
-        bTambah = new javax.swing.JButton();
-        bUbah = new javax.swing.JButton();
-        bHapus = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblSiswa = new javax.swing.JTable();
+        bUbah = new javax.swing.JButton();
+        bTambah = new javax.swing.JButton();
+        bHapus = new javax.swing.JButton();
         bReset = new javax.swing.JButton();
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jLabel1.setText("Filter");
 
+        cbFilter.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         cbFilter.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Kelas 1", "Kelas 2", "Kelas 3", "Kelas 4", "Kelas 5", "Kelas 6" }));
+        cbFilter.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbFilterActionPerformed(evt);
+            }
+        });
 
-        jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel2.setText("Search :");
 
-        bTambah.setBackground(new java.awt.Color(102, 102, 255));
-        bTambah.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        bTambah.setForeground(new java.awt.Color(255, 255, 255));
-        bTambah.setText("Tambah");
-        bTambah.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        bTambah.addActionListener(new java.awt.event.ActionListener() {
+        tCari.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bTambahActionPerformed(evt);
+                tCariActionPerformed(evt);
             }
         });
-
-        bUbah.setBackground(new java.awt.Color(255, 204, 102));
-        bUbah.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        bUbah.setForeground(new java.awt.Color(255, 255, 255));
-        bUbah.setText("Ubah");
-        bUbah.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        bUbah.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bUbahActionPerformed(evt);
-            }
-        });
-
-        bHapus.setBackground(new java.awt.Color(255, 102, 102));
-        bHapus.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        bHapus.setForeground(new java.awt.Color(255, 255, 255));
-        bHapus.setText("Hapus");
-        bHapus.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        bHapus.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bHapusActionPerformed(evt);
+        tCari.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                tCariKeyReleased(evt);
             }
         });
 
@@ -123,14 +226,56 @@ public class panelSiswa extends javax.swing.JPanel {
             new String [] {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tblSiswa.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblSiswaMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tblSiswa);
 
-        bReset.setBackground(new java.awt.Color(51, 204, 0));
-        bReset.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        bUbah.setBackground(new java.awt.Color(245, 158, 11));
+        bUbah.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        bUbah.setForeground(new java.awt.Color(255, 255, 255));
+        bUbah.setText("Ubah");
+        bUbah.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bUbahActionPerformed(evt);
+            }
+        });
+
+        bTambah.setBackground(new java.awt.Color(34, 197, 94));
+        bTambah.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        bTambah.setForeground(new java.awt.Color(255, 255, 255));
+        bTambah.setText("Tambah");
+        bTambah.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bTambahActionPerformed(evt);
+            }
+        });
+
+        bHapus.setBackground(new java.awt.Color(239, 68, 68));
+        bHapus.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        bHapus.setForeground(new java.awt.Color(255, 255, 255));
+        bHapus.setText("Hapus");
+        bHapus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bHapusActionPerformed(evt);
+            }
+        });
+
+        bReset.setBackground(new java.awt.Color(100, 116, 139));
+        bReset.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         bReset.setForeground(new java.awt.Color(255, 255, 255));
         bReset.setText("Reset");
-        bReset.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         bReset.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bResetActionPerformed(evt);
@@ -142,50 +287,50 @@ public class panelSiswa extends javax.swing.JPanel {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(25, 25, 25)
+                .addGap(22, 22, 22)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(cbFilter, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(tCari, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(57, 57, 57))
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(tCari, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(81, 81, 81))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(bTambah, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(bUbah, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(bHapus, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(bReset, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(bTambah, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(27, 27, 27)
+                                .addComponent(bUbah, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(31, 31, 31)
+                                .addComponent(bHapus, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(30, 30, 30)
+                                .addComponent(bReset, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(cbFilter, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1057, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 38, Short.MAX_VALUE))))
+                        .addGap(0, 41, Short.MAX_VALUE))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(20, 20, 20)
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(tCari, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(2, 2, 2)))
+                .addComponent(cbFilter, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(23, 23, 23)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(tCari, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cbFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(36, 36, 36)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(bTambah)
-                    .addComponent(bUbah)
-                    .addComponent(bHapus)
-                    .addComponent(bReset))
-                .addGap(40, 40, 40)
+                    .addComponent(bTambah, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(bHapus, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(bUbah, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(bReset, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 520, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(22, Short.MAX_VALUE))
+                .addContainerGap(28, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -200,21 +345,166 @@ public class panelSiswa extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void bTambahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bTambahActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_bTambahActionPerformed
-
     private void bUbahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bUbahActionPerformed
-        // TODO add your handling code here:
+      int selectedRow = tblSiswa.getSelectedRow();
+    
+    if (selectedRow == -1) {
+        JOptionPane.showMessageDialog(this,
+                "Pilih data siswa yang akan diubah!",
+                "Peringatan",
+                JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+    
+    // Ambil data dari tabel yang dipilih
+    String nis = tblSiswa.getValueAt(selectedRow, 1).toString();
+    String nama = tblSiswa.getValueAt(selectedRow, 2).toString();
+    String kelas = tblSiswa.getValueAt(selectedRow, 3).toString();
+    String jk = tblSiswa.getValueAt(selectedRow, 4).toString();
+    
+    String jenisKelamin = "";
+if (jk.equals("L")) {
+    jenisKelamin = "Laki-laki";
+} else if (jk.equals("P")) {
+    jenisKelamin = "Perempuan";
+}
+
+// Kirim ke dialog
+dialogUbahSiswa dialog = new dialogUbahSiswa(nis, nama, kelas, jenisKelamin);
+dialog.setVisible(true);
     }//GEN-LAST:event_bUbahActionPerformed
 
+    private void bTambahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bTambahActionPerformed
+      new DialogTambahSiswa().setVisible(true);
+      refreshTableData();
+    }//GEN-LAST:event_bTambahActionPerformed
+
     private void bHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bHapusActionPerformed
-        // TODO add your handling code here:
+        int selectedRow = tblSiswa.getSelectedRow();
+if (selectedRow == -1) {
+    JOptionPane.showMessageDialog(this,
+            "Pilih data siswa yang akan dinonaktifkan!",
+            "Peringatan",
+            JOptionPane.WARNING_MESSAGE);
+    return;
+}
+
+// Ambil data dari baris yang dipilih
+int nis = Integer.parseInt(tblSiswa.getValueAt(selectedRow, 1).toString());
+String namaSiswa = tblSiswa.getValueAt(selectedRow, 2).toString();
+
+// Konfirmasi nonaktifkan
+int confirm = JOptionPane.showConfirmDialog(this,
+        "Apakah Anda yakin ingin menonaktifkan siswa ini?\n\n"
+        + "NIS  : " + nis + "\n"
+        + "Nama : " + namaSiswa + "\n\n"
+        + "Data siswa dan riwayat absensi tetap tersimpan.",
+        "Konfirmasi Nonaktifkan Siswa",
+        JOptionPane.YES_NO_OPTION,
+        JOptionPane.QUESTION_MESSAGE);
+
+if (confirm == JOptionPane.YES_OPTION) {
+    SiswaDAO siswaDAO = new SiswaDAO();
+    boolean success = siswaDAO.nonaktifkanSiswa(nis);
+    
+    if (success) {
+        JOptionPane.showMessageDialog(this,
+                "√ Siswa berhasil dinonaktifkan!",
+                "Berhasil",
+                JOptionPane.INFORMATION_MESSAGE);
+        // Load ulang langsung dari database
+        List<Siswa> listSiswa = siswaDAO.getAllSiswa();
+        loadTableData(listSiswa);
+    } else {
+        JOptionPane.showMessageDialog(this,
+                "✗ Gagal menonaktifkan siswa!",
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+    }
+}
+loadAllSiswa();
+
     }//GEN-LAST:event_bHapusActionPerformed
 
     private void bResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bResetActionPerformed
-        // TODO add your handling code here:
+      // Reset filter
+        cbFilter.setSelectedIndex(0);
+        tCari.setText("");
+
+        // Load ulang langsung dari database
+        List<Siswa> listSiswa = siswaDAO.getAllSiswa();
+        loadTableData(listSiswa);
+
+        JOptionPane.showMessageDialog(this, "Filter dan pencarian telah direset!",
+                "Info", JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_bResetActionPerformed
+
+    private void cbFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbFilterActionPerformed
+
+        Object selectedItem = cbFilter.getSelectedItem();
+
+        if (selectedItem == null) {
+            // Jika null, tampilkan semua siswa atau return
+            List<Siswa> listSiswa = siswaDAO.getAllSiswa();
+            loadTableData(listSiswa);
+            return;
+        }
+
+        String selected = selectedItem.toString();
+        List<Siswa> listSiswa;
+
+        // Cek apakah pilihan adalah "-- Semua Kelas --" atau angka kelas
+        if (selected.equals("-- Semua Kelas --") || cbFilter.getSelectedIndex() == 0) {
+            // Tampilkan semua siswa
+            listSiswa = siswaDAO.getAllSiswa();
+        } else {
+            // Parse String ke Integer dan filter berdasarkan kelas
+            try {
+                int idKelas = Integer.parseInt(selected);
+                listSiswa = siswaDAO.getSiswaByKelas(idKelas);
+            } catch (NumberFormatException e) {
+                // Jika parsing gagal, tampilkan semua siswa
+                listSiswa = siswaDAO.getAllSiswa();
+            }
+        }
+
+        loadTableData(listSiswa);
+    }//GEN-LAST:event_cbFilterActionPerformed
+
+    private void tblSiswaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblSiswaMouseClicked
+        int baris = tblSiswa.rowAtPoint(evt.getPoint());
+
+        if (baris >= 0) {
+            // Highlight baris yang dipilih
+            tblSiswa.setRowSelectionInterval(baris, baris);
+
+            // Enable tombol Ubah dan Hapus
+            bUbah.setEnabled(true);
+            bHapus.setEnabled(true);
+
+            
+        }
+
+        
+    }//GEN-LAST:event_tblSiswaMouseClicked
+
+    private void tCariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tCariActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tCariActionPerformed
+
+    private void tCariKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tCariKeyReleased
+       TableRowSorter<TableModel> rowSorter;
+    DefaultTableModel model = (DefaultTableModel) tblSiswa.getModel();
+    rowSorter = new TableRowSorter<>(model);
+    tblSiswa.setRowSorter(rowSorter);
+    String text = tCari.getText();
+    
+    if (text.trim().length() == 0) {
+        rowSorter.setRowFilter(null); // tampilkan semua data
+    } else {
+        rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + text)); // filter, ignore case
+    }
+    }//GEN-LAST:event_tCariKeyReleased
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

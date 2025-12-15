@@ -4,6 +4,11 @@
  */
 package Frame;
 
+import ClassAbsensi.Absensi;
+import ClassAbsensi.AbsensiDAO;
+import ClassAbsensi.KelasDAO;
+import ClassAbsensi.SiswaDAO;
+import java.util.List;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -15,11 +20,93 @@ import org.jfree.data.category.DefaultCategoryDataset;
  * @author MyBook Hype AMD
  */
 public class panelDashboard extends javax.swing.JPanel {
+private SiswaDAO siswaDAO;
+private KelasDAO kelasDAO;
+private AbsensiDAO absensiDAO;
 
     public panelDashboard() {
         initComponents();
         tampilkanChart();
+         siswaDAO = new SiswaDAO();
+        kelasDAO = new KelasDAO();
+        absensiDAO = new AbsensiDAO();
+        loadDashboardData();
     }
+    private void loadDashboardData() {
+    loadTotalSiswa();
+    loadTotalKelas();
+    loadAbsensiHariIni();
+}
+public void refreshDashboard() {
+    loadDashboardData();
+}
+private void loadTotalSiswa() {
+    try {
+        int totalSiswa = siswaDAO.getTotalSiswa();
+        lblSiswa.setText(String.valueOf(totalSiswa));
+    } catch (Exception e) {
+        System.err.println("Error load total siswa: " + e.getMessage());
+        lblSiswa.setText("0");
+    }
+}
+
+private void loadTotalKelas() {
+    try {
+        int totalKelas = kelasDAO.getTotalKelas();
+        lblKelas.setText(String.valueOf(totalKelas));
+    } catch (Exception e) {
+        System.err.println("Error load total kelas: " + e.getMessage());
+        lblKelas.setText("0");
+    }
+}
+
+private void loadAbsensiHariIni() {
+    try {
+        // Ambil semua data absensi hari ini
+            List<Absensi> listAbsensi = absensiDAO.getAbsensiHariIni();
+        
+        // Hitung manual berdasarkan status
+        int hadir = 0;
+        int izin = 0;
+        int sakit = 0;
+        int alfa = 0;
+        int terlambat = 0;
+        
+        for (Absensi absensi : listAbsensi) {
+            String status = absensi.getStatus().toLowerCase();
+            
+            if (status.contains("hadir")) {
+                hadir++;
+            } else if (status.contains("izin")) {
+                izin++;
+            } else if (status.contains("sakit")) {
+                sakit++;
+            } else if (status.contains("alfa") || status.contains("alpa")) {
+                alfa++;
+            } else if (status.contains("telat") || status.contains("terlambat")) {
+                terlambat++;
+            }
+        }
+        
+        // Set ke label
+        lblHadir.setText(String.valueOf(hadir));
+        lblIzin.setText(String.valueOf(izin));
+        lblSakit.setText(String.valueOf(sakit));
+        lblAlfa.setText(String.valueOf(alfa));
+        lblTerlambat.setText(String.valueOf(terlambat));
+        
+    } catch (Exception e) {
+        System.err.println("Error load absensi hari ini: " + e.getMessage());
+        e.printStackTrace();
+        
+        // Set default value jika error
+        lblHadir.setText("0");
+        lblIzin.setText("0");
+        lblSakit.setText("0");
+        lblAlfa.setText("0");
+        lblTerlambat.setText("0");
+    }
+}
 
      private void tampilkanChart() {
         // Buat dataset
@@ -316,7 +403,7 @@ domainAxis.setUpperMargin(0.01);    // Margin atas
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel9)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 63, Short.MAX_VALUE)
                         .addComponent(jLabel11)
                         .addGap(43, 43, 43))
                     .addGroup(jPanel2Layout.createSequentialGroup()
@@ -358,10 +445,10 @@ domainAxis.setUpperMargin(0.01);    // Margin atas
                     .addComponent(panelChart, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanelCustom4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(40, 40, 40)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jPanelCustom5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(40, 40, 40)
-                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(29, 29, 29))
         );
         layout.setVerticalGroup(
