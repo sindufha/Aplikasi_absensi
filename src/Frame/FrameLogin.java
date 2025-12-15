@@ -1,7 +1,7 @@
 package Frame;
 
 
-import ClassAbsensi.LoginDB;
+import ClassAbsensi.LoginDAO;
 import ClassAbsensi.User;
 import com.formdev.flatlaf.FlatLightLaf;
 import javax.swing.JOptionPane;
@@ -155,7 +155,7 @@ String username = tUsername.getText().trim();
         }
 
 // Panggil LoginDAO untuk cek ke database
-        LoginDB loginDAO = new LoginDB();
+        LoginDAO loginDAO = new LoginDAO();
         User user = loginDAO.login(username, password);
 
 // Cek hasil login
