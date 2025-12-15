@@ -236,7 +236,8 @@ public List<Siswa> getSiswaAktifByKelas(int idKelas) {
 
     public int getTotalSiswa() {
         String sql = "SELECT COUNT(*) FROM siswa";
-        try (Statement stmt = conn.createStatement();
+        try (Connection conn = Koneksi.getKoneksi();
+                Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
             if (rs.next()) {
                 return rs.getInt(1);
