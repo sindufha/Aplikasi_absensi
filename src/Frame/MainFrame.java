@@ -463,6 +463,12 @@ private void setupPanelResize(JPanel panel) {
 
     private void btnDashboardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDashboardActionPerformed
         sidebar.setActive(btnDashboard);
+        panelDashboard pd = new panelDashboard();
+        content.removeAll();
+        content.add(pd);
+
+        content.repaint();
+        content.revalidate();
     }//GEN-LAST:event_btnDashboardActionPerformed
 
     private void btnSiswaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSiswaActionPerformed
