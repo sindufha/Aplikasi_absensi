@@ -1,4 +1,4 @@
-/*
+ /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JDialog.java to edit this template
  */
@@ -58,8 +58,8 @@ public class DialogTambahSiswa extends javax.swing.JDialog {
 
     // Method untuk load ComboBox Jenis Kelamin
     private void loadComboBoxJenisKelamin() {
-        cJK.removeAllItems();
-        cJK.addItem("-- Pilih Jenis Kelamin --");
+        cJK.removeAllItems(); //Hapus semua item yang ada di ComboBox
+        cJK.addItem("-- Pilih Jenis Kelamin --"); //Tambahkan item pertama ke ComboBox berupa teks
         cJK.addItem("Laki-laki");
         cJK.addItem("Perempuan");
         cJK.setSelectedIndex(0);
@@ -67,8 +67,8 @@ public class DialogTambahSiswa extends javax.swing.JDialog {
 
     // Method untuk load ComboBox Kelas dari database
     private void loadComboBoxKelas() {
-        cKelas.removeAllItems();
-        cKelas.addItem("-- Pilih Kelas --");
+        cKelas.removeAllItems(); //Hapus semua item yang ada di ComboBox
+        cKelas.addItem("-- Pilih Kelas --"); //Tambahkan item pertama ke ComboBox berupa teks
 
         SiswaDAO siswaDAO = new SiswaDAO();
         List<Integer> listKelas = siswaDAO.getDistinctKelas();
@@ -136,12 +136,12 @@ public class DialogTambahSiswa extends javax.swing.JDialog {
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel4.setText("Kelas");
 
-        cKelas.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cKelas.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Kelas 1", "Kelas 2", "Kelas 3", "Kelas 4", "Kelas 5", "Kelas 6" }));
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel5.setText("Jenis Kelamin");
 
-        cJK.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cJK.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Laki-laki", "Perempuan" }));
 
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
         jPanel3.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -320,7 +320,7 @@ public class DialogTambahSiswa extends javax.swing.JDialog {
 
     private void btnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSimpanActionPerformed
                                         
-  String nis = tNIS.getText().trim();
+    String nis = tNIS.getText().trim();
     String namaSiswa = tNama.getText().trim();
     
     // ✅ CONVERT JENIS KELAMIN KE FORMAT DATABASE
@@ -335,12 +335,13 @@ public class DialogTambahSiswa extends javax.swing.JDialog {
     
     // Parse kelas
     int idKelas = 0;
-    if (cKelas.getSelectedIndex() > 0) {
+    if (cKelas.getSelectedIndex() > 0) { //Jika index ComboBox lebih dari 0.
         try {
-            String selectedKelas = cKelas.getSelectedItem().toString();
-            idKelas = Integer.parseInt(selectedKelas);
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this,
+            //Ambil item kelas yang dipilih di ComboBox, lalu ubah ke String.
+            String selectedKelas = cKelas.getSelectedItem().toString(); 
+            idKelas = Integer.parseInt(selectedKelas); //Ubah teks kelas menjadi angka dan simpan ke idKelas.
+        } catch (NumberFormatException e) { // tangkap error teks yg tidak bisa diubah ke angka misal huruf
+            JOptionPane.showMessageDialog(this, //Tampilkan peringatan bahwa format kelas tidak valid.
                 "Format kelas tidak valid!",
                 "Validasi Error",
                 JOptionPane.WARNING_MESSAGE);
@@ -423,7 +424,8 @@ public class DialogTambahSiswa extends javax.swing.JDialog {
         String qrFileName = "QR_" + nis + ".png";
         String qrFilePath = qrFolderPath + File.separator + qrFileName;
         
-        // Generate QR Code file
+        // Generate QR Code file kenapa pakai boolean?
+        //karena method generateQRFile yang dipanggil mengembalikan nilai berhasil / gagal.
         boolean qrGenerated = QRCodeGenerator.generateQRFile(qrCode, qrFilePath, 300, 300);
         
         if (!qrGenerated) {
@@ -510,10 +512,14 @@ public class DialogTambahSiswa extends javax.swing.JDialog {
         // Generate QR Code
         int size = 300;
         String charset = "UTF-8";
-        
+        //Buat sebuah HashMap yang key-nya bertipe EncodeHintType dan value-nya bertipe Object,
+        //lalu simpan di variabel bernama hints.
         Map<EncodeHintType, Object> hints = new HashMap<>();
+        //Masukkan ke dalam hints: key ERROR_CORRECTION dengan value ErrorCorrectionLevel.H.
         hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H);
+        //Masukkan pengaturan CHARACTER_SET dengan nilai charset (misal: "UTF-8").
         hints.put(EncodeHintType.CHARACTER_SET, charset);
+        //Tambahkan pengaturan margin sebesar 1 ke dalam hints.
         hints.put(EncodeHintType.MARGIN, 1);
         
         BitMatrix matrix = new MultiFormatWriter().encode(
