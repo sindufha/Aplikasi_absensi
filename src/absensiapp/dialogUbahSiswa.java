@@ -67,7 +67,7 @@ public class dialogUbahSiswa extends javax.swing.JDialog {
 
         SiswaDAO siswaDAO = new SiswaDAO();
         List<Integer> listKelas = siswaDAO.getDistinctKelas();
-
+        //jika data kelas kosong maka tampilkan dialog.... 
         if (listKelas.isEmpty()) {
             JOptionPane.showMessageDialog(this,
                     "Data kelas masih kosong!\n"
@@ -76,7 +76,7 @@ public class dialogUbahSiswa extends javax.swing.JDialog {
                     JOptionPane.WARNING_MESSAGE);
             return;
         }
-
+        //Tambahkan kelas satu per satu ke ComboBox.
         for (Integer idKelas : listKelas) {
             cKelas.addItem(String.valueOf(idKelas));
         }
@@ -148,12 +148,12 @@ public class dialogUbahSiswa extends javax.swing.JDialog {
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel4.setText("Kelas");
 
-        cKelas.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cKelas.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Kelas 1", "Kelas 2", "kelas 3", "Kelas 4", "Kelas 5", "Kelas 6" }));
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel5.setText("Jenis Kelamin");
 
-        cJK.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cJK.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Laki-laki", "Perempuan" }));
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -253,7 +253,7 @@ public class dialogUbahSiswa extends javax.swing.JDialog {
         String nis = tNIS.getText().trim();
         String namaSiswa = tNama.getText().trim();
 
-        // ✅ CONVERT JENIS KELAMIN KE FORMAT DATABASE
+        // CONVERT JENIS KELAMIN KE FORMAT DATABASE karena database hanya menyimpan data L dan P
         String jenisKelaminDisplay = cJK.getSelectedItem().toString();
         String jenisKelamin = "";
 
@@ -263,7 +263,7 @@ public class dialogUbahSiswa extends javax.swing.JDialog {
             jenisKelamin = "P";
         }
 
-        // Parse kelas
+        // Mengambil kelas yang dipilih.
         int idKelas = 0;
         if (cKelas.getSelectedIndex() > 0) {
             try {
@@ -348,7 +348,7 @@ public class dialogUbahSiswa extends javax.swing.JDialog {
                 JOptionPane.QUESTION_MESSAGE);
 
         if (confirm == JOptionPane.YES_OPTION) {
-            // ✅ GENERATE DAN SAVE QR CODE KE FILE
+            // GENERATE DAN SAVE QR CODE KE FILE dan Menentukan tempat penyimpanan file QR.
             String qrFolderPath = "qr_codes"; // Folder untuk menyimpan QR
             String qrFileName = "QR_" + nis + ".png";
             String qrFilePath = qrFolderPath + File.separator + qrFileName;
@@ -356,6 +356,8 @@ public class dialogUbahSiswa extends javax.swing.JDialog {
             // Generate QR Code file
             boolean qrGenerated = QRCodeGenerator.generateQRFile(qrCode, qrFilePath, 300, 300);
 
+            //“Jika QR Code tidak berhasil dibuat, tampilkan pesan error kepada pengguna, 
+            //lalu hentikan proses (keluar dari method).”
             if (!qrGenerated) {
                 JOptionPane.showMessageDialog(this,
                         "⚠ Gagal membuat file QR Code!\n"
