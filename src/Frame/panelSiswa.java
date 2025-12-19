@@ -45,16 +45,18 @@ private SiswaDAO siswaDAO;
         model.addColumn("Jenis Kelamin");
         model.addColumn("Status");  // ✅ Tambah kolom status
 
-        List<Siswa> listSiswa = siswaDAO.getAllSiswa();
+        List<Siswa> listSiswa = siswaDAO.getAllSiswa(); //Ambil ulang semua data siswa dari database
+        
+        //looping isi tabel dengan data siswa yg ada di dalam listSiswa
         int no = 1;
-        for (Siswa siswa : listSiswa) {
-            model.addRow(new Object[]{
+        for (Siswa siswa : listSiswa) { //Untuk setiap objek Siswa yang ada di dalam listSiswa,
+            model.addRow(new Object[]{ //tambahkan baris baru kemoddel table
                 no++,
                 siswa.getNis(),
                 siswa.getNamaSiswa(),
                 siswa.getIdKelas(),
                 siswa.getJenisKelamin(),
-                siswa.getStatus() // ✅ Tampilkan status
+                siswa.getStatus() 
             });
         }
         tblSiswa.setModel(model);
@@ -66,8 +68,8 @@ private SiswaDAO siswaDAO;
         idKelas = Integer.parseInt(cbFilter.getSelectedItem().toString());
 
         if (idKelas > 0) {
-            // Panggil method getSiswaByKelas dari SiswaDB
             SiswaDAO siswaDB = new SiswaDAO();
+           // Panggil method getSiswaByKelas untuk mengambil data siswa dengan id tersebut, lalu data yg di temukan masukkan ke listSiswa
             List<Siswa> listSiswa = siswaDB.getSiswaByKelas(idKelas);
 
             // Tampilkan data ke table
@@ -78,13 +80,14 @@ private SiswaDAO siswaDAO;
         }
     }
 
-    private void loadTableData(List<Siswa> listSiswa) {
+    private void loadTableData(List<Siswa> listSiswa) { //daftar (list) berisi objek Siswa nama variabelnya listSiswa
+        //Ambil model tabel dari tblSiswa, lalu kosongkan seluruh baris data di tabel tersebut.
         DefaultTableModel model = (DefaultTableModel) tblSiswa.getModel();
-        model.setRowCount(0);
+        model.setRowCount(0); //Mengatur jumlah baris tabel menjadi 0.
 
         int no = 1;
-        for (Siswa siswa : listSiswa) {
-            model.addRow(new Object[]{
+        for (Siswa siswa : listSiswa) {//Untuk setiap objek Siswa yang ada di dalam listSiswa
+            model.addRow(new Object[]{//tambahkan satu baris baru kedlm table
                 no++, // No
                 siswa.getNis(), // NIS
                 siswa.getNamaSiswa(), // Nama Siswa
@@ -96,18 +99,21 @@ private SiswaDAO siswaDAO;
 
     private void loadAllSiswa() {
         SiswaDAO siswaDB = new SiswaDAO();
-        List<Siswa> listSiswa = siswaDB.getAllSiswa();
+        // Panggil method getAllSiswa untuk mengambil data
+        List<Siswa> listSiswa = siswaDB.getAllSiswa(); 
         loadTableData(listSiswa);
     }
 
     private void loadComboBoxKelas() {
-        cbFilter.removeAllItems();
-        cbFilter.addItem("-- Semua Kelas --");
+        cbFilter.removeAllItems(); //Hapus semua item yang ada di ComboBox cbFilter
+        cbFilter.addItem("-- Semua Kelas --"); //Tambahkan item pertama ke ComboBox berupa teks
 
-        List<Integer> listKelas = siswaDAO.getDistinctKelas();
+        List<Integer> listKelas = siswaDAO.getDistinctKelas();//Ambil daftar ID kelas yang unik dari database melalui method getDistinctKelas()
 
+        
+        //Untuk setiap idKelas yang ada dalam listKelas
         for (Integer idKelas : listKelas) {
-            cbFilter.addItem(idKelas.toString());
+            cbFilter.addItem(idKelas.toString()); //tambahkan sebagai item ComboBox 
         }
     }
 
@@ -290,49 +296,50 @@ private SiswaDAO siswaDAO;
     }//GEN-LAST:event_bTambahActionPerformed
 
     private void bHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bHapusActionPerformed
-        int selectedRow = tblSiswa.getSelectedRow();
-if (selectedRow == -1) {
-    JOptionPane.showMessageDialog(this,
-            "Pilih data siswa yang akan dinonaktifkan!",
-            "Peringatan",
-            JOptionPane.WARNING_MESSAGE);
-    return;
-}
+        int selectedRow = tblSiswa.getSelectedRow(); //Ambil baris yang sedang dipilih di tabel siswa.
+        if (selectedRow == -1) { 
+            //Kalau tidak ada baris yang dipilih, tampilkan pesan peringatan dan hentikan proses.
+            JOptionPane.showMessageDialog(this,
+                    "Pilih data siswa yang akan dinonaktifkan!",
+                    "Peringatan",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
 
-// Ambil data dari baris yang dipilih
-int nis = Integer.parseInt(tblSiswa.getValueAt(selectedRow, 1).toString());
-String namaSiswa = tblSiswa.getValueAt(selectedRow, 2).toString();
+    //Ambil nilai NIS dan Nama Siswa dari baris yang dipilih pada tabel siswa.
+        int nis = Integer.parseInt(tblSiswa.getValueAt(selectedRow, 1).toString());
+        String namaSiswa = tblSiswa.getValueAt(selectedRow, 2).toString();
 
-// Konfirmasi nonaktifkan
-int confirm = JOptionPane.showConfirmDialog(this,
-        "Apakah Anda yakin ingin menonaktifkan siswa ini?\n\n"
-        + "NIS  : " + nis + "\n"
-        + "Nama : " + namaSiswa + "\n\n"
-        + "Data siswa dan riwayat absensi tetap tersimpan.",
-        "Konfirmasi Nonaktifkan Siswa",
-        JOptionPane.YES_NO_OPTION,
-        JOptionPane.QUESTION_MESSAGE);
+    // Konfirmasi nonaktifkan
+        int confirm = JOptionPane.showConfirmDialog(this,
+                "Apakah Anda yakin ingin menonaktifkan siswa ini?\n\n"
+                + "NIS  : " + nis + "\n"
+                + "Nama : " + namaSiswa + "\n\n"
+                + "Data siswa dan riwayat absensi tetap tersimpan.",
+                "Konfirmasi Nonaktifkan Siswa",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE);
 
-if (confirm == JOptionPane.YES_OPTION) {
-    SiswaDAO siswaDAO = new SiswaDAO();
-    boolean success = siswaDAO.nonaktifkanSiswa(nis);
-    
-    if (success) {
-        JOptionPane.showMessageDialog(this,
-                "√ Siswa berhasil dinonaktifkan!",
-                "Berhasil",
-                JOptionPane.INFORMATION_MESSAGE);
-        // Load ulang langsung dari database
-        List<Siswa> listSiswa = siswaDAO.getAllSiswa();
-        loadTableData(listSiswa);
-    } else {
-        JOptionPane.showMessageDialog(this,
-                "✗ Gagal menonaktifkan siswa!",
-                "Error",
-                JOptionPane.ERROR_MESSAGE);
-    }
-}
-loadAllSiswa();
+        if (confirm == JOptionPane.YES_OPTION) {
+            SiswaDAO siswaDAO = new SiswaDAO();
+            boolean success = siswaDAO.nonaktifkanSiswa(nis); //Panggil method nonaktifkanSiswa berdasarkan NIS Hasilnya disimpan ke variabel success (true / false)
+
+            if (success) {
+                JOptionPane.showMessageDialog(this,
+                        "√ Siswa berhasil dinonaktifkan!",
+                        "Berhasil",
+                        JOptionPane.INFORMATION_MESSAGE);
+                // Load ulang langsung dari database
+                List<Siswa> listSiswa = siswaDAO.getAllSiswa();
+                loadTableData(listSiswa);
+            } else {
+                JOptionPane.showMessageDialog(this,
+                        "✗ Gagal menonaktifkan siswa!",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        }
+        loadAllSiswa();
 
     }//GEN-LAST:event_bHapusActionPerformed
 
@@ -350,14 +357,14 @@ loadAllSiswa();
     }//GEN-LAST:event_bResetActionPerformed
 
     private void cbFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbFilterActionPerformed
-
+        //Ambil item yang sedang dipilih pada ComboBox cbFilter, lalu simpan ke dalam variabel bernama selectedItem.
         Object selectedItem = cbFilter.getSelectedItem();
-
+        
+        // Jika null, tampilkan semua siswa atau return
         if (selectedItem == null) {
-            // Jika null, tampilkan semua siswa atau return
             List<Siswa> listSiswa = siswaDAO.getAllSiswa();
             loadTableData(listSiswa);
-            return;
+            return;//untuk menghentikan prosees
         }
 
         String selected = selectedItem.toString();
@@ -382,10 +389,10 @@ loadAllSiswa();
     }//GEN-LAST:event_cbFilterActionPerformed
 
     private void tblSiswaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblSiswaMouseClicked
-        int baris = tblSiswa.rowAtPoint(evt.getPoint());
+        int baris = tblSiswa.rowAtPoint(evt.getPoint()); //buat variabel baris untuk menyimpan nomor baris pada tabel
 
         if (baris >= 0) {
-            // Highlight baris yang dipilih
+            // Pilih dan sorot baris pada tabel dari baris ke-baris sampai baris ke-baris
             tblSiswa.setRowSelectionInterval(baris, baris);
 
             // Enable tombol Ubah dan Hapus
@@ -406,16 +413,19 @@ loadAllSiswa();
     }//GEN-LAST:event_tCariActionPerformed
 
     private void tCariKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tCariKeyReleased
-       TableRowSorter<TableModel> rowSorter;
+       TableRowSorter<TableModel> rowSorter; //Membuat variabel rowSorter yang berfungsi untuk mengatur sorting dan filtering data JTable.
     DefaultTableModel model = (DefaultTableModel) tblSiswa.getModel();
-    rowSorter = new TableRowSorter<>(model);
-    tblSiswa.setRowSorter(rowSorter);
-    String text = tCari.getText();
+    rowSorter = new TableRowSorter<>(model); //Menghubungkan rowSorter dengan model tabel siswa.
+    tblSiswa.setRowSorter(rowSorter);//mengaktifkan rowsorter
+    String text = tCari.getText(); //Mengambil teks yang diketik user di field pencarian.
     
+    
+    //Filter tabel secara realtime (case-insensitive).
     if (text.trim().length() == 0) {
         rowSorter.setRowFilter(null); // tampilkan semua data
     } else {
-        rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + text)); // filter, ignore case
+// Menyaring baris tabel berdasarkan teks regexFilter()pakai pencocokan teks (?i)ignore case (tidak peduli huruf besar/kecil)
+        rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + text)); 
     }
     }//GEN-LAST:event_tCariKeyReleased
 
