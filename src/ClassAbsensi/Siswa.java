@@ -32,6 +32,10 @@ public class Siswa {
         this.qrCode = qrCode;
     }
     
+    
+    
+    //setter : mengubah/ memberi nilai pada variabel
+    //getter : mengambil/membaca nilai dari variabel
     // Getters dan Setters
     public int getIdSiswa() {
         return idSiswa;
@@ -97,7 +101,9 @@ public class Siswa {
 public void setStatus(String status) {
     this.status = status;
 }
-    @Override
+
+    //berfungsi ini membuat objek siswa bisa dicetak menjadi teks
+    @Override //Method ini menimpa (override) method toString() bawaan dari class Object
     public String toString() {
         return "Siswa{" +
                 "idSiswa=" + idSiswa +
